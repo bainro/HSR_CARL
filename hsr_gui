@@ -1,0 +1,12 @@
+#!/bin/bash
+
+source /opt/ros/noetic/setup.bash
+export ROS_MASTER_URI=http://hsrb.local:11311
+
+roscd hsrb_common_launch/
+cd config
+# backgnd process and pipe any output to the VOID
+rosrun rviz rviz -d hsrb_display_full_hsrb.rviz &>/dev/null &
+
+cd /home/hsr/testHSR
+python3 carlsr_ui.py &>/dev/null &
