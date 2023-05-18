@@ -1,0 +1,36 @@
+#/bin/bash
+
+cd ~
+
+source /opt/ros/noetic/setup.bash 
+rosnode kill /pose_integrator &> /dev/null &
+
+# kill any previous running hector SLAMs
+pgrep hector &>/dev/null && pgrep hector | xargs sudo kill
+# then start up the main command / ROS package :)
+rosrun hector_mapping hector_mapping _map_size:=4096 _map_resolution:=0.05 \
+       _pub_map_odom_transform:=true _scan_topic:=/hsrb/base_scan          \
+       _use_tf_scan_transformation:=true _map_update_angle_thresh:=2.0     \
+       _map_update_distance_thresh:=0.10 _scan_subscriber_queue_size:=1    \
+       _update_factor_free:=0.39 _update_factor_occupied:=0.85             \
+       _base_frame:=base_link &> /tmp/hector_slam.log &
+
+rosrun rviz rviz -d /home/administrator/Desktop/hector.rviz &> /tmp/hector_rviz.log &
+
+echo "Starting hector SLAM & RVIZ!"
+echo "Logging all text to /tmp/hector_slam.log & /tmp/hector_rivz.log"
+
+#/home/administrator/bin/ps4
+
+### Periodically save the map. Can be stopped with CTRL-C
+save_dir=hector_map/$(date +"%d-%m-%Y")
+mkdir -p $save_dir
+cd $save_dir
+i=0
+while true
+do
+    i=$((i+1))
+    sleep 60
+    echo "attempting to auto save the map at $PWD!"
+    rosrun map_server map_saver -f map_$i
+done

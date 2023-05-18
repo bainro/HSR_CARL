@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# assumed to be run by administrator user
+source /opt/ros/noetic/setup.bash
+source /home/administrator/cartographer_ws/devel_isolated/setup.bash
+
+mkdir ~/Desktop/cartographer_maps
+cd ~/Desktop/cartographer_maps
+
+# stop the rosbag recording
+sudo pkill rosbag
+
+rosservice call /finish_trajectory 0
+rosservice call /write_state "{filename: 'current.pbstream', include_unfinished_submaps: "true"}"
+cp /home/administrator/.ros/current.pbstream ./current.pbstream
+cp /home/hsr-hmi/.ros/current.pbstream ./current.pbstream
+now=`date +%s`
+cp current.pbstream ${now}.pbstream
+# going to dupe the map in this format and present to robot & rviz.
+rosrun map_server map_saver --occ 49 --free 40
+cp map.yaml ${now}.yaml
+cp map.pgm ${now}.pgm
+# this is where the ros docker robot service looks for maps!
+sudo cp map.yaml /etc/opt/tmc/robot/conf.d/cart_carl
+sudo cp map.pgm /etc/opt/tmc/robot/conf.d/cart_carl
+# kil cartographer slam!
+sudo pkill cart
+
+sudo systemctl restart docker.hsrb.robot.service
+echo "sensors should go down, you'll have to do the emergency button upstart routine now!"

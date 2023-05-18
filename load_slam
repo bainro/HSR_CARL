@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# assumed to be run by administrator user
+source /opt/ros/noetic/setup.bash
+source /home/administrator/cartographer_ws/devel_isolated/setup.bash
+
+mkdir ~/Desktop/cartographer_maps
+cd ~/Desktop/cartographer_maps
+
+rosnode kill /pose_integrator
+roslaunch cartographer_toyota_hsr carl_localize.launch &>/tmp/cart_carl_loc.log &
+# for xdisplay
+sudo xhost local:root &>/dev/null
+rosrun rviz rviz -d /home/administrator/Desktop/cartographer_loc.rviz &
+

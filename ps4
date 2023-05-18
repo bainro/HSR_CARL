@@ -1,0 +1,8 @@
+#/bin/bash
+
+source /opt/ros/noetic/setup.bash 
+roslaunch tmc_dualshock4_node dualshock4_node.launch &>/dev/null &
+echo "hold both the SHARE & PS button until flashing lights on controller"
+echo "Try running it again if it doesn't work the 1st time! :)"
+sleep 5
+rosservice call /dualshock4_node/start &>/dev/null &
