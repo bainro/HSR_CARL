@@ -59,9 +59,14 @@ POSE_GRAPH.constraint_builder.sampling_ratio = 0.05 -- 0.3
 POSE_GRAPH.matcher_rotation_weight = 1.6e2 -- 1.6e3
 POSE_GRAPH.global_sampling_ratio = 0.0003 -- 0.003
 POSE_GRAPH.optimize_every_n_nodes = 20 -- 90
-POSE_GRAPH.optimization_problem.odometry_translation_weight = 1e2
-POSE_GRAPH.constraint_builder.loop_closure_translation_weight = 1e1
-POSE_GRAPH.optimization_problem.local_slam_pose_translation_weight = 1e7
-POSE_GRAPH.constraint_builder.ceres_scan_matcher.translation_weight = 0.1
-POSE_GRAPH.matcher_translation_weight = 50
+
+-- found from 1st grid search
+POSE_GRAPH.optimization_problem.odometry_translation_weight = 1e4
+POSE_GRAPH.constraint_builder.loop_closure_translation_weight = 1e2
+POSE_GRAPH.optimization_problem.local_slam_pose_translation_weight = 1e6
+POSE_GRAPH.constraint_builder.ceres_scan_matcher.translation_weight = 1POSE_GRAPH.matcher_translation_weight = 500
+POSE_GRAPH.optimization_problem.odometry_rotation_weight = 1e5
+POSE_GRAPH.constraint_builder.loop_closure_rotation_weight = 1e6
+POSE_GRAPH.constraint_builder.min_score = 0.75
+POSE_GRAPH.constraint_builder.global_localization_min_score = 0.7
 return options
