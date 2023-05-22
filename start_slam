@@ -11,9 +11,12 @@ cd ~/Desktop/cartographer_maps
 sudo xhost local:root &>/dev/null
 
 rosnode kill /pose_integrator
+# resize camera image so rosbag does not get too big
+rosrun nodelet nodelet standalone image_proc/resize image:=/stereo/left/image_rect \
+       camera_info:=/stereo/left/camera_info _scale_width:=0.3 _scale_height:=0.3 &
 # record ros topics for high-def map & offline slam parameter tuning
-rosbag record /hsrb/base_imu/data /hsrb/base_scan /hsrb/odom /tf /tf_static &>/dev/null &
-# kill any lingering, previous SLAM processes
+rosbag record /global_pose /hsrb/base_imu/data /hsrb/base_scan /hsrb/odom /tf /tf_static &>/dev/null &
+# kill any previous SLAM processes
 sudo pkill cart
 roslaunch cartographer_toyota_hsr carl_map.launch &
 rosrun rviz rviz -d /home/administrator/Desktop/cartographer.rviz &
