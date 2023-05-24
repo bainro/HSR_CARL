@@ -24,7 +24,7 @@ options = {
   odom_frame = "odom",
   provide_odom_frame = false,
   publish_frame_projected_to_2d = false,
-  use_odometry = false,  -- TODO(macmason): Re-enable odometry once we enable the IMU.
+  use_odometry = false,
   use_nav_sat = false,
   use_landmarks = false,
   num_laser_scans = 1,
@@ -45,11 +45,28 @@ options = {
 MAP_BUILDER.use_trajectory_builder_2d = true
 
 TRAJECTORY_BUILDER_2D.min_range = 0.
-TRAJECTORY_BUILDER_2D.max_range = 20.
+TRAJECTORY_BUILDER_2D.max_range = 40. -- 20.
 TRAJECTORY_BUILDER_2D.missing_data_ray_length = 5.
-TRAJECTORY_BUILDER_2D.use_imu_data = false  -- TODO(macmason): Enable the IMU.
+TRAJECTORY_BUILDER_2D.use_imu_data = false
 TRAJECTORY_BUILDER_2D.use_online_correlative_scan_matching = true
 
 POSE_GRAPH.optimization_problem.huber_scale = 1e2
+--POSE_GRAPH.constraint_builder.loop_closure_rotation_weight = 1e7
+POSE_GRAPH.max_num_final_iterations = 2000
 
+POSE_GRAPH.constraint_builder.sampling_ratio = 0.05 -- 0.3
+POSE_GRAPH.matcher_rotation_weight = 1.6e2 -- 1.6e3
+POSE_GRAPH.global_sampling_ratio = 0.0003 -- 0.003
+POSE_GRAPH.optimize_every_n_nodes = 20 -- 90
+
+-- found from grid search
+POSE_GRAPH.optimization_problem.odometry_translation_weight = 1e4
+POSE_GRAPH.constraint_builder.loop_closure_translation_weight = 1e2
+POSE_GRAPH.optimization_problem.local_slam_pose_translation_weight = 1e6
+POSE_GRAPH.constraint_builder.ceres_scan_matcher.translation_weight = 1
+POSE_GRAPH.matcher_translation_weight = 500
+POSE_GRAPH.optimization_problem.odometry_rotation_weight = 1e2 -- 1e4
+POSE_GRAPH.constraint_builder.loop_closure_rotation_weight = 1e2 -- 1e3
+POSE_GRAPH.constraint_builder.min_score = 0.65
+POSE_GRAPH.constraint_builder.global_localization_min_score = 0.7
 return options

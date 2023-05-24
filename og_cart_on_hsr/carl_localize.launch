@@ -12,6 +12,8 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
+ 
+ -load_state_filename /home/administrator/Desktop/cartographer_maps/current.pbstream"
 -->
 
 <launch>
@@ -19,7 +21,7 @@
       type="cartographer_node" args="
           -configuration_directory $(find cartographer_toyota_hsr)/configuration_files
           -configuration_basename carl_localize.lua
-          -load_state_filename /home/administrator/Desktop/cartographer_maps/current.pbstream"
+          -load_state_filename /home/administrator/Desktop/smoked_glass.pbstream"
       output="screen">
     <remap from="scan" to="hsrb/base_scan" />
     <remap from="odom" to="hsrb/odom" />
