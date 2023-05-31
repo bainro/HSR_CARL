@@ -1,4 +1,4 @@
-<!-- https://tinyurl.com/3fktabyr -->
+<!-- From this forum topic: tinyurl.com/3fktabyr -->
 <launch>
   <arg name="camera_name" default="camera360" />
   <arg name="frame_id" default="$(arg camera_name)_center_link"/>
