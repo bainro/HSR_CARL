@@ -1,0 +1,7 @@
+#!/bin/bash
+su administrator -c '/home/administrator/bin/classroom_demo'
+
+
+#su administrator -c 'source /home/administrator/.bashrc &>/dev/null && \
+#                     sudo xhost local:root &>/dev/null && \
+#                     /home/administrator/bin/start_slam'
