@@ -75,7 +75,7 @@ if __name__ == "__main__":
       scale = scale + 2
     else:
       # translate points up
-      path_y = [y - 1 for y in path_y]
+      path_y = [y - 10 for y in path_y]
       
   def down_cb(shift):
     global scale, path_y
@@ -83,7 +83,7 @@ if __name__ == "__main__":
       scale = scale - 2
     else:
       # translate points down
-      path_y = [y + 1 for y in path_y]    
+      path_y = [y + 10 for y in path_y]    
       
   def left_cb(shift):
     global rot, path_x
@@ -91,7 +91,7 @@ if __name__ == "__main__":
       rot = rot + 0.2
     else:
       # translate points to the left
-      path_x = [x - 1 for x in path_x]
+      path_x = [x - 10 for x in path_x]
       
   def right_cb(shift):
     global rot, path_x
@@ -99,7 +99,7 @@ if __name__ == "__main__":
       rot = rot - 0.2
     else:
       # translate points to the right
-      path_x = [x + 1 for x in path_x]        
+      path_x = [x + 10 for x in path_x]        
   
   def on_press(key):
     if key == kb.Key.shift:
@@ -107,7 +107,7 @@ if __name__ == "__main__":
       shift_on = True
   
   def on_release(key):
-    print('{0} released'.format(key))
+    # print('{0} released'.format(key))
     global shift_on
     if key == kb.Key.shift:
       shift_on = False
