@@ -43,7 +43,6 @@ if __name__ == "__main__":
     rospy.wait_for_service('add_two_ints')
       try:
         add_two_ints = rospy.ServiceProxy('add_two_ints', AddTwoInts)
-        resp1 = add_two_ints(x, y)
         return resp1.sum
       except rospy.ServiceException as e:
           print("Service call failed: %s"%e)
@@ -138,6 +137,12 @@ if __name__ == "__main__":
   
   # save in the format Tim's already using (i.e. csv)
   # save cropped image of map & resized camera image
+  # loop over the bag to save each image with it's pose
+  bag = rosbag.Bag('/tmp/loc.bag')
+  path_x, path_y = [], []
+  for topic, msg, t in bag.read_messages(topics=['/image_proc_resize/image']):
+    print(msg)
+  bag.close()
   
   # === FUTURE FEATURES ===
   # Include history channels (i.e. multiple stacked FPV images)
