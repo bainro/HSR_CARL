@@ -1,10 +1,15 @@
 '''
 Coverts a rosbag into a dataset for Perspective Transorming VAE(s)
 '''
+import rosbag
 
 if __name__ == "__main__":
-  # laod map.pgm from sys.argv
+  # load map.pgm from sys.argv
   # load rosbag from sys.argv
+  bag = rosbag.Bag('/tmp/test.bag')
+  for topic, msg, t in bag.read_messages(topics=['chatter', 'numbers']):
+    print(msg)
+  bag.close()
   # get a path of length X
   # overlay this path on the map 
   # use keys to translate & rotate the path
