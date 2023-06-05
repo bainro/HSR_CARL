@@ -136,14 +136,19 @@ if __name__ == "__main__":
   with open("/tmp/map.pgm", 'rb') as pgmf:
     map_img = plt.imread(pgmf)
     
+  loop_count = 0  
   while not enter_pressed:
+    loop_count = loop_count + 1
     plt.clf()
     map_plot = plt.imshow(map_img)
     trans_path_x = [x * scale * math.sin(rot) for x in path_x]
     trans_path_y = [y * scale * math.cos(rot) for y in path_y]
     # overlay the path on the map 
     plt.scatter(x=trans_path_x, y=trans_path_y, c='r', s=3)
-    plt.show(block=False)
+    if loop_count > 1:
+      plt.draw()
+    else:
+      plt.show(block=False)
     time.sleep(0.1)
   
   # add buffer to map to enable rotate + crop
