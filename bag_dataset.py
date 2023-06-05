@@ -140,7 +140,7 @@ if __name__ == "__main__":
     trans_path_y = [y * scale * math.cos(rot) for y in path_y]
     # overlay the path on the map 
     plt.scatter(x=trans_path_x, y=trans_path_y, c='r', s=3)
-    plt.show(blocking=False)
+    plt.show(block=False)
     time.sleep(0.1)
   
   # add buffer to map to enable rotate + crop
