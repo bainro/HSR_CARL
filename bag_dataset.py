@@ -132,22 +132,17 @@ if __name__ == "__main__":
   with open("/tmp/map.pgm", 'rb') as pgmf:
     map_img = plt.imread(pgmf)
     
-  loop_count = 0  
   while not enter_pressed:
-    loop_count = loop_count + 1
     plt.clf()
     plt.imshow(map_img)
     trans_path_x = [x * scale * math.sin(rot) for x in path_x]
     trans_path_y = [y * scale * math.cos(rot) for y in path_y]
     # overlay the path on the map 
     plt.scatter(x=trans_path_x, y=trans_path_y, c='r', s=3)
-    #if loop_count > 1:
-    #plt.draw()
     plt.show(block=False)
     plt.pause(0.01)
     with kb.Listener(on_press=on_press, on_release=on_release) as listener:
       listener.join() 
-    #time.sleep(1.0)
   
   # add buffer to map to enable rotate + crop
   # crop with robot position at center
