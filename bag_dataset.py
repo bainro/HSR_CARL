@@ -167,5 +167,4 @@ if __name__ == "__main__":
   
   # === FUTURE FEATURES ===
   # Include history channels (i.e. multiple stacked FPV images)
-  # Generating GMP images using the blueprint. 
-  # ^ Requires scaling offline or as additional script setting.
+  # Generating GMP images using the blueprint images instead of map.pgm 
