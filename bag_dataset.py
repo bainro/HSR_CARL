@@ -8,6 +8,7 @@ import rosbag
 import argparse
 import matplotlib.pyplot as plt
 from pynput import keyboard as kb
+from tf import TransformerROS as tfROS
 from geometry_msgs.msg import PoseStamped
 
 parser = argparse.ArgumentParser()
@@ -38,9 +39,9 @@ if __name__ == "__main__":
   os.system("pkill cart")
   os.system("rosnode kill /loc_bag")
   
-  time.sleep(1)
-  curr_map_to_odom = None
-  curr_odom_to_base = None
+  time.sleep(1) 
+  map_pose = None
+  trans, rot = None, None
   # load rosbag & get a path of length non-significant length
   bag = rosbag.Bag('/tmp/loc.bag')
   path_x, path_y = [], []
@@ -52,18 +53,29 @@ if __name__ == "__main__":
     is_odom_to_base = frame_id != "odom" and child_id != "base_footprint"
     if not (is_map_to_odom or is_odom_to_base):
       continue
-    x = msg.transforms[0].transform.translation.x
-    y = msg.transforms[0].transform.translation.y
-    if is_map_to_odom:
-      curr_map_to_odom = [x, y]
-    else:
-      curr_odom_to_base = [x, y]
-    
+    if is_odom_to_base:
+      t = msg.transforms[0].transform.translation
+      trans = [t.x, t.y, t.z]
+      r = msg.transforms[0].transform.rotation
+      rot = [r.x, r.y, r.z, r.w]
+    # in case the map_to_odom /tf comes first
+    if trans == None:
+      continue
+      
     base_pose = PoseStamped()
     base_pose.header.stamp = rospy.Time.now()
-    transformPose("map", base_pose)
-    path_x.append()
-    path_y.append()
+    base_pose.header.frame_id = "odom"
+    base_pose.child_frame_id = "base_footprint"
+    base_pose.pose.position.x = trans[0]
+    base_pose.pose.position.y = trans[1]
+    base_pose.pose.position.z = trans[2]
+    base_pose.pose.orientation.x = rot[0]
+    base_pose.pose.orientation.y = rot[1]
+    base_pose.pose.orientation.z = rot[2]
+    base_pose.pose.orientation.w = rot[3]
+    map_pose = tfROS.transformPose("map", base_pose)
+    path_x.append(map_pose.pose.position.x)
+    path_y.append(map_pose.pose.position.y)
     # @TODO add back conditional to only calculate small path subset
     # triangle maths
     # path_dist = ((path_x[0] - path_x[-1]) ** 2 + (path_y[0] - path_y[-1]) ** 2) ** 0.5
