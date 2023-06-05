@@ -22,77 +22,33 @@ assert args.map_file != "" and args.bag_file != "", "Must specify path to *.pbst
 if __name__ == "__main__":
   # run a bag in offline localization-only mode (requires a previously learned SLAM map)
   os.system("rosparam set use_sim_time true")
-  # create copy of filtered /tf so they don't accumulate & conflict in the new bag
-  os.system("rosbag filter " + args.bag_file + " /tmp/filtered.bag 'topic != \"/tf\"'")
+  
   # carl_localize.launch expects the map to be here
   os.system("cp " + args.map_file + " /tmp/current.pbstream")
-  os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
+  os.system("roslaunch cartographer_toyota_hsr carl_offline.launch &")
+  # could ask user to provide this, but we have the .pbstream anyway
   os.system("rosrun map_server map_saver --occ 49 --free 40 -f '/tmp/map'")
-  
-  # weird glitch where earliest /tf messages aren't captured by catrographer
-  for i in range(10):
-    # need to play the OG, unfiltered one as we want to capture /tf msgs
-    os.system("rosbag play --clock -u 0.2 --rate 0.2 " + args.bag_file)
-  # save a new bag with robot's pose & the FPV camera images
-  os.system("rosbag record -O '/tmp/loc.bag' /tf /image_proc_resize/image __name:=loc_bag &")
-  os.system("rosbag play --clock --rate 2.5 /tmp/filtered.bag")
   os.system("pkill cart")
-  os.system("rosnode kill /loc_bag")
   
-  time.sleep(1) 
-  map_pose = None
-  trans, rot = None, None
-  # load rosbag & get a path of length non-significant length
-  bag = rosbag.Bag('/tmp/loc.bag')
+  # now run cart in offline mode
+  offline_cmd = "roslaunch cartographer_toyota_hsr carl_offline.launch bag_filenames:='" 
+  offline_cmd = offline_cmd + args.bag_file + "' save_file:='/tmp/test.pbstream' &"
+  os.system(offline_cmd)
+
+  os.system("roslaunch cartographer_toyota_hsr carl_offline.launch &")
+  # os.system("rosservice call /trajectory_query 'trajectory_id: 1' &>/tmp/robot_traj.txt")
+  # os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs' -e 'x:' -e 'y:' | grep -v 'nsecs'")
+  
+  def add_two_ints_client(x, y):
+    rospy.wait_for_service('add_two_ints')
+      try:
+        add_two_ints = rospy.ServiceProxy('add_two_ints', AddTwoInts)
+        resp1 = add_two_ints(x, y)
+        return resp1.sum
+      except rospy.ServiceException as e:
+          print("Service call failed: %s"%e)
+  
   path_x, path_y = [], []
-  for topic, msg, t in bag.read_messages(topics=['/tf']):
-    frame_id = msg.transforms[0].header.frame_id
-    child_id = msg.transforms[0].child_frame_id
-    # robot's pose inferred from the global map & robot's base_footprint frame
-    is_map_to_odom = (frame_id == "map" and child_id == "odom")
-    is_odom_to_base = (frame_id == "odom" and child_id == "base_footprint")
-    
-    if not (is_map_to_odom or is_odom_to_base):
-      continue
-    print("WOOHOO")
-    if is_odom_to_base:
-      print("DBL WOOHOO")
-      t = msg.transforms[0].transform.translation
-      trans = [t.x, t.y, t.z]
-      r = msg.transforms[0].transform.rotation
-      rot = [r.x, r.y, r.z, r.w]
-    # in case the map_to_odom /tf comes first
-    if trans == None:
-      continue
-      
-    base_pose = PoseStamped()
-    base_pose.header.stamp = rospy.Time.now()
-    base_pose.header.frame_id = "odom"
-    base_pose.child_frame_id = "base_footprint"
-    base_pose.pose.position.x = trans[0]
-    base_pose.pose.position.y = trans[1]
-    base_pose.pose.position.z = trans[2]
-    base_pose.pose.orientation.x = rot[0]
-    base_pose.pose.orientation.y = rot[1]
-    base_pose.pose.orientation.z = rot[2]
-    base_pose.pose.orientation.w = rot[3]
-    map_pose = tfROS.transformPose("map", base_pose)
-    path_x.append(map_pose.pose.position.x)
-    path_y.append(map_pose.pose.position.y)
-    # @TODO add back conditional to only calculate small path subset
-    # triangle maths
-    # path_dist = ((path_x[0] - path_x[-1]) ** 2 + (path_y[0] - path_y[-1]) ** 2) ** 0.5
-    #if path_dist > 10:
-    #  break
-  bag.close()
-  
-  # ensure path points start as positive values
-  min_x = min(path_x)
-  if min_x < 0:
-    path_x = [x - min_x for x in path_x]
-  min_y = min(path_y)
-  if min_y < 0:
-    path_y = [y - min_y for y in path_y]
   
   # use keys to translate, rotate, & scale the path
   rot = 0 # rotation factor in radians
