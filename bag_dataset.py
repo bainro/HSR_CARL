@@ -5,8 +5,8 @@ import os
 import time
 import rosbag
 import argparse
-import keyboard as kb
 import matplotlib.pyplot as plt
+from pynput import keyboard as kb
 
 parser = argparse.ArgumentParser()
 _help = "path to previously learned cartographer map (*.pbstream)"
@@ -68,10 +68,7 @@ if __name__ == "__main__":
   scale = 1
   enter_pressed = False
   
-  def enter_cb(e):
-    global enter_pressed
-    enter_pressed = True
-  
+  '''
   def up_cb(e):
     global scale, path_y
     if kb.is_pressed("shift"):
@@ -109,6 +106,30 @@ if __name__ == "__main__":
   kb.on_release_key("left", left_cb)
   kb.on_release_key("right", right_cb)
   kb.on_release_key("enter", enter_cb)
+  '''
+
+  shift_on = False
+  
+  def on_press(key):
+    if key == kb.Key.shift:
+      global shift_on
+      shift_on = True
+  
+  def on_release(key):
+    if key == kb.Key.shift:
+      global shift_on
+      shift_on = False
+    
+    print('{0} released'.format(key))
+    
+    if key == kb.Key.enter:
+        global enter_pressed
+        enter_pressed = True
+        # Stop listener
+        return False
+
+  listener = kb.Listener(on_press=on_press, on_release=on_release)
+  listener.start()
   
   print("use the arrow keys and shift to rotate, translate, & scale the path")
   
