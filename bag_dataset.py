@@ -146,8 +146,8 @@ if __name__ == "__main__":
     # overlay the path on the map 
     plt.scatter(x=trans_path_x, y=trans_path_y, c='r', s=3)
     #if loop_count > 1:
-    plt.draw()
-    #plt.show(block=False)
+    #plt.draw()
+    plt.show(block=False)
     with kb.Listener(on_press=on_press, on_release=on_release) as listener:
       listener.join() 
     #time.sleep(1.0)
