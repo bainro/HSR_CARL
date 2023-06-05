@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser()
 _help = "path to previously learned cartographer map (*.pbstream)"
-parser.add_argument("map_file", type=str, required=True, help=_help)
+parser.add_argument("--map_file", type=str, required=True, help=_help)
 _help = "path to previously recorded rosbag"
-parser.add_argument("bag_file", type=str, required=True, help=_help)
+parser.add_argument("--bag_file", type=str, required=True, help=_help)
 args = parser.parse_args()
 
 if __name__ == "__main__":
