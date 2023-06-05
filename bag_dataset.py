@@ -46,11 +46,14 @@ if __name__ == "__main__":
     child_id = msg.transforms[0].child_frame_id
     # robot's pose inferred from transformations between the global map & odom frame
     if frame_id != "map" and child_id != "odom":
-        continue
+      continue
+    else:
+      print(msg)
     path_x.append(msg.transforms[0].transform.translation.x)
     path_y.append(msg.transforms[0].transform.translation.y)
     # triangle maths
     path_dist = ((path_x[0] - path_x[-1]) ** 2 + (path_y[0] - path_y[-1]) ** 2) ** 0.5
+    # @TODO add back conditional to only calculate path subset
     #if path_dist > 10:
     #  break
   bag.close()
