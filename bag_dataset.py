@@ -31,6 +31,7 @@ if __name__ == "__main__":
   # save a new bag with robot's pose & the FPV camera images
   os.system("rosbag record -o /tmp/loc.bag /tf /image_proc_resize/image __name:=loc_bag &")
   os.system("rosbag play --clock --rate 2.5 /tmp/filtered.bag")
+  os.system("pkill cart")
   os.system("rosnode kill /loc_bag")
   
   # load the picture of the map
