@@ -51,7 +51,8 @@ if __name__ == "__main__":
     path_y.append(y)
     # triangle maths
     path_dist = ((path_x[0] - path_x[-1]) ** 2 + (path_y[0] - path_y[-1]) ** 2) ** 0.5
-    if path_dist > 10:
+    if path_dist > 10 or len(path_x) > 10:
+      print("@TODO remove 2nd conditional for dbg")
       break
   bag.close()
   
