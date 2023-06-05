@@ -5,6 +5,7 @@ import os
 import time
 import rosbag
 import argparse
+import keyboard as kb
 import matplotlib.pyplot as plt
 
 parser = argparse.ArgumentParser()
@@ -62,16 +63,70 @@ if __name__ == "__main__":
   if min_y < 0:
     path_y = [y - min_y for y in path_y]
   
+  # use keys to translate, rotate, & scale the path
+  rot = 0 # rotation factor in radians
+  scale = 1
+  enter_pressed = False
+  
+  def enter_cb(e):
+    global enter_pressed
+    enter_pressed = True
+  
+  def up_cb(e):
+    global scale, path_y
+    if kb.is_pressed("shift"):
+      scale = scale + 0.2
+    else:
+      # shift points up
+      path_y = [y - 1 for y in path_y]
+      
+  def down_cb(e):
+    global scale, path_y
+    if kb.is_pressed("shift"):
+      scale = scale - 0.2
+    else:
+      # shift points down
+      path_y = [y + 1 for y in path_y]    
+      
+  def left_cb(e):
+    global rot, path_x
+    if kb.is_pressed("shift"):
+      rot = rot + 0.2
+    else:
+      # shift points to the left
+      path_x = [x - 1 for x in path_x]
+      
+  def right_cb(e):
+    global rot, path_y
+    if kb.is_pressed("shift"):
+      rot = rot - 0.2
+    else:
+      # shift points to the right
+      path_x = [x + 1 for x in path_x]        
+    
+  kb.on_release_key("up", up_cb)
+  kb.on_release_key("down", down_cb)
+  kb.on_release_key("left", left_cb)
+  kb.on_release_key("right", right_cb)
+  kb.on_release_key("enter", enter_cb)
+  
+  print("use the arrow keys and shift to rotate, translate, & scale the path")
+  
   # load the picture of the map
   map_img = None
   with open("/tmp/map.pgm", 'rb') as pgmf:
     map_img = plt.imread(pgmf)
-  map_plot = plt.imshow(map_img)
-  # overlay the path on the map 
-  plt.scatter(x=path_x, y=path_y, c='r', s=3)
-  plt.show()
+    
+  while not enter_pressed:
+    plt.clf()
+    map_plot = plt.imshow(map_img)
+    trans_path_x = [x * scale * math.sin(rot) for x in path_x]
+    trans_path_y = [y * scale * math.cos(rot) for y in path_y]
+    # overlay the path on the map 
+    plt.scatter(x=trans_path_x, y=trans_path_y, c='r', s=3)
+    plt.show(blocking=False)
+    time.sleep(0.1)
   
-  # use keys to translate, rotate, & scale the path
   # add buffer to map to enable rotate + crop
   # crop with robot position at center
   # rotate, then crop to final size
