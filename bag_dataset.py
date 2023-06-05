@@ -96,14 +96,14 @@ if __name__ == "__main__":
       
   def right_cb(shift):
     global rot, path_y
-    if kb.is_pressed("shift"):
+    if shift:
       rot = rot - 0.2
     else:
       # translate points to the right
       path_x = [x + 1 for x in path_x]        
   
-  def on_press(key):
-    if key == kb.Key.shift:
+  def on_press(shift):
+    if shift:
       global shift_on
       shift_on = True
   
@@ -112,13 +112,13 @@ if __name__ == "__main__":
     global shift_on
     if key == kb.Key.shift:
       shift_on = False
-    elif key == kb.key.left:
+    elif key == kb.Key.left:
       left_cb(shift_on)
-    elif key == kb.key.right:
+    elif key == kb.Key.right:
       right_cb(shift_on)
-    elif key == kb.key.down:
+    elif key == kb.Key.down:
       down_cb(shift_on)
-    elif key == kb.key.up:
+    elif key == kb.Key.up:
       up_cb(shift_on)
     elif key == kb.Key.enter:
       global enter_pressed
