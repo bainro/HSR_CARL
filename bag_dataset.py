@@ -123,11 +123,11 @@ if __name__ == "__main__":
     elif key == kb.Key.enter:
       global enter_pressed
       enter_pressed = True
-      # Stop listener
-      return False
+      
+    return False
 
-  listener = kb.Listener(on_press=on_press, on_release=on_release)
-  listener.start()
+  #listener = kb.Listener(on_press=on_press, on_release=on_release)
+  #listener.start()
   
   print("use the arrow keys and shift to rotate, translate, & scale the path")
   
@@ -145,11 +145,12 @@ if __name__ == "__main__":
     trans_path_y = [y * scale * math.cos(rot) for y in path_y]
     # overlay the path on the map 
     plt.scatter(x=trans_path_x, y=trans_path_y, c='r', s=3)
-    if loop_count > 1:
-      plt.draw()
-    else:
-      plt.show(block=False)
-    time.sleep(1.0)
+    #if loop_count > 1:
+    plt.draw()
+    #plt.show(block=False)
+    listener = kb.Listener(on_press=on_press, on_release=on_release)
+    listener.join()  
+    #time.sleep(1.0)
   
   # add buffer to map to enable rotate + crop
   # crop with robot position at center
