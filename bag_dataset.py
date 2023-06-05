@@ -22,7 +22,7 @@ if __name__ == "__main__":
   # carl_localize.launch expects the map to be here
   os.system("cp " + args.map_file + " /tmp/current.pbstream")
   os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
-  os.system("rosrun map_server map_saver --occ 49 --free 40 -f '/tmp/map.pgm'")
+  os.system("rosrun map_server map_saver --occ 49 --free 40 -f '/tmp/map'")
   
   # weird glitch where earliest /tf messages aren't captured by catrographer
   for i in range(10):
