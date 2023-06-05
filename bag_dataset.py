@@ -36,18 +36,18 @@ if __name__ == "__main__":
   os.system(offline_cmd)
 
   os.system("roslaunch cartographer_toyota_hsr carl_offline.launch &")
-  # os.system("rosservice call /trajectory_query 'trajectory_id: 1' &>/tmp/robot_traj.txt")
-  # os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs' -e 'x:' -e 'y:' | grep -v 'nsecs'")
+  os.system("rosservice call /trajectory_query 'trajectory_id: 1' &>/tmp/robot_traj.txt")
+  # get just the pose position (x,y) and the corresponding timestamp (secs)
+  os.system("grep -C4 position /tmp/traj.txt | grep -e 'x:' &>/tmp/x.log")
+  os.system("grep -C4 position /tmp/traj.txt | grep -e 'y:' &>/tmp/y.log")
+  os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs' | grep -v 'nsecs' &>/tmp/secs.log")
   
-  def add_two_ints_client(x, y):
-    rospy.wait_for_service('add_two_ints')
-      try:
-        add_two_ints = rospy.ServiceProxy('add_two_ints', AddTwoInts)
-        return resp1.sum
-      except rospy.ServiceException as e:
-          print("Service call failed: %s"%e)
+  # read the 3 files into separate lists
   
   path_x, path_y = [], []
+  with open('/tmp/x.log', 'r') as x_file:
+    lines = x_file.readlines()
+    print(lines[0]);exit()
   
   # use keys to translate, rotate, & scale the path
   rot = 0 # rotation factor in radians
