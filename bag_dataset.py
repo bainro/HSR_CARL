@@ -100,12 +100,6 @@ if __name__ == "__main__":
     else:
       # shift points to the right
       path_x = [x + 1 for x in path_x]        
-    
-  kb.on_release_key("up", up_cb)
-  kb.on_release_key("down", down_cb)
-  kb.on_release_key("left", left_cb)
-  kb.on_release_key("right", right_cb)
-  kb.on_release_key("enter", enter_cb)
   '''
 
   shift_on = False
