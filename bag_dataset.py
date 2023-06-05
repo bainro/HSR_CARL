@@ -149,7 +149,7 @@ if __name__ == "__main__":
       plt.draw()
     else:
       plt.show(block=False)
-    time.sleep(0.1)
+    time.sleep(1.0)
   
   # add buffer to map to enable rotate + crop
   # crop with robot position at center
