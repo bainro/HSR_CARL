@@ -38,19 +38,27 @@ if __name__ == "__main__":
   os.system("rosnode kill /loc_bag")
   
   time.sleep(1)
+  curr_map_to_odom = None
+  curr_odom_to_base = None
   # load rosbag & get a path of length non-significant length
   bag = rosbag.Bag('/tmp/loc.bag')
   path_x, path_y = [], []
   for topic, msg, t in bag.read_messages(topics=['/tf']):
     frame_id = msg.transforms[0].header.frame_id
     child_id = msg.transforms[0].child_frame_id
-    # robot's pose inferred from transformations between the global map & odom frame
-    if frame_id != "map" and child_id != "odom":
+    # robot's pose inferred from the global map & robot's base_footprint frame
+    is_map_to_odom = frame_id != "map" and child_id != "odom"
+    is_odom_to_base = frame_id != "odom" and child_id != "base_footprint"
+    if not (is_map_to_odom or is_odom_to_base):
       continue
+    x = msg.transforms[0].transform.translation.x
+    y = msg.transforms[0].transform.translation.y
+    if is_map_to_odom:
+      curr_map_to_odom = [x, y]
     else:
-      print(msg)
-    path_x.append(msg.transforms[0].transform.translation.x)
-    path_y.append(msg.transforms[0].transform.translation.y)
+      curr_odom_to_base = [x, y]
+    path_x.append()
+    path_y.append()
     # @TODO add back conditional to only calculate small path subset
     # triangle maths
     # path_dist = ((path_x[0] - path_x[-1]) ** 2 + (path_y[0] - path_y[-1]) ** 2) ** 0.5
