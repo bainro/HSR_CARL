@@ -40,9 +40,10 @@ if __name__ == "__main__":
   bag = rosbag.Bag('/tmp/loc.bag')
   path_x, path_y = [], []
   for topic, msg, t in bag.read_messages(topics=['/tf']):
-    # print(msg)
+    frame_id = msg.transforms[0].header.frame_id
+    child_id = msg.transforms[0].child_frame_id
     # robot's pose inferred from transformations between the global map & odom frame
-    if msg.header.frame_id != "map" and msg.child_frame_id != "odom":
+    if frame_id != "map" and child_id != "odom":
         continue
     path_x.append(msg.transform.translation.x)
     path_y.append(msg.transform.translation.y)
