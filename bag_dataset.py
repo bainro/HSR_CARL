@@ -73,7 +73,7 @@ if __name__ == "__main__":
   def up_cb(shift):
     global scale, path_y
     if shift:
-      scale = scale + 0.2
+      scale = scale + 2
     else:
       # translate points up
       path_y = [y - 1 for y in path_y]
@@ -81,7 +81,7 @@ if __name__ == "__main__":
   def down_cb(shift):
     global scale, path_y
     if shift:
-      scale = scale - 0.2
+      scale = scale - 2
     else:
       # translate points down
       path_y = [y + 1 for y in path_y]    
@@ -102,8 +102,8 @@ if __name__ == "__main__":
       # translate points to the right
       path_x = [x + 1 for x in path_x]        
   
-  def on_press(shift):
-    if shift:
+  def on_press(key):
+    if key == kb.Key.shift:
       global shift_on
       shift_on = True
   
@@ -140,7 +140,7 @@ if __name__ == "__main__":
   while not enter_pressed:
     loop_count = loop_count + 1
     plt.clf()
-    map_plot = plt.imshow(map_img)
+    plt.imshow(map_img)
     trans_path_x = [x * scale * math.sin(rot) for x in path_x]
     trans_path_y = [y * scale * math.cos(rot) for y in path_y]
     # overlay the path on the map 
