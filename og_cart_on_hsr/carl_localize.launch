@@ -21,7 +21,7 @@
       type="cartographer_node" args="
           -configuration_directory $(find cartographer_toyota_hsr)/configuration_files
           -configuration_basename carl_localize.lua
-          -load_state_filename /home/administrator/Desktop/smoked_glass.pbstream"
+          -load_state_filename /tmp/current.pbstream"
       output="screen">
     <remap from="scan" to="hsrb/base_scan" />
     <remap from="odom" to="hsrb/odom" />
