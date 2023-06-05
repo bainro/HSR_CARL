@@ -51,9 +51,9 @@ if __name__ == "__main__":
       print(msg)
     path_x.append(msg.transforms[0].transform.translation.x)
     path_y.append(msg.transforms[0].transform.translation.y)
+    # @TODO add back conditional to only calculate small path subset
     # triangle maths
-    path_dist = ((path_x[0] - path_x[-1]) ** 2 + (path_y[0] - path_y[-1]) ** 2) ** 0.5
-    # @TODO add back conditional to only calculate path subset
+    # path_dist = ((path_x[0] - path_x[-1]) ** 2 + (path_y[0] - path_y[-1]) ** 2) ** 0.5
     #if path_dist > 10:
     #  break
   bag.close()
@@ -155,11 +155,9 @@ if __name__ == "__main__":
   # restart and loop over the whole bag
   bag = rosbag.Bag('/tmp/loc.bag')
   path_x, path_y = [], []
-  for topic, msg, t in bag.read_messages(topics=['/tf']):
-    # print(msg)
-    x,y = 0,0
-    path_x.append(x)
-    path_y.append(y)
+  for topic, msg, t in bag.read_messages(topics=['/tf', '/image_proc_resize/image']):
+    path_x.append(0)
+    path_y.append(0)
   bag.close()
   
   # save in the format Tim's already using (i.e. csv)
