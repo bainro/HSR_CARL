@@ -8,6 +8,7 @@ import rosbag
 import argparse
 import matplotlib.pyplot as plt
 from pynput import keyboard as kb
+from geometry_msgs.msg import PoseStamped
 
 parser = argparse.ArgumentParser()
 _help = "path to previously learned cartographer map (*.pbstream)"
@@ -57,6 +58,10 @@ if __name__ == "__main__":
       curr_map_to_odom = [x, y]
     else:
       curr_odom_to_base = [x, y]
+    
+    base_pose = PoseStamped()
+    base_pose.header.stamp = rospy.Time.now()
+    transformPose("map", base_pose)
     path_x.append()
     path_y.append()
     # @TODO add back conditional to only calculate small path subset
