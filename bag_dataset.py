@@ -49,8 +49,8 @@ if __name__ == "__main__":
     frame_id = msg.transforms[0].header.frame_id
     child_id = msg.transforms[0].child_frame_id
     # robot's pose inferred from the global map & robot's base_footprint frame
-    is_map_to_odom = frame_id != "map" and child_id != "odom"
-    is_odom_to_base = frame_id != "odom" and child_id != "base_footprint"
+    is_map_to_odom = (frame_id == "map" and child_id == "odom")
+    is_odom_to_base = (frame_id == "odom" and child_id == "base_footprint")
     
     if not (is_map_to_odom or is_odom_to_base):
       continue
