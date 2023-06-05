@@ -39,13 +39,13 @@ if __name__ == "__main__":
   # load rosbag & get a path of length non-significant length
   bag = rosbag.Bag('/tmp/loc.bag')
   path_x, path_y = [], []
-  # @TODO filter only transforms between map & odom
-  print("@TODO filter only transforms between map & odom")
   for topic, msg, t in bag.read_messages(topics=['/tf']):
-    print(msg)
-    x,y = 10,10 # dbg
-    path_x.append(x)
-    path_y.append(y)
+    # print(msg)
+    # robot's pose inferred from transformations between the global map & odom frame
+    if msg.header.frame_id != "map" and msg.child_frame_id != "odom":
+        continue
+    path_x.append(msg.transform.translation.x)
+    path_y.append(msg.transform.translation.y)
     # triangle maths
     path_dist = ((path_x[0] - path_x[-1]) ** 2 + (path_y[0] - path_y[-1]) ** 2) ** 0.5
     if path_dist > 10 or len(path_x) > 10:
