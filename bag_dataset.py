@@ -12,10 +12,11 @@ parser.add_argument("--map_file", type=str, required=True, help=_help)
 _help = "path to previously recorded rosbag"
 parser.add_argument("--bag_file", type=str, required=True, help=_help)
 args = parser.parse_args()
+assert args.map_file != "" and args.bag_file != "", "Must specify path to *.pbstream & *.bag files!"
 
 if __name__ == "__main__":
   # run a bag in offline localization-only mode (requires a previously learned SLAM map)
-  os.system("rosparam use_sim_time true")
+  os.system("rosparam set use_sim_time true")
   # create copy of filtered /tf so they don't accumulate & conflict in the new bag
   os.system("rosbag filter " + args.bag_file + " /tmp/filtered.bag 'topic != \"/tf\"'")
   # carl_localize.launch expects the map to be here
