@@ -3,6 +3,7 @@ Coverts a rosbag into a dataset for Perspective Transorming VAE(s)
 '''
 import os
 import time
+import math
 import rosbag
 import argparse
 import matplotlib.pyplot as plt
