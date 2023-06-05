@@ -136,14 +136,6 @@ if __name__ == "__main__":
   # rotate, then crop to final size
   # draw robot's pose (start simple, like an arrow)
   
-  # restart and loop over the whole bag
-  bag = rosbag.Bag('/tmp/loc.bag')
-  path_x, path_y = [], []
-  for topic, msg, t in bag.read_messages(topics=['/tf', '/image_proc_resize/image']):
-    path_x.append(0)
-    path_y.append(0)
-  bag.close()
-  
   # save in the format Tim's already using (i.e. csv)
   # save cropped image of map & resized camera image
   
