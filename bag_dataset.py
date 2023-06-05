@@ -73,7 +73,7 @@ if __name__ == "__main__":
   bag = rosbag.Bag('/tmp/loc.bag')
   path_x, path_y = [], []
   for topic, msg, t in bag.read_messages(topics=['/tf']):
-    print(msg)
+    # print(msg)
     x,y = 0,0
     path_x.append(x)
     path_y.append(y)
