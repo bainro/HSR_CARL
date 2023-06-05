@@ -54,6 +54,14 @@ if __name__ == "__main__":
       break
   bag.close()
   
+  # ensure path points start as positive values
+  min_x = min(path_x)
+  if min_x < 0:
+    path_x = [x - min_x for x in path_x]
+  min_y = min(path_y)
+  if min_y < 0:
+    path_y = [y - min_y for y in path_y]
+  
   # load the picture of the map
   map_img = None
   with open("/tmp/map.pgm", 'rb') as pgmf:
