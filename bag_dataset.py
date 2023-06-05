@@ -19,15 +19,17 @@ if __name__ == "__main__":
   os.system("cp " + args.map_file + " /tmp/current.pbstream")
   os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
   
-  ### @TODO create copy of filtered /tf so they don't accumulate?
-  ### @TODO use args.bag_file!
+  # create copy of filtered /tf so they don't accumulate & conflict in the new bag
+  os.system("rosbag filter " + args.bag_file + " /tmp/filtered.bag 'topic != \"/tf\"'")
   
   # weird glitch where earliest /tf messages aren't captured by catrographer
   for i in range(10):
-    os.system("rosbag play --clock -u 0.2 --rate 0.2 /tmp/test.bag")
-  os.system("rosbag play --clock --rate 2.5 /tmp/test.bag")
+    # need to play the OG, unfiltered one as we want to capture /tf msgs
+    os.system("rosbag play --clock -u 0.2 --rate 0.2 " + args.bag_file)
   # save a new bag with robot's pose & the FPV camera images
-  os.system("rosbag record /tf /image_proc_resize/image")
+  os.system("rosbag record /tf /image_proc_resize/image __name:=loc_bag &")
+  os.system("rosbag play --clock --rate 2.5 /tmp/filtered.bag")
+  os.system("rosnode kill /loc_bag")
   
   # load map.pgm from sys.argv
   # load rosbag from sys.argv
