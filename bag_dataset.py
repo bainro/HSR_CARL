@@ -2,6 +2,7 @@
 Coverts a rosbag into a dataset for Perspective Transorming VAE(s)
 '''
 import os
+import time
 import rosbag
 import argparse
 import matplotlib.pyplot as plt
@@ -34,7 +35,7 @@ if __name__ == "__main__":
   os.system("pkill cart")
   os.system("rosnode kill /loc_bag")
   
-  import time; time.sleep(1)
+  time.sleep(1)
   # load rosbag & get a path of length non-significant length
   bag = rosbag.Bag('/tmp/loc.bag')
   path_x, path_y = [], []
