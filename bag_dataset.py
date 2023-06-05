@@ -2,7 +2,7 @@
 Coverts a rosbag into a dataset for Perspective Transorming VAE(s)
 '''
 import os
-import rosbag
+import rosbage
 import argparse
 import matplotlib.pyplot as plt
 
@@ -42,15 +42,21 @@ if __name__ == "__main__":
   # load rosbag & get a path of length non-significant length
   bag = rosbag.Bag('/tmp/loc.bag')
   path_x, path_y = [], []
+  # @TODO filter only transforms between map & odom
+  print("@TODO filter only transforms between map & odom")
   for topic, msg, t in bag.read_messages(topics=['/tf']):
     print(msg)
-    x,y = 0,0
+    x,y = 10,10 # dbg
     path_x.append(x)
     path_y.append(y)
+    # triangle maths
+    path_dist = ((path_x[0] - path_x[-1]) ** 2 + (path_y[0] - path_y[-1]) ** 2) ** 0.5
+    if path_dist > 10:
+      break
   bag.close()
   
   # overlay this path on the map 
-  plt.scatter(x=path_x, y=path_y, c='r', s=40)
+  plt.scatter(x=path_x, y=path_y, c='r', s=3)
   # use keys to translate, rotate, & scale the path
   # add buffer to map to enable rotate + crop
   # crop with robot position at center
