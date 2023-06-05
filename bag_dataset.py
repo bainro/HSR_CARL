@@ -109,18 +109,22 @@ if __name__ == "__main__":
   
   def on_release(key):
     print('{0} released'.format(key))
+    global shift_on
     if key == kb.Key.shift:
-      global shift_on
       shift_on = False
-    elif :
-    elif :
-    elif :
-    elif :
+    elif key == kb.key.left:
+      left_cb(shift_on)
+    elif key == kb.key.right:
+      right_cb(shift_on)
+    elif key == kb.key.down:
+      down_cb(shift_on)
+    elif key == kb.key.up:
+      up_cb(shift_on)
     elif key == kb.Key.enter:
-        global enter_pressed
-        enter_pressed = True
-        # Stop listener
-        return False
+      global enter_pressed
+      enter_pressed = True
+      # Stop listener
+      return False
 
   listener = kb.Listener(on_press=on_press, on_release=on_release)
   listener.start()
