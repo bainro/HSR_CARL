@@ -2,6 +2,7 @@
 Coverts a rosbag into a dataset for Perspective Transorming VAE(s)
 '''
 import os
+import time
 import argparse
 import rosbag
 
@@ -18,6 +19,7 @@ if __name__ == "__main__":
   # carl_localize.launch expects the map to be here
   os.system("cp " + args.map_file + " /tmp/current.pbstream")
   os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
+  os.system("rosrun map_server map_saver --occ 49 --free 40 -f '/tmp/map.pgm'")
   
   # create copy of filtered /tf so they don't accumulate & conflict in the new bag
   os.system("rosbag filter " + args.bag_file + " /tmp/filtered.bag 'topic != \"/tf\"'")
@@ -27,9 +29,12 @@ if __name__ == "__main__":
     # need to play the OG, unfiltered one as we want to capture /tf msgs
     os.system("rosbag play --clock -u 0.2 --rate 0.2 " + args.bag_file)
   # save a new bag with robot's pose & the FPV camera images
-  os.system("rosbag record /tf /image_proc_resize/image __name:=loc_bag &")
+  os.system("rosbag record -o /tmp/loc.bag /tf /image_proc_resize/image __name:=loc_bag &")
   os.system("rosbag play --clock --rate 2.5 /tmp/filtered.bag")
   os.system("rosnode kill /loc_bag")
+  
+  # print("sleeping for a bit to ensure cartographer has enough time to finish")
+  # finish_traj & save pbs & pgm 
   
   # load map.pgm from sys.argv
   # load rosbag from sys.argv
