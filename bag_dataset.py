@@ -2,7 +2,7 @@
 Coverts a rosbag into a dataset for Perspective Transorming VAE(s)
 '''
 import os
-import rosbage
+import rosbag
 import argparse
 import matplotlib.pyplot as plt
 
