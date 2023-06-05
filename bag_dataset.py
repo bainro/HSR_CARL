@@ -148,8 +148,8 @@ if __name__ == "__main__":
     #if loop_count > 1:
     plt.draw()
     #plt.show(block=False)
-    listener = kb.Listener(on_press=on_press, on_release=on_release)
-    listener.join()  
+    with kb.Listener(on_press=on_press, on_release=on_release) as listener:
+      listener.join() 
     #time.sleep(1.0)
   
   # add buffer to map to enable rotate + crop
