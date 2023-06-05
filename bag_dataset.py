@@ -148,6 +148,7 @@ if __name__ == "__main__":
     #if loop_count > 1:
     #plt.draw()
     plt.show(block=False)
+    plt.pause(0.01)
     with kb.Listener(on_press=on_press, on_release=on_release) as listener:
       listener.join() 
     #time.sleep(1.0)
