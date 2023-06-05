@@ -95,7 +95,7 @@ if __name__ == "__main__":
       path_x = [x - 1 for x in path_x]
       
   def right_cb(shift):
-    global rot, path_y
+    global rot, path_x
     if shift:
       rot = rot - 0.2
     else:
