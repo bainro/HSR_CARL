@@ -34,13 +34,6 @@ if __name__ == "__main__":
   os.system("pkill cart")
   os.system("rosnode kill /loc_bag")
   
-  # load the picture of the map
-  map_img = None
-  with open("/tmp/map.pgm", 'rb') as pgmf:
-    map_img = plt.imread(pgmf)
-  map_plot = plt.imshow(map_img)
-  plt.show()
-  
   # load rosbag & get a path of length non-significant length
   bag = rosbag.Bag('/tmp/loc.bag')
   path_x, path_y = [], []
@@ -58,8 +51,15 @@ if __name__ == "__main__":
       break
   bag.close()
   
-  # overlay this path on the map 
+  # load the picture of the map
+  map_img = None
+  with open("/tmp/map.pgm", 'rb') as pgmf:
+    map_img = plt.imread(pgmf)
+  map_plot = plt.imshow(map_img)
+  # overlay the path on the map 
   plt.scatter(x=path_x, y=path_y, c='r', s=3)
+  plt.show()
+  
   # use keys to translate, rotate, & scale the path
   # add buffer to map to enable rotate + crop
   # crop with robot position at center
