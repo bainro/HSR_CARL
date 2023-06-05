@@ -51,9 +51,12 @@ if __name__ == "__main__":
     # robot's pose inferred from the global map & robot's base_footprint frame
     is_map_to_odom = frame_id != "map" and child_id != "odom"
     is_odom_to_base = frame_id != "odom" and child_id != "base_footprint"
+    
     if not (is_map_to_odom or is_odom_to_base):
       continue
+    print("WOOHOO")
     if is_odom_to_base:
+      print("DBL WOOHOO")
       t = msg.transforms[0].transform.translation
       trans = [t.x, t.y, t.z]
       r = msg.transforms[0].transform.rotation
