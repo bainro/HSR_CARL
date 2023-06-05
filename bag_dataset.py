@@ -29,7 +29,7 @@ if __name__ == "__main__":
     # need to play the OG, unfiltered one as we want to capture /tf msgs
     os.system("rosbag play --clock -u 0.2 --rate 0.2 " + args.bag_file)
   # save a new bag with robot's pose & the FPV camera images
-  os.system("rosbag record -o /tmp/loc.bag /tf /image_proc_resize/image __name:=loc_bag &")
+  os.system("rosbag record -O '/tmp/loc.bag' /tf /image_proc_resize/image __name:=loc_bag &")
   os.system("rosbag play --clock --rate 2.5 /tmp/filtered.bag")
   os.system("pkill cart")
   os.system("rosnode kill /loc_bag")
