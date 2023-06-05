@@ -4,10 +4,13 @@ Coverts a rosbag into a dataset for Perspective Transorming VAE(s)
 import rosbag
 
 if __name__ == "__main__":
+  # run a bag in offline localization-only mode (requires a previously learned SLAM map)
+  # save a new bag with robot's pose & the FPV camera images
+  
   # load map.pgm from sys.argv
   # load rosbag from sys.argv
   bag = rosbag.Bag('/tmp/test.bag')
-  for topic, msg, t in bag.read_messages(topics=['chatter', 'numbers']):
+  for topic, msg, t in bag.read_messages(topics=['image_proc_resize/image', '/tf']):
     print(msg)
   bag.close()
   # get a path of length X
