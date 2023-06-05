@@ -51,9 +51,8 @@ if __name__ == "__main__":
     path_y.append(msg.transforms[0].transform.translation.y)
     # triangle maths
     path_dist = ((path_x[0] - path_x[-1]) ** 2 + (path_y[0] - path_y[-1]) ** 2) ** 0.5
-    if path_dist > 10 or len(path_x) > 10:
-      print("@TODO remove 2nd conditional for dbg")
-      break
+    #if path_dist > 10:
+    #  break
   bag.close()
   
   # ensure path points start as positive values
@@ -125,9 +124,6 @@ if __name__ == "__main__":
       enter_pressed = True
       
     return False
-
-  #listener = kb.Listener(on_press=on_press, on_release=on_release)
-  #listener.start()
   
   print("use the arrow keys and shift to rotate, translate, & scale the path")
   
