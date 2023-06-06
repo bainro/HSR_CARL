@@ -39,9 +39,9 @@ if __name__ == "__main__":
   os.system("rosservice call /trajectory_query 'trajectory_id: 1' &>/tmp/robot_traj.txt")
   os.system("pkill cart")
   # get just the pose position (x,y) and the corresponding timestamp (secs)
-  os.system("grep -C4 position /tmp/traj.txt | grep -e 'x:' &>/tmp/x.log")
-  os.system("grep -C4 position /tmp/traj.txt | grep -e 'y:' &>/tmp/y.log")
-  os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs' | grep -v 'nsecs' &>/tmp/secs.log")
+  os.system("grep -C4 position /tmp/traj.txt | grep -e 'x:' > /tmp/x.log")
+  os.system("grep -C4 position /tmp/traj.txt | grep -e 'y:'  >/tmp/y.log")
+  os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs' | grep -v 'nsecs' > /tmp/secs.log")
   
   # read the 3 files into separate lists
   
