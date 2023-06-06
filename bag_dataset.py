@@ -61,7 +61,7 @@ if __name__ == "__main__":
   
   for l in lines:
     l = l.strip()
-    path_y.append(float(l[3:]))
+    path_y.append(-1 * float(l[3:]))
    
   with open('/tmp/secs.log', 'r') as secs_file:
     lines = secs_file.readlines()
