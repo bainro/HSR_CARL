@@ -3,13 +3,10 @@ Coverts a rosbag into a dataset for Perspective Transorming VAE(s)
 '''
 import os
 import time
-import math
 import rosbag
 import argparse
 import matplotlib.pyplot as plt
 from pynput import keyboard as kb
-from tf import TransformerROS as tfROS
-from geometry_msgs.msg import PoseStamped
 
 parser = argparse.ArgumentParser()
 _help = "path to previously learned cartographer map (*.pbstream)"
@@ -23,6 +20,7 @@ if __name__ == "__main__":
   # run a bag in offline localization-only mode (requires a previously learned SLAM map)
   os.system("rosparam set use_sim_time true")
   
+  os.system("pkill cart")
   # carl_localize.launch expects the map to be here
   os.system("cp " + args.map_file + " /tmp/current.pbstream")
   os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
@@ -36,6 +34,7 @@ if __name__ == "__main__":
   os.system(offline_cmd)
 
   os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
+  time.sleep(3)
   os.system("rosservice call /trajectory_query 'trajectory_id: 1' &>/tmp/robot_traj.txt")
   os.system("pkill cart")
   # get just the pose position (x,y) and the corresponding timestamp (secs)
