@@ -90,34 +90,34 @@ if __name__ == "__main__":
   def up_cb(shift):
     global scale, path_y
     if shift:
-      scale = scale + 2
+      scale = scale + 0.1
     else:
       # translate points up
-      path_y = [y - 10 for y in path_y]
+      path_y = [y - 1 for y in path_y]
       
   def down_cb(shift):
     global scale, path_y
     if shift:
-      scale = scale - 2
+      scale = scale - 0.1
     else:
       # translate points down
-      path_y = [y + 10 for y in path_y]    
+      path_y = [y + 1 for y in path_y]    
       
   def left_cb(shift):
     global rot, path_x
     if shift:
-      rot = rot + 0.2
+      rot = rot + 0.05
     else:
       # translate points to the left
-      path_x = [x - 10 for x in path_x]
+      path_x = [x - 1 for x in path_x]
       
   def right_cb(shift):
     global rot, path_x
     if shift:
-      rot = rot - 0.2
+      rot = rot - 0.05
     else:
       # translate points to the right
-      path_x = [x + 10 for x in path_x]        
+      path_x = [x + 1 for x in path_x]        
   
   def on_press(key):
     if key == kb.Key.shift:
@@ -153,8 +153,12 @@ if __name__ == "__main__":
   while not enter_pressed:
     plt.clf()
     plt.imshow(map_img)
-    trans_path_x = [x * scale * math.sin(rot) for x in path_x]
-    trans_path_y = [y * scale * math.cos(rot) for y in path_y]
+    trans_path_x, trans_path_y = [], []
+    for i in range(len(path_x)):
+      x = path_x[i] * math.cos(rot) - path_y[i] * math.sin(rot)
+      trans_path_x.append(x * scale)
+      y = path_y[i] * math.cos(rot) + path_x[i] * math.sin(rot)
+      trans_path_y.append(y * scale)
     # overlay the path on the map 
     plt.scatter(x=trans_path_x, y=trans_path_y, c='r', s=3)
     plt.show(block=False)
