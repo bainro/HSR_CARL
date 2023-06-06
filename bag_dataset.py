@@ -90,34 +90,34 @@ if __name__ == "__main__":
   def up_cb(shift):
     global scale, path_y
     if shift:
-      scale = scale + 0.1
+      scale = scale + 0.05
     else:
       # translate points up
-      path_y = [y - 1 for y in path_y]
+      path_y = [y - .1 for y in path_y]
       
   def down_cb(shift):
     global scale, path_y
     if shift:
-      scale = scale - 0.1
+      scale = scale - 0.05
     else:
       # translate points down
-      path_y = [y + 1 for y in path_y]    
+      path_y = [y + .1 for y in path_y]    
       
   def left_cb(shift):
     global rot, path_x
     if shift:
-      rot = rot + 0.05
+      rot = rot + 0.01
     else:
       # translate points to the left
-      path_x = [x - 1 for x in path_x]
+      path_x = [x - .1 for x in path_x]
       
   def right_cb(shift):
     global rot, path_x
     if shift:
-      rot = rot - 0.05
+      rot = rot - 0.01
     else:
       # translate points to the right
-      path_x = [x + 1 for x in path_x]        
+      path_x = [x + .1 for x in path_x]        
   
   def on_press(key):
     if key == kb.Key.shift:
@@ -145,9 +145,15 @@ if __name__ == "__main__":
   
   print("use the arrow keys and shift to rotate, translate, & scale the path")
   
+  print("specific settings for SBSG 2nd floor")
+  for i in range(len(path_x)):
+    path_x[i] = path_x[i] + 50
+    path_y[i] = path_y[i] + 50
+  
   # load the picture of the map
   map_img = None
-  with open("/tmp/map.pgm", 'rb') as pgmf:
+  # with open("/tmp/map.pgm", 'rb') as pgmf:
+  with open("/tmp/test.png", 'rb') as pgmf:
     map_img = plt.imread(pgmf)
     
   print("path_x[0] start: ", path_x[0])  
