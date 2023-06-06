@@ -47,7 +47,8 @@ if __name__ == "__main__":
   
   # read the 3 files into separate lists
   
-  path_x, path_y, path_secs = [], [], []
+  path_x, path_y = [], []
+  path_secs, path_nsecs = [], []
   with open('/tmp/x.log', 'r') as x_file:
     lines = x_file.readlines()
   
