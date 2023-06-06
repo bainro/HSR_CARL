@@ -161,7 +161,7 @@ if __name__ == "__main__":
     
   print("path_x[0] start: ", path_x[0])  
   print("path_y[0] start: ", path_y[0])  
-  fig = plt.figure(figsize=(36,12))
+  fig = plt.figure(figsize=(36,12), dpi=400)
   while not enter_pressed:
     plt.clf()
     plt.imshow(map_img, resample=False, interpolation='none')
