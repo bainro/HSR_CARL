@@ -29,6 +29,7 @@ if __name__ == "__main__":
   os.system("rosrun map_server map_saver --occ 49 --free 40 -f '/tmp/map'")
   os.system("pkill cart")
   
+  os.system("rm /tmp/current.pbstream")
   # now run cart in offline mode
   offline_cmd = "roslaunch cartographer_toyota_hsr carl_offline.launch bag_filenames:='" 
   offline_cmd = offline_cmd + args.bag_file + "' save_file:='/tmp/test.pbstream'"
