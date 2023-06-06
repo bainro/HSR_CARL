@@ -85,7 +85,7 @@ if __name__ == "__main__":
   print("specific settings for SBSG 2nd floor")
   for i in range(len(path_x)):
     path_x[i] = path_x[i] + 53
-    path_y[i] = path_y[i] + 53
+    path_y[i] = path_y[i] + 14
   rot = 0.04 # radians
   scale = 126.5
   shift_on = False
