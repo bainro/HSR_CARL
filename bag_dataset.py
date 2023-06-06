@@ -82,8 +82,8 @@ if __name__ == "__main__":
   path_nsecs = [] # don't need nsecs anymore
   
   # use keys to translate, rotate, & scale the path
-  rot = 0 # rotation factor in radians
-  scale = 1
+  rot = 0 # radians
+  scale = 20
   shift_on = False
   enter_pressed = False
   
@@ -150,6 +150,7 @@ if __name__ == "__main__":
   with open("/tmp/map.pgm", 'rb') as pgmf:
     map_img = plt.imread(pgmf)
     
+  print("path_x[0] start: ", path_x[0])  
   while not enter_pressed:
     plt.clf()
     plt.imshow(map_img)
@@ -166,6 +167,7 @@ if __name__ == "__main__":
     with kb.Listener(on_press=on_press, on_release=on_release) as listener:
       listener.join() 
   
+  print("path_x[0] end: ", path_x[0])
   print("scale: ", scale)
   print("rot: ", rot)
   
