@@ -49,40 +49,40 @@ if __name__ == "__main__":
     os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs:' | grep -v 'nsecs' > /tmp/secs.log")
     os.system("grep -C4 position /tmp/traj.txt | grep -e 'nsecs:' > /tmp/nsecs.log")
 
-    # read the 4 files into parallel lists
-    path_x, path_y = [], []
-    path_secs, path_nsecs = [], []
-    with open('/tmp/x.log', 'r') as x_file:
-      lines = x_file.readlines()
+  # read the 4 files into parallel lists
+  path_x, path_y = [], []
+  path_secs, path_nsecs = [], []
+  with open('/tmp/x.log', 'r') as x_file:
+    lines = x_file.readlines()
 
-    for l in lines:
-      l = l.strip()
-      path_x.append(float(l[3:]))
+  for l in lines:
+    l = l.strip()
+    path_x.append(float(l[3:]))
 
-    with open('/tmp/y.log', 'r') as y_file:
-      lines = y_file.readlines()
+  with open('/tmp/y.log', 'r') as y_file:
+    lines = y_file.readlines()
 
-    for l in lines:
-      l = l.strip()
-      path_y.append(-1 * float(l[3:]))
+  for l in lines:
+    l = l.strip()
+    path_y.append(-1 * float(l[3:]))
 
-    with open('/tmp/secs.log', 'r') as secs_file:
-      lines = secs_file.readlines()
+  with open('/tmp/secs.log', 'r') as secs_file:
+    lines = secs_file.readlines()
 
-    for l in lines:
-      l = l.strip()
-      path_secs.append(float(l[6:]))
+  for l in lines:
+    l = l.strip()
+    path_secs.append(float(l[6:]))
 
-    with open('/tmp/nsecs.log', 'r') as nsecs_file:
-      lines = nsecs_file.readlines()
+  with open('/tmp/nsecs.log', 'r') as nsecs_file:
+    lines = nsecs_file.readlines()
 
-    for l in lines:
-      l = l.strip()
-      path_nsecs.append(float(l[6:]))
+  for l in lines:
+    l = l.strip()
+    path_nsecs.append(float(l[6:]))
 
-    for i in range(len(path_secs)):
-      path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
-    path_nsecs = [] # don't need nsecs anymore
+  for i in range(len(path_secs)):
+    path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
+  path_nsecs = [] # don't need nsecs anymore
   
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 2nd floor")
