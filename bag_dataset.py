@@ -166,6 +166,9 @@ if __name__ == "__main__":
     with kb.Listener(on_press=on_press, on_release=on_release) as listener:
       listener.join() 
   
+  print("scale: ", scale)
+  print("rot: ", rot)
+  
   # add buffer to map to enable rotate + crop
   # crop with robot position at center
   # rotate, then crop to final size
