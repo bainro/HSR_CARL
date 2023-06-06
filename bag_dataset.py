@@ -82,42 +82,46 @@ if __name__ == "__main__":
   path_nsecs = [] # don't need nsecs anymore
   
   # use keys to translate, rotate, & scale the path
-  rot = 0 # radians
-  scale = 110
+  print("specific settings for SBSG 2nd floor")
+  for i in range(len(path_x)):
+    path_x[i] = path_x[i] + 53
+    path_y[i] = path_y[i] + 53
+  rot = 0.04 # radians
+  scale = 126.5
   shift_on = False
   enter_pressed = False
   
   def up_cb(shift):
     global scale, path_y
     if shift:
-      scale = scale + 0.5
+      scale = scale + 0.15
     else:
       # translate points up
-      path_y = [y - 1 for y in path_y]
+      path_y = [y - .1 for y in path_y]
       
   def down_cb(shift):
     global scale, path_y
     if shift:
-      scale = scale - 0.5
+      scale = scale - 0.15
     else:
       # translate points down
-      path_y = [y + 1 for y in path_y]    
+      path_y = [y + .1 for y in path_y]    
       
   def left_cb(shift):
     global rot, path_x
     if shift:
-      rot = rot + 0.01
+      rot = rot + 0.003
     else:
       # translate points to the left
-      path_x = [x - 1 for x in path_x]
+      path_x = [x - .1 for x in path_x]
       
   def right_cb(shift):
     global rot, path_x
     if shift:
-      rot = rot - 0.01
+      rot = rot - 0.003
     else:
       # translate points to the right
-      path_x = [x + 1 for x in path_x]        
+      path_x = [x + .1 for x in path_x]        
   
   def on_press(key):
     if key == kb.Key.shift:
@@ -144,12 +148,7 @@ if __name__ == "__main__":
     return False
   
   print("use the arrow keys and shift to rotate, translate, & scale the path")
-  
-  print("specific settings for SBSG 2nd floor")
-  for i in range(len(path_x)):
-    path_x[i] = path_x[i] + 50
-    path_y[i] = path_y[i] + 50
-  
+   
   # load the picture of the map
   map_img = None
   # with open("/tmp/map.pgm", 'rb') as pgmf:
