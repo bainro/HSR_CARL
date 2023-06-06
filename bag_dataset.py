@@ -32,6 +32,7 @@ if __name__ == "__main__":
   offline_cmd = "roslaunch cartographer_toyota_hsr carl_offline.launch bag_filenames:='" 
   offline_cmd = offline_cmd + args.bag_file + "' save_file:='/tmp/test.pbstream'"
   os.system(offline_cmd)
+  os.system("cp /tmp/test.pbstream /tmp/current.pbstream")
 
   os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
   time.sleep(3)
@@ -40,15 +41,31 @@ if __name__ == "__main__":
   os.system("pkill cart")
   # get just the pose position (x,y) and the corresponding timestamp (secs)
   os.system("grep -C4 position /tmp/traj.txt | grep -e 'x:' > /tmp/x.log")
-  os.system("grep -C4 position /tmp/traj.txt | grep -e 'y:'  >/tmp/y.log")
-  os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs' | grep -v 'nsecs' > /tmp/secs.log")
+  os.system("grep -C4 position /tmp/traj.txt | grep -e 'y:' > /tmp/y.log")
+  os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs:' | grep -v 'nsecs' > /tmp/secs.log")
   
   # read the 3 files into separate lists
   
-  path_x, path_y = [], []
+  path_x, path_y, path_secs = [], [], []
   with open('/tmp/x.log', 'r') as x_file:
     lines = x_file.readlines()
-    print(lines[0]);exit()
+  
+  for l in lines:
+    path_x.append(float(l[3:]))
+    
+  with open('/tmp/y.log', 'r') as y_file:
+    lines = y_file.readlines()
+  
+  for l in lines:
+    path_y.append(float(l[3:]))
+   
+  with open('/tmp/secs.log', 'r') as secs_file:
+    lines = secs_file.readlines()
+  
+  for l in lines:
+    path_secs.append(float(l[6:]))
+    
+  print(path_secs[:10]);exit()
   
   # use keys to translate, rotate, & scale the path
   rot = 0 # rotation factor in radians
