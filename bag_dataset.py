@@ -14,72 +14,75 @@ _help = "path to previously learned cartographer map (*.pbstream)"
 parser.add_argument("--map_file", type=str, required=True, help=_help)
 _help = "path to previously recorded rosbag"
 parser.add_argument("--bag_file", type=str, required=True, help=_help)
+_help = "reuse previous path calculations"
+parser.add_argument('--reuse_path', default=False, action='store_true', help=_help)
 args = parser.parse_args()
 assert args.map_file != "" and args.bag_file != "", "Must specify path to *.pbstream & *.bag files!"
 
 if __name__ == "__main__":
-  # run a bag in offline localization-only mode (requires a previously learned SLAM map)
-  os.system("rosparam set use_sim_time true")
-  
-  os.system("pkill cart")
-  # carl_localize.launch expects the map to be here
-  os.system("cp " + args.map_file + " /tmp/current.pbstream")
-  os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
-  # could ask user to provide this, but we have the .pbstream anyway
-  os.system("rosrun map_server map_saver --occ 49 --free 40 -f '/tmp/map'")
-  os.system("pkill cart")
-  
-  # now run cart in offline mode
-  offline_cmd = "roslaunch cartographer_toyota_hsr carl_offline.launch bag_filenames:='" 
-  offline_cmd = offline_cmd + args.bag_file + "' save_file:='/tmp/offline.pbstream'"
-  os.system(offline_cmd)
-  os.system("cp /tmp/offline.pbstream /tmp/current.pbstream")
+  if not args.reuse_path:
+    # run a bag in offline localization-only mode (requires a previously learned SLAM map)
+    os.system("rosparam set use_sim_time true")
 
-  os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
-  time.sleep(3)
-  os.system("rosservice call /trajectory_query 'trajectory_id: 1' > /tmp/traj.txt")
-  time.sleep(3)
-  os.system("pkill cart")
-  # get just the pose position (x,y) and the corresponding timestamp (secs)
-  os.system("grep -C4 position /tmp/traj.txt | grep -e 'x:' > /tmp/x.log")
-  os.system("grep -C4 position /tmp/traj.txt | grep -e 'y:' > /tmp/y.log")
-  os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs:' | grep -v 'nsecs' > /tmp/secs.log")
-  os.system("grep -C4 position /tmp/traj.txt | grep -e 'nsecs:' > /tmp/nsecs.log")
-  
-  # read the 4 files into parallel lists
-  path_x, path_y = [], []
-  path_secs, path_nsecs = [], []
-  with open('/tmp/x.log', 'r') as x_file:
-    lines = x_file.readlines()
-  
-  for l in lines:
-    l = l.strip()
-    path_x.append(float(l[3:]))
-    
-  with open('/tmp/y.log', 'r') as y_file:
-    lines = y_file.readlines()
-  
-  for l in lines:
-    l = l.strip()
-    path_y.append(-1 * float(l[3:]))
-   
-  with open('/tmp/secs.log', 'r') as secs_file:
-    lines = secs_file.readlines()
-  
-  for l in lines:
-    l = l.strip()
-    path_secs.append(float(l[6:]))
-    
-  with open('/tmp/nsecs.log', 'r') as nsecs_file:
-    lines = nsecs_file.readlines()
-  
-  for l in lines:
-    l = l.strip()
-    path_nsecs.append(float(l[6:]))
-  
-  for i in range(len(path_secs)):
-    path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
-  path_nsecs = [] # don't need nsecs anymore
+    os.system("pkill cart")
+    # carl_localize.launch expects the map to be here
+    os.system("cp " + args.map_file + " /tmp/current.pbstream")
+    os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
+    # could ask user to provide this, but we have the .pbstream anyway
+    os.system("rosrun map_server map_saver --occ 49 --free 40 -f '/tmp/map'")
+    os.system("pkill cart")
+
+    # now run cart in offline mode
+    offline_cmd = "roslaunch cartographer_toyota_hsr carl_offline.launch bag_filenames:='" 
+    offline_cmd = offline_cmd + args.bag_file + "' save_file:='/tmp/offline.pbstream'"
+    os.system(offline_cmd)
+    os.system("cp /tmp/offline.pbstream /tmp/current.pbstream")
+
+    os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
+    time.sleep(3)
+    os.system("rosservice call /trajectory_query 'trajectory_id: 1' > /tmp/traj.txt")
+    time.sleep(3)
+    os.system("pkill cart")
+    # get just the pose position (x,y) and the corresponding timestamp (secs)
+    os.system("grep -C4 position /tmp/traj.txt | grep -e 'x:' > /tmp/x.log")
+    os.system("grep -C4 position /tmp/traj.txt | grep -e 'y:' > /tmp/y.log")
+    os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs:' | grep -v 'nsecs' > /tmp/secs.log")
+    os.system("grep -C4 position /tmp/traj.txt | grep -e 'nsecs:' > /tmp/nsecs.log")
+
+    # read the 4 files into parallel lists
+    path_x, path_y = [], []
+    path_secs, path_nsecs = [], []
+    with open('/tmp/x.log', 'r') as x_file:
+      lines = x_file.readlines()
+
+    for l in lines:
+      l = l.strip()
+      path_x.append(float(l[3:]))
+
+    with open('/tmp/y.log', 'r') as y_file:
+      lines = y_file.readlines()
+
+    for l in lines:
+      l = l.strip()
+      path_y.append(-1 * float(l[3:]))
+
+    with open('/tmp/secs.log', 'r') as secs_file:
+      lines = secs_file.readlines()
+
+    for l in lines:
+      l = l.strip()
+      path_secs.append(float(l[6:]))
+
+    with open('/tmp/nsecs.log', 'r') as nsecs_file:
+      lines = nsecs_file.readlines()
+
+    for l in lines:
+      l = l.strip()
+      path_nsecs.append(float(l[6:]))
+
+    for i in range(len(path_secs)):
+      path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
+    path_nsecs = [] # don't need nsecs anymore
   
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 2nd floor")
@@ -152,6 +155,7 @@ if __name__ == "__main__":
   # load the picture of the map
   map_img = None
   # with open("/tmp/map.pgm", 'rb') as pgmf:
+  # @TODO hardcoded for SBSG 2nd floor
   with open("/tmp/test.png", 'rb') as pgmf:
     map_img = plt.imread(pgmf)
     
