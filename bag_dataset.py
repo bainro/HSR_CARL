@@ -45,8 +45,7 @@ if __name__ == "__main__":
   os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs:' | grep -v 'nsecs' > /tmp/secs.log")
   os.system("grep -C4 position /tmp/traj.txt | grep -e 'nsecs:' > /tmp/nsecs.log")
   
-  # read the 3 files into separate lists
-  
+  # read the 4 files into parallel lists
   path_x, path_y = [], []
   path_secs, path_nsecs = [], []
   with open('/tmp/x.log', 'r') as x_file:
@@ -76,13 +75,10 @@ if __name__ == "__main__":
   for l in lines:
     l = l.strip()
     path_nsecs.append(float(l[6:]))
-    
+  
   for i in range(len(path_secs)):
     path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
-    
-  print(path_secs[:10])
-  path_nsecs = []
-  exit()
+  path_nsecs = [] # don't need nsecs anymore
   
   # use keys to translate, rotate, & scale the path
   rot = 0 # rotation factor in radians
