@@ -32,7 +32,7 @@ if __name__ == "__main__":
   
   # now run cart in offline mode
   offline_cmd = "roslaunch cartographer_toyota_hsr carl_offline.launch bag_filenames:='" 
-  offline_cmd = offline_cmd + args.bag_file + "' save_file:='/tmp/test.pbstream' &"
+  offline_cmd = offline_cmd + args.bag_file + "' save_file:='/tmp/test.pbstream'"
   os.system(offline_cmd)
 
   os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
