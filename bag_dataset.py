@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
   os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
   time.sleep(3)
-  os.system("rosservice call /trajectory_query 'trajectory_id: 1' > /tmp/robot_traj.txt")
+  os.system("rosservice call /trajectory_query 'trajectory_id: 1' > /tmp/traj.txt")
   time.sleep(3)
   os.system("pkill cart")
   # get just the pose position (x,y) and the corresponding timestamp (secs)
