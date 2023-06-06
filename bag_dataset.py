@@ -34,10 +34,10 @@ if __name__ == "__main__":
   offline_cmd = "roslaunch cartographer_toyota_hsr carl_offline.launch bag_filenames:='" 
   offline_cmd = offline_cmd + args.bag_file + "' save_file:='/tmp/test.pbstream' &"
   os.system(offline_cmd)
-  print("\n\n\n", offline_cmd, "\n\n\n")
 
   os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
   os.system("rosservice call /trajectory_query 'trajectory_id: 1' &>/tmp/robot_traj.txt")
+  os.system("pkill cart")
   # get just the pose position (x,y) and the corresponding timestamp (secs)
   os.system("grep -C4 position /tmp/traj.txt | grep -e 'x:' &>/tmp/x.log")
   os.system("grep -C4 position /tmp/traj.txt | grep -e 'y:' &>/tmp/y.log")
