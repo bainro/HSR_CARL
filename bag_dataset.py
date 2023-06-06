@@ -88,7 +88,7 @@ if __name__ == "__main__":
   print("specific settings for SBSG 2nd floor")
   for i in range(len(path_x)):
     path_x[i] = path_x[i] + 53
-    path_y[i] = path_y[i] + 14
+    path_y[i] = path_y[i] + 5
   rot = 0.04 # radians
   scale = 126.5
   shift_on = False
@@ -163,7 +163,7 @@ if __name__ == "__main__":
   print("path_y[0] start: ", path_y[0])  
   while not enter_pressed:
     plt.clf()
-    plt.imshow(map_img)
+    plt.imshow(map_img, resample=False)
     trans_path_x, trans_path_y = [], []
     for i in range(len(path_x)):
       x = path_x[i] * math.cos(rot) - path_y[i] * math.sin(rot)
@@ -171,7 +171,7 @@ if __name__ == "__main__":
       y = path_y[i] * math.cos(rot) + path_x[i] * math.sin(rot)
       trans_path_y.append(y * scale)
     # overlay the path on the map 
-    plt.scatter(x=trans_path_x, y=trans_path_y, c='r', s=3)
+    plt.scatter(x=trans_path_x, y=trans_path_y, c='b', s=3)
     plt.show(block=False)
     plt.pause(0.01)
     with kb.Listener(on_press=on_press, on_release=on_release) as listener:
