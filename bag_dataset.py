@@ -161,9 +161,10 @@ if __name__ == "__main__":
     
   print("path_x[0] start: ", path_x[0])  
   print("path_y[0] start: ", path_y[0])  
+  fig = plt.figure(figsize=(36,12))
   while not enter_pressed:
     plt.clf()
-    plt.imshow(map_img, resample=False)
+    plt.imshow(map_img, resample=False, interpolation='none')
     trans_path_x, trans_path_y = [], []
     for i in range(len(path_x)):
       x = path_x[i] * math.cos(rot) - path_y[i] * math.sin(rot)
