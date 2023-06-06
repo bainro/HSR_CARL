@@ -77,7 +77,7 @@ if __name__ == "__main__":
     l = l.strip()
     path_nsecs.append(float(l[6:]))
     
-  for i in len(path_secs):
+  for i in range(len(path_secs)):
     path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
     
   print(path_secs[:10])
