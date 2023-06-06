@@ -161,7 +161,7 @@ if __name__ == "__main__":
     
   print("path_x[0] start: ", path_x[0])  
   print("path_y[0] start: ", path_y[0])  
-  fig = plt.figure(figsize=(36,12), dpi=400)
+  # fig = plt.figure(figsize=(36,12))
   while not enter_pressed:
     plt.clf()
     plt.imshow(map_img, resample=False, interpolation='none')
@@ -177,6 +177,8 @@ if __name__ == "__main__":
     plt.pause(0.01)
     with kb.Listener(on_press=on_press, on_release=on_release) as listener:
       listener.join() 
+  
+  fig.savefig('/tmp/test.svg', format='svg', dpi=1200)
   
   print("path_x[0] end: ", path_x[0])
   print("path_y[0] end: ", path_y[0])
