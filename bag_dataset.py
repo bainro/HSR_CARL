@@ -156,6 +156,7 @@ if __name__ == "__main__":
     map_img = plt.imread(pgmf)
     
   print("path_x[0] start: ", path_x[0])  
+  print("path_y[0] start: ", path_y[0])  
   while not enter_pressed:
     plt.clf()
     plt.imshow(map_img)
@@ -173,6 +174,7 @@ if __name__ == "__main__":
       listener.join() 
   
   print("path_x[0] end: ", path_x[0])
+  print("path_y[0] end: ", path_y[0])
   print("scale: ", scale)
   print("rot: ", rot)
   
