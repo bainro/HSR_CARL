@@ -51,18 +51,21 @@ if __name__ == "__main__":
     lines = x_file.readlines()
   
   for l in lines:
+    l = l.strip()
     path_x.append(float(l[3:]))
     
   with open('/tmp/y.log', 'r') as y_file:
     lines = y_file.readlines()
   
   for l in lines:
+    l = l.strip()
     path_y.append(float(l[3:]))
    
   with open('/tmp/secs.log', 'r') as secs_file:
     lines = secs_file.readlines()
   
   for l in lines:
+    l = l.strip()
     path_secs.append(float(l[6:]))
     
   print(path_secs[:10]);exit()
