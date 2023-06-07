@@ -78,14 +78,14 @@ if __name__ == "__main__":
 
   for l in lines:
     l = l.strip()
-    path_z.append(-1 * float(l[3:]))
+    path_z.append(float(l[3:]))
     
   with open('/tmp/rot_w.log', 'r') as rot_w_file:
     lines = rot_w_file.readlines()
 
   for l in lines:
     l = l.strip()
-    path_w.append(-1 * float(l[3:]))
+    path_w.append(float(l[3:]))
     
   with open('/tmp/secs.log', 'r') as secs_file:
     lines = secs_file.readlines()
