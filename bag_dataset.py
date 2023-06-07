@@ -211,7 +211,6 @@ if __name__ == "__main__":
   plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=5, label="end")
   plt.legend(loc="lower right")
   # fig.savefig('/tmp/test.svg', format='svg', dpi=1200)
-  plt.clf()
   
   print("path_x[0] end: ", path_x[0])
   print("path_y[0] end: ", path_y[0])
@@ -224,7 +223,7 @@ if __name__ == "__main__":
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     yaw_degs = yaw * 180 / math.pi
     print("FOR DBG'ING!")
-    pyplot.arrow(x, y, 10*math.sin(yaw), 10*math.cos(yaw))
+    plt.arrow(x, y, 10*math.sin(yaw), 10*math.cos(yaw))
     # print("figure out the offset for each map's 0 degrees rotation")
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
@@ -237,6 +236,7 @@ if __name__ == "__main__":
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
   for i in range(len(trans_path_x)):
+    plt.clf()
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
     
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
