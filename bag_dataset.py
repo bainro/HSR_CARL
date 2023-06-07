@@ -226,7 +226,7 @@ if __name__ == "__main__":
   print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[0] * roi_rel_w) // 1)
   fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
-  map_img = rotate_image(map_img, path_z[0], path_w[0])
+  map_img = rotate_image(map_img, path_x[0], path_y[0], path_z[0], path_w[0])
   # crop out around the robot
   x_start = (trans_path_x[0] - rot_w // 2)
   x_end = (trans_path_x[0] + rot_w // 2)
