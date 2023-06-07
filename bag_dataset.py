@@ -264,6 +264,8 @@ if __name__ == "__main__":
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
     return rot_img
   
+  out_dir = os.path.join("/tmp/test_data/")
+  os.makedirs(out_dir, exist_ok=True)
   target_size = 128
   # region of interest's (i.e. centered at robot) relative width
   roi_rel_w = 0.15 # hyperparameter to be set by user
@@ -304,12 +306,12 @@ if __name__ == "__main__":
     
     fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
+    # plt.savefig('/tmp/overlay.svg', format='svg', dpi=1200)
+    
     if i == 0:
       plt.imshow(fpv_img, cmap='gray', vmin=0, vmax=255)
       plt.show()
   
-  out_dir = os.path.join("/tmp/test_data/")
-  os.makedirs(out_dir, exist_ok=True)
   # save each FPV image with the corresponding GMP image
   bag = rosbag.Bag(args.bag_file)
   with open(os.path.join(destination_dir, "meta_data.csv"), "w") as meta_data_file:
