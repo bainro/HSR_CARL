@@ -105,9 +105,24 @@ if __name__ == "__main__":
     path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
   del path_nsecs # don't need nsecs anymore
   
+  # hyperparameter of relative path width to filter poses
+  rel_filter_dx = 0.1
+  path_w = max(path_x) - min(path_x)
+  filter_dx = path_w * rel_filter_dx
+  last_pt = [200, 200] # last non-filtered (i.e. included) pose
   # filter out poses based on (dx, dr) wrt last included pose
   for i in range(len(path_secs)):
-    pass
+    x = path_x[i]
+    y = path_y[i]
+    dx = pass
+    qz = path_z[i]
+    qw = path_w[i]
+    _r, _p, yaw = t.euler_from_quaternion([0, 0, qz, qw])
+    dr = pass
+    if dx > filter_dx or dr > filter_dr:
+      last_pt = [x, y, qz, qw]
+    else: # bye-bye!
+      del path_x[i], path_y[i], path_z[i], path_w[i], path_secs[i]
   
   assert len(path_secs) == len(path_x) == len(path_y), "No longer parallel lists!"
   assert len(path_y) == len(path_z) == len(path_w), "No longer parallel lists!"
