@@ -103,7 +103,14 @@ if __name__ == "__main__":
 
   for i in range(len(path_secs)):
     path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
-  path_nsecs = [] # don't need nsecs anymore
+  del path_nsecs # don't need nsecs anymore
+  
+  print("FOR DBG'ING!")
+  path_x = path_x[::100]
+  path_y = path_y[::100]
+  path_z = path_z[::100]
+  path_w = path_w[::100]
+  path_secs = path_secs[::100]
   
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 2nd floor")
@@ -187,7 +194,7 @@ if __name__ == "__main__":
     plt.clf()
     plt.imshow(map_img, resample=False, interpolation='none')
     trans_path_x, trans_path_y = [], []
-    for i in [0, 400, 700, 1000, 1600, 3200]: # range(len(path_x)):
+    for i in range(len(path_x)):
       x = path_x[i] * math.cos(rot) - path_y[i] * math.sin(rot)
       trans_path_x.append(x * scale)
       y = path_y[i] * math.cos(rot) + path_x[i] * math.sin(rot)
