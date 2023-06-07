@@ -193,7 +193,7 @@ if __name__ == "__main__":
   fig = plt.figure(figsize=(36,12))
   while not enter_pressed:
     plt.clf()
-    plt.imshow(map_img, resample=False, interpolation='none')
+    plt.imshow(map_img, resample=False, interpolation='none', cmap='gray', vmin=0, vmax=255)
     trans_path_x, trans_path_y = [], []
     for i in range(len(path_x)):
       x = path_x[i] * math.cos(rot) - path_y[i] * math.sin(rot)
@@ -209,8 +209,9 @@ if __name__ == "__main__":
   
   plt.scatter(x=trans_path_x[0], y=trans_path_y[0], c='black', s=5, label="start")
   plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=5, label="end")
-  plt.legend(loc="lower right")
-  # fig.savefig('/tmp/test.svg', format='svg', dpi=1200)
+  plt.legend(loc="upper right")
+  plt.show()
+  fig.savefig('/tmp/overlay.svg', format='svg', dpi=1200)
   plt.clf()
   
   print("path_x[0] end: ", path_x[0])
