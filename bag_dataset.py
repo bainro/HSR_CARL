@@ -142,16 +142,6 @@ if __name__ == "__main__":
   assert len(path_secs) == len(path_x) == len(path_y), "No longer parallel lists!"
   assert len(path_y) == len(path_z) == len(path_w), "No longer parallel lists!"
   
-  '''
-  print("DBG ONLY!!!!!")
-  skip_factor = 1
-  path_x = path_x[::skip_factor]
-  path_y = path_y[::skip_factor]
-  path_z = path_z[::skip_factor]
-  path_w = path_w[::skip_factor]
-  path_secs = path_secs[::skip_factor]
-  '''
-  
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 5th floor")
   for i in range(len(path_x)):
@@ -270,15 +260,6 @@ if __name__ == "__main__":
     rotation_pt = (x,y)
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     yaw_degs = yaw * 180 / math.pi
-    # print("FOR DBG'ING FPV ROTATION!")
-    # print("yaw: ", yaw)
-    # _x = 50 * math.cos(yaw)
-    # _y = 50 * math.sin(yaw)
-    # _x = x + int(_x//1)
-    # _y = y + int(_y//1)
-    # image[y:y+20,x:x+20,:] = 0
-    # image[_y:_y+20,_x:_x+20,:] = 0
-    # print("figure out the offset for each map's 0 degrees rotation")
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
     return rot_img
@@ -288,8 +269,6 @@ if __name__ == "__main__":
   roi_rel_w = 0.15 # hyperparameter to be set by user
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
-  
-  # fig2 = plt.figure(figsize=(10, 12))
   
   for c, i in enumerate(range(len(trans_path_x))):
     if len(map_img.shape) == 3: # e.g. RGB
@@ -327,25 +306,6 @@ if __name__ == "__main__":
                          interpolation=cv2.INTER_AREA) 
     plt.imshow(fpv_img, cmap='gray', vmin=0, vmax=255)
     plt.show()
-    
-    '''
-    if c > 15: break
-    ax = plt.subplot(5,4,c+1)
-    ax.axes.get_xaxis().set_visible(False)
-    ax.axes.get_yaxis().set_visible(False)
-    ax.imshow(fpv_img)
-    '''
-  
-  '''
-  plt.tight_layout(0.55)
-  ax1 = plt.subplot(5,1,5)
-  ax1.imshow(map_img)
-  ax1.scatter(x=trans_path_x, y=trans_path_y, c='b', s=3)
-  ax1.axes.get_xaxis().set_visible(False)
-  ax1.axes.get_yaxis().set_visible(False)
-  fig2.savefig('/tmp/test2.svg', format='svg', dpi=1200)
-  plt.show()
-  '''
   
   # save in the format Tim's already using (i.e. csv)
   # save cropped image of map & resized camera image
