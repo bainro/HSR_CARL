@@ -48,9 +48,13 @@ if __name__ == "__main__":
     os.system("grep -C4 position /tmp/traj.txt | grep -e 'y:' > /tmp/y.log")
     os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs:' | grep -v 'nsecs' > /tmp/secs.log")
     os.system("grep -C4 position /tmp/traj.txt | grep -e 'nsecs:' > /tmp/nsecs.log")
+    os.system("grep -C4 'w:' /tmp/traj.txt | grep -e 'z:' > /tmp/rot_z.log")
+    os.system("grep -C4 'w:' /tmp/traj.txt > /tmp/rot_w.log")
 
-  # read the 4 files into parallel lists
+  # read the files into parallel lists
   path_x, path_y = [], []
+  # quarternion rotation, but we only need 2
+  path_z, path_w = [], []
   path_secs, path_nsecs = [], []
   with open('/tmp/x.log', 'r') as x_file:
     lines = x_file.readlines()
@@ -65,7 +69,21 @@ if __name__ == "__main__":
   for l in lines:
     l = l.strip()
     path_y.append(-1 * float(l[3:]))
+    
+  with open('/tmp/rot_z.log', 'r') as rot_z_file:
+    lines = rot_z_file.readlines()
 
+  for l in lines:
+    l = l.strip()
+    path_z.append(-1 * float(l[3:]))
+    
+  with open('/tmp/rot_w.log', 'r') as rot_w_file:
+    lines = rot_w_file.readlines()
+
+  for l in lines:
+    l = l.strip()
+    path_w.append(-1 * float(l[3:]))
+    
   with open('/tmp/secs.log', 'r') as secs_file:
     lines = secs_file.readlines()
 
@@ -178,7 +196,7 @@ if __name__ == "__main__":
     with kb.Listener(on_press=on_press, on_release=on_release) as listener:
       listener.join() 
   
-  plt.scatter(x=trans_path_x[0], y=trans_path_y[0], c='g', s=5, label="start")
+  plt.scatter(x=trans_path_x[0], y=trans_path_y[0], c='black', s=5, label="start")
   plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=5, label="end")
   plt.legend(loc="lower right")
   # fig.savefig('/tmp/test.svg', format='svg', dpi=1200)
@@ -189,6 +207,23 @@ if __name__ == "__main__":
   print("rot: ", rot)
   
   # rotate & crop with robot position at center
+  import numpy as np
+  import cv2
+
+  def rotate_image(image, angle):
+    image_center = tuple(np.array(image.shape[1::-1]) / 2)
+    rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
+    result = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
+    return result
+  
+  target_size = 128
+  print(map_img.shape)
+  # region of interest's (i.e. centered at robot) relative width
+  roi_rel_w = 0.07 # hyperparameter to be set :)
+  print("assumes HxWxC image format!")
+  rot_w = map_img.shape[0] * rot_rel_w
+  fpv_img = np.zeros(size=(128,128,3))
+  
   
   # save in the format Tim's already using (i.e. csv)
   # save cropped image of map & resized camera image
