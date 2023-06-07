@@ -105,13 +105,22 @@ if __name__ == "__main__":
     path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
   del path_nsecs # don't need nsecs anymore
   
+  # filter out poses based on (dx, dr) wrt last included pose
+  for i in range(len(path_secs)):
+    pass
+  
+  assert len(path_secs) == len(path_x) == len(path_y), "No longer parallel lists!"
+  assert len(path_y) == len(path_z) == len(path_w), "No longer parallel lists!"
+  
+  '''
+  print("DBG ONLY!!!!!")
   skip_factor = 1
-  # print("DBG ONLY!!!!!")
-  path_x = path_x[::skip_factor]#[:16]
-  path_y = path_y[::skip_factor]#[:16]
-  path_z = path_z[::skip_factor]#[:16]
-  path_w = path_w[::skip_factor]#[:16]
-  path_secs = path_secs[::skip_factor]#[:16]
+  path_x = path_x[::skip_factor]
+  path_y = path_y[::skip_factor]
+  path_z = path_z[::skip_factor]
+  path_w = path_w[::skip_factor]
+  path_secs = path_secs[::skip_factor]
+  '''
   
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 5th floor")
