@@ -106,7 +106,7 @@ if __name__ == "__main__":
   del path_nsecs # don't need nsecs anymore
   
   print("FOR DBG'ING!")
-  skip_factor = 30 # 500
+  skip_factor = 70 # 500
   path_x = path_x[::skip_factor]
   path_y = path_y[::skip_factor]
   path_z = path_z[::skip_factor]
