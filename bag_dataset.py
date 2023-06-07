@@ -221,7 +221,8 @@ if __name__ == "__main__":
   roi_rel_w = 0.07 # hyperparameter to be set by user
   print("assumes HxWxC image format!")
   rot_w = map_img.shape[0] * rot_rel_w
-  fpv_img = np.zeros(size=(rot_w, rot_w, 3))
+  # extra padding for the rotation and 2nd crop
+  fpv_img = np.zeros(size=(2*rot_w, 2*rot_w, 3))
   # crop out around the robot
   assert False, "not enough padding"
   assert False, "what about literal edge case"
@@ -244,7 +245,8 @@ if __name__ == "__main__":
   # rotate around the center
   # crop again (2 crops ensures no white space)
   
-  fpv_img.reshape(target_size, target_size, 3)
+  print("need to reshape cv2 CHW to matplotlib HWC?)
+  fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), interpolation=cv2.INTER_CUBIC) 
   
   # save in the format Tim's already using (i.e. csv)
   # save cropped image of map & resized camera image
