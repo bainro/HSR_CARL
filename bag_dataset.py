@@ -208,14 +208,16 @@ if __name__ == "__main__":
   print("path_y[0] end: ", path_y[0])
   print("scale: ", scale)
   print("rot: ", rot)
-  
-  # rotate & crop with robot position at center
-  def rotate_image(image, qz, qw):
+ 
+  def rotate_image(image, x, y, qz, qw):
+    # (x, y) pt to rotate about
+    # (qz, qw) last 2 quarternion elements
     print("assumes HxWxC image format!")
     image_center = tuple(np.array(image.shape[1::-1]) // 2)
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
-    print("roll, pitch, yaw: ", _roll, _pitch, yaw)
-    rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
+    yaw_degs = yaw * 180 / math.pi
+    print("figure out the offset for each map's 0 degrees rotation")
+    rot_mat = cv2.getRotationMatrix2D(image_center, yaw_degs, 1.0)
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
     return rot_img
   
