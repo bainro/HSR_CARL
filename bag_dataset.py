@@ -228,8 +228,8 @@ if __name__ == "__main__":
   for i in range(len(path_x)):
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
-    plt.imshow(rot_map)
-    plt.show()
+    # plt.imshow(rot_map)
+    # plt.show()
     # crop out around the robot
     x_start = int(trans_path_x[i] - rot_w // 2)
     x_end = int(trans_path_x[i] + rot_w // 2)
@@ -250,11 +250,11 @@ if __name__ == "__main__":
       y_end = map_img.shape[0]
 
     fpv_img[ypo:y_end-y_start, xpo:x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
-    plt.imshow(fpv_img)
-    plt.show()
+    # plt.imshow(fpv_img)
+    # plt.show()
 
     fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
-                         interpolation=cv2.INTER_CUBIC) 
+                         interpolation=cv2.INTER_AREA) 
 
     plt.imshow(fpv_img)
     plt.show()
