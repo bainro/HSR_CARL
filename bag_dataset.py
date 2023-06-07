@@ -106,7 +106,7 @@ if __name__ == "__main__":
   del path_nsecs # don't need nsecs anymore
   
   print("FOR DBG'ING!")
-  skip_factor = 500
+  skip_factor = 10 # 500
   path_x = path_x[::skip_factor]
   path_y = path_y[::skip_factor]
   path_z = path_z[::skip_factor]
@@ -249,9 +249,9 @@ if __name__ == "__main__":
   for i in range(len(trans_path_x)):
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
     
-    plt.imshow(map_img)
-    plt.show()
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
+    plt.imshow(rot_map)
+    plt.show()
     
     # crop out around the robot
     x_start = int(trans_path_x[i] - rot_w // 2)
