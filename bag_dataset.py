@@ -226,7 +226,7 @@ if __name__ == "__main__":
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
-  for i in [0, 200, 400, 700, 1000, 1600]: # range(len(path_x)):
+  for i in range(len(trans_path_x)):
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
     # plt.imshow(rot_map)
