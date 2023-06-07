@@ -219,13 +219,13 @@ if __name__ == "__main__":
  
   def rotate_image(image, x, y, qz, qw):
     # print("assumes HxWxC image format!")
+    x = int(x//1)
+    y = int(y//1)
     rotation_pt = (x,y)
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     yaw_degs = yaw * 180 / math.pi
     print("FOR DBG'ING!")
-    x = int(x//1)
-    y = int(y//1)
-    image[x:x+10,y:y+10,:] = 255
+    image[x:x+100,y:y+100,:] = 255
     # print("figure out the offset for each map's 0 degrees rotation")
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
@@ -238,7 +238,6 @@ if __name__ == "__main__":
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
   for i in range(len(trans_path_x)):
-    plt.clf()
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
     
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
