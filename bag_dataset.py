@@ -109,8 +109,8 @@ if __name__ == "__main__":
   filter_dr = 0.375 # 0.375 rads ~= 21 degs
   # relative path width change to filter consecutive poses
   rel_filter_dx = 0.1 # hyperparameter to tune for each map
-  path_w = max(path_x) - min(path_x)
-  filter_dx = path_w * rel_filter_dx
+  path_width = max(path_x) - min(path_x)
+  filter_dx = path_width * rel_filter_dx
   # last non-filtered (i.e. included) pose. 
   last_pt = [math.inf, math.inf, math.inf] 
   # filter out poses based on (dx, dr) wrt last included pose
