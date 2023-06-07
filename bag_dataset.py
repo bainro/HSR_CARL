@@ -227,6 +227,8 @@ if __name__ == "__main__":
   rot_w = int((map_img.shape[0] * roi_rel_w) // 1)
   fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
   map_img = rotate_image(map_img, path_x[0], path_y[0], path_z[0], path_w[0])
+  plt.imshow(map_img)
+  plt.show()
   # crop out around the robot
   x_start = int(trans_path_x[0] - rot_w // 2)
   x_end = int(trans_path_x[0] + rot_w // 2)
@@ -247,6 +249,8 @@ if __name__ == "__main__":
     y_end = map_img.shape[1]
   
   fpv_img[xpo:x_end-x_start, ypo:y_end-y_start, :] = map_img[x_start:x_end, y_start:y_end, :]
+  plt.imshow(fpv_img)
+  plt.show()
   
   print("need to reshape cv2 CHW to matplotlib HWC?")
   fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
