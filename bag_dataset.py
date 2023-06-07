@@ -161,7 +161,7 @@ if __name__ == "__main__":
     
   print("path_x[0] start: ", path_x[0])  
   print("path_y[0] start: ", path_y[0])  
-  fig, ax = plt.figure(figsize=(36,12))
+  fig = plt.figure(figsize=(36,12))
   while not enter_pressed:
     plt.clf()
     plt.imshow(map_img, resample=False, interpolation='none')
@@ -180,7 +180,7 @@ if __name__ == "__main__":
   
   plt.scatter(x=trans_path_x[0], y=trans_path_y[0], c='g', s=3, label="start")
   plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=3, label="end")
-  ax.legend()
+  plt.legend()
   fig.savefig('/tmp/test.svg', format='svg', dpi=1200)
   
   print("path_x[0] end: ", path_x[0])
