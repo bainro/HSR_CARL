@@ -225,7 +225,7 @@ if __name__ == "__main__":
   roi_rel_w = 0.07 # hyperparameter to be set by user
   print("assumes HxWxC image format!")
   rot_w = map_img.shape[0] * roi_rel_w
-  fpv_img = np.zeros(size=(rot_w, rot_w, 3))
+  fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
   map_img = rotate_image(map_img, path_z[0], path_w[0])
   # crop out around the robot
   x_start = (trans_path_x[0] - rot_w // 2)
