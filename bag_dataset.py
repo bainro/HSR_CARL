@@ -256,7 +256,6 @@ if __name__ == "__main__":
 
     fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
-
     plt.imshow(fpv_img)
     plt.show()
   
