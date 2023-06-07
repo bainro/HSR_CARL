@@ -222,7 +222,19 @@ if __name__ == "__main__":
   print("assumes HxWxC image format!")
   rot_w = map_img.shape[0] * rot_rel_w
   fpv_img = np.zeros(size=(rot_w, rot_w, 3))
-  # crop out around the robot 
+  # crop out around the robot
+  assert False, "not enough padding"
+  assert False, "what about literal edge case"
+  x_start = (trans_path_x[0] - rot_w // 2)
+  x_end = (trans_path_x[0] + rot_w // 2)
+  y_start = (trans_path_y[0] - rot_w // 2)
+  y_end = (trans_path_y[0] + rot_w // 2)
+  if x_start < 0 or y_start < 0:
+    pass
+  print("assumes HxWxC image format!")
+  if x_end > map_img.shape[0] or y_end > map_img.shape[1]:
+    pass
+  crop_img = map_img[x_start:x_end, y_start:yend, :]
   # conditional logic for if crop isn't big enough
   # rotate around the center
   # crop again (2 crops ensures no white space)
