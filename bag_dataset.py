@@ -105,8 +105,7 @@ if __name__ == "__main__":
     path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
   del path_nsecs # don't need nsecs anymore
   
-  print("FOR DBG'ING!")
-  skip_factor = 70 # 500
+  skip_factor = 70
   path_x = path_x[::skip_factor]
   path_y = path_y[::skip_factor]
   path_z = path_z[::skip_factor]
@@ -225,15 +224,14 @@ if __name__ == "__main__":
     rotation_pt = (x,y)
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     yaw_degs = yaw * 180 / math.pi
-    print("FOR DBG'ING!")
-    print("yaw: ", yaw)
-    _x = 50 * math.cos(yaw)
-    _y = 50 * math.sin(yaw)
-    _x = x + int(_x//1)
-    _y = y + int(_y//1)
-    image[y:y+20,x:x+20,:] = 0
-    image[_y:_y+20,_x:_x+20,:] = 0
-    
+    # print("FOR DBG'ING!")
+    # print("yaw: ", yaw)
+    # _x = 50 * math.cos(yaw)
+    # _y = 50 * math.sin(yaw)
+    # _x = x + int(_x//1)
+    # _y = y + int(_y//1)
+    # image[y:y+20,x:x+20,:] = 0
+    # image[_y:_y+20,_x:_x+20,:] = 0
     # print("figure out the offset for each map's 0 degrees rotation")
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
@@ -245,12 +243,15 @@ if __name__ == "__main__":
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
-  for i in range(len(trans_path_x)):
+  plt.figure(figsize=(12, 4))
+  ax1 = plt.subplot(5,4,1)
+  ax1.imshow(map_img)
+  ax1.scatter(x=trans_path_x, y=trans_path_y, c='b', s=3)
+  
+  for c, i in enumerate(range(len(trans_path_x))):
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
-    
+ 
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
-    # plt.imshow(rot_map)
-    # plt.show()
     
     # crop out around the robot
     x_start = int(trans_path_x[i] - rot_w // 2)
@@ -272,13 +273,14 @@ if __name__ == "__main__":
       y_end = map_img.shape[0]
 
     fpv_img[ypo:y_end-y_start, xpo:x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
-    # plt.imshow(fpv_img)
-    # plt.show()
-
     fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
-    plt.imshow(fpv_img)
-    plt.show()
+    # plt.imshow(fpv_img)
+    # plt.show()
+    
+    ax = plt.subplot(5,4,c+2)
+  
+  plt.show()
   
   # save in the format Tim's already using (i.e. csv)
   # save cropped image of map & resized camera image
