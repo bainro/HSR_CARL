@@ -248,6 +248,7 @@ if __name__ == "__main__":
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
     
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
+    plt.plot(10, 10, 110, 110, linewidth=25)
     # plt.imshow(rot_map)
     # plt.show()
     # crop out around the robot
