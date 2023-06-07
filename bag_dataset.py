@@ -113,8 +113,10 @@ if __name__ == "__main__":
   filter_dx = path_width * rel_filter_dx
   # last non-filtered (i.e. included) pose. 
   last_pt = [math.inf, math.inf, math.inf] 
+  del_count = 0
   # filter out poses based on (dx, dr) wrt last included pose
   for i in range(len(path_secs)):
+    i = i - del_count
     x = path_x[i]
     y = path_y[i]
     # triangle maths
@@ -134,6 +136,7 @@ if __name__ == "__main__":
       last_pt = [x, y, yaw]
     else: # bye-bye!
       del path_x[i], path_y[i], path_z[i], path_w[i], path_secs[i]
+      del_count = del_count + 1
   
   assert len(path_secs) == len(path_x) == len(path_y), "No longer parallel lists!"
   assert len(path_y) == len(path_z) == len(path_w), "No longer parallel lists!"
