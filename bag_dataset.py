@@ -105,7 +105,7 @@ if __name__ == "__main__":
     path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
   del path_nsecs # don't need nsecs anymore
   
-  skip_factor = 70
+  skip_factor = 250
   print("DBG ONLY!!!!!")
   path_x = path_x[::skip_factor][:16]
   path_y = path_y[::skip_factor][:16]
@@ -244,7 +244,7 @@ if __name__ == "__main__":
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
-  plt.figure(figsize=(7, 16))
+  plt.figure(figsize=(12, 32))
   
   for c, i in enumerate(range(len(trans_path_x))):
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
@@ -283,6 +283,8 @@ if __name__ == "__main__":
   ax1 = plt.subplot(5,1,5)
   ax1.imshow(map_img)
   ax1.scatter(x=trans_path_x, y=trans_path_y, c='b', s=3)
+  plt.axis('off')
+  fig.savefig('/tmp/test2.svg', format='svg', dpi=1200)
   plt.show()
   
   # save in the format Tim's already using (i.e. csv)
