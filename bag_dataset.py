@@ -108,7 +108,7 @@ if __name__ == "__main__":
   # change angle in radians to filter consecutive poses
   filter_dr = 0.75 # 0.75 rads ~= 45 degs
   # relative path width change to filter consecutive poses
-  rel_filter_dx = 0.02 # hyperparameter to tune for each map
+  rel_filter_dx = 0.015 # hyperparameter to tune for each map
   path_width = max(path_x) - min(path_x)
   filter_dx = path_width * rel_filter_dx
   # last non-filtered (i.e. included) pose. 
@@ -138,6 +138,7 @@ if __name__ == "__main__":
       del path_x[i], path_y[i], path_z[i], path_w[i], path_secs[i]
       del_count = del_count + 1
   
+  print("Number of datapoints after filtering: ", len(path_x))
   assert len(path_secs) == len(path_x) == len(path_y), "No longer parallel lists!"
   assert len(path_y) == len(path_z) == len(path_w), "No longer parallel lists!"
   
