@@ -223,6 +223,8 @@ if __name__ == "__main__":
     rotation_pt = (x,y)
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     yaw_degs = yaw * 180 / math.pi
+    print("FOR DBG'ING!")
+    pyplot.arrow(x, y, 10*math.sin(yaw), 10*math.cos(yaw))
     # print("figure out the offset for each map's 0 degrees rotation")
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
@@ -230,7 +232,7 @@ if __name__ == "__main__":
   
   target_size = 128
   # region of interest's (i.e. centered at robot) relative width
-  roi_rel_w = 0.07 # hyperparameter to be set by user
+  roi_rel_w = 0.08 # hyperparameter to be set by user
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
