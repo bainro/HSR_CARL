@@ -2,10 +2,12 @@
 Coverts a rosbag into a dataset for Perspective Transorming VAE(s)
 '''
 import os
+import cv2
 import time
 import math
 import rosbag
 import argparse
+import numpy as np
 import matplotlib.pyplot as plt
 from pynput import keyboard as kb
 
@@ -207,9 +209,6 @@ if __name__ == "__main__":
   print("rot: ", rot)
   
   # rotate & crop with robot position at center
-  import numpy as np
-  import cv2
-
   def rotate_image(image, angle):
     image_center = tuple(np.array(image.shape[1::-1]) / 2)
     rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
@@ -219,10 +218,10 @@ if __name__ == "__main__":
   target_size = 128
   print(map_img.shape)
   # region of interest's (i.e. centered at robot) relative width
-  roi_rel_w = 0.07 # hyperparameter to be set :)
+  roi_rel_w = 0.07 # hyperparameter to be set by user
   print("assumes HxWxC image format!")
   rot_w = map_img.shape[0] * rot_rel_w
-  fpv_img = np.zeros(size=(128,128,3))
+  fpv_img = np.zeros(size=(rot_w, rot_w, 3))
   
   
   # save in the format Tim's already using (i.e. csv)
