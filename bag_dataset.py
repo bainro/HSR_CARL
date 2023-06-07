@@ -232,7 +232,7 @@ if __name__ == "__main__":
     _y = 50 * math.sin(yaw)
     _x = x + int(_x//1)
     _y = y + int(_y//1)
-    plt.plot(x, y, _x, _y, linewidth=25)
+    plt.plot(y, x, _y, _x, linewidth=25)
     # print("figure out the offset for each map's 0 degrees rotation")
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
