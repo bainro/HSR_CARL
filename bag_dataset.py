@@ -106,9 +106,9 @@ if __name__ == "__main__":
   del path_nsecs # don't need nsecs anymore
   
   # change angle in radians to filter consecutive poses
-  filter_dr = 0.375 # 0.375 rads ~= 21 degs
+  filter_dr = 0.75 # 0.75 rads ~= 45 degs
   # relative path width change to filter consecutive poses
-  rel_filter_dx = 0.1 # hyperparameter to tune for each map
+  rel_filter_dx = 0.02 # hyperparameter to tune for each map
   path_width = max(path_x) - min(path_x)
   filter_dx = path_width * rel_filter_dx
   # last non-filtered (i.e. included) pose. 
