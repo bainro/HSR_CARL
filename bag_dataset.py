@@ -246,7 +246,7 @@ if __name__ == "__main__":
   if y_end > map_img.shape[1]:
     y_end = map_img.shape[1]
   
-  fpv_img[xpo:x_end-x_start, ypo:y_end-y_start, :] = map_img[x_start:x_end, y_start:yend, :]
+  fpv_img[xpo:x_end-x_start, ypo:y_end-y_start, :] = map_img[x_start:x_end, y_start:y_end, :]
   
   print("need to reshape cv2 CHW to matplotlib HWC?")
   fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
