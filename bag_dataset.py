@@ -226,7 +226,7 @@ if __name__ == "__main__":
     yaw_degs = yaw * 180 / math.pi
     print("FOR DBG'ING!")
     for i in range(20):
-      image[y+i,x+i,:] = 0  
+      image[y+i:y+i+3,x+i:x+i+3,:] = 0  
     # print("figure out the offset for each map's 0 degrees rotation")
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
