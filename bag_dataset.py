@@ -210,54 +210,54 @@ if __name__ == "__main__":
   print("rot: ", rot)
  
   def rotate_image(image, x, y, qz, qw):
-    print("assumes HxWxC image format!")
+    # print("assumes HxWxC image format!")
     rotation_pt = (x,y)
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     yaw_degs = yaw * 180 / math.pi
-    print("figure out the offset for each map's 0 degrees rotation")
+    # print("figure out the offset for each map's 0 degrees rotation")
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
     return rot_img
   
   target_size = 128
-  print(map_img.shape)
   # region of interest's (i.e. centered at robot) relative width
   roi_rel_w = 0.07 # hyperparameter to be set by user
-  print("assumes HxWxC image format!")
+  # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
-  fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
-  map_img = rotate_image(map_img, path_x[0], path_y[0], path_z[0], path_w[0])
-  plt.imshow(map_img)
-  plt.show()
-  # crop out around the robot
-  x_start = int(trans_path_x[0] - rot_w // 2)
-  x_end = int(trans_path_x[0] + rot_w // 2)
-  y_start = int(trans_path_y[0] - rot_w // 2)
-  y_end = int(trans_path_y[0] + rot_w // 2)
-  # x and y (blank/white) padding offset
-  xpo, ypo = 0, 0
-  if x_start < 0:
-    xpo = abs(x_start)
-    x_start = 0
-  if y_start < 0:
-    ypo = abs(y_start)
-    y_start = 0
-  print("assumes HxWxC image format!")
-  if x_end > map_img.shape[1]: 
-    x_end = map_img.shape[1]
-  if y_end > map_img.shape[0]:
-    y_end = map_img.shape[0]
   
-  fpv_img[ypo:y_end-y_start, xpo:x_end-x_start, :] = map_img[y_start:y_end, x_start:x_end, :]
-  plt.imshow(fpv_img)
-  plt.show()
-  
-  print("need to reshape cv2 CHW to matplotlib HWC?")
-  fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
-                       interpolation=cv2.INTER_CUBIC) 
-  
-  plt.imshow(fpv_img)
-  plt.show()
+  for i in range(len(path_x)):
+    fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
+    rot_map = rotate_image(map_img, path_x[0], path_y[0], path_z[0], path_w[0])
+    plt.imshow(rot_map)
+    plt.show()
+    # crop out around the robot
+    x_start = int(trans_path_x[0] - rot_w // 2)
+    x_end = int(trans_path_x[0] + rot_w // 2)
+    y_start = int(trans_path_y[0] - rot_w // 2)
+    y_end = int(trans_path_y[0] + rot_w // 2)
+    # x and y (blank/white) padding offset
+    xpo, ypo = 0, 0
+    if x_start < 0:
+      xpo = abs(x_start)
+      x_start = 0
+    if y_start < 0:
+      ypo = abs(y_start)
+      y_start = 0
+    # print("assumes HxWxC image format!")
+    if x_end > map_img.shape[1]: 
+      x_end = map_img.shape[1]
+    if y_end > map_img.shape[0]:
+      y_end = map_img.shape[0]
+
+    fpv_img[ypo:y_end-y_start, xpo:x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
+    plt.imshow(fpv_img)
+    plt.show()
+
+    fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
+                         interpolation=cv2.INTER_CUBIC) 
+
+    plt.imshow(fpv_img)
+    plt.show()
   
   # save in the format Tim's already using (i.e. csv)
   # save cropped image of map & resized camera image
