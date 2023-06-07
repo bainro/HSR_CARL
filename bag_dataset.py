@@ -210,14 +210,12 @@ if __name__ == "__main__":
   print("rot: ", rot)
  
   def rotate_image(image, x, y, qz, qw):
-    # (x, y) pt to rotate about
-    # (qz, qw) last 2 quarternion elements
     print("assumes HxWxC image format!")
-    image_center = tuple(np.array(image.shape[1::-1]) // 2)
+    rotation_pt = (x,y)
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     yaw_degs = yaw * 180 / math.pi
     print("figure out the offset for each map's 0 degrees rotation")
-    rot_mat = cv2.getRotationMatrix2D(image_center, yaw_degs, 1.0)
+    rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
     return rot_img
   
