@@ -274,6 +274,12 @@ if __name__ == "__main__":
     if y_end > map_img.shape[0]:
       y_end = map_img.shape[0]
 
+    print("ypo: ", ypo)
+    print("xpo: ", xpo)
+    print("x_end: ", x_end)
+    print("y_end: ", y_end)
+    print("fpv_img.shape: ", fpv_img.shape)
+    print("rot_map.shape: ", rot_map.shape)
     fpv_img[ypo:y_end-y_start, xpo:x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
     fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
