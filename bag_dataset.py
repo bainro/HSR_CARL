@@ -209,8 +209,11 @@ if __name__ == "__main__":
   print("rot: ", rot)
   
   # rotate & crop with robot position at center
-  def rotate_image(image, angle):
-    image_center = tuple(np.array(image.shape[1::-1]) / 2)
+  def rotate_image(image, qz, qw):
+    print("assumes HxWxC image format!")
+    image_center = tuple(np.array(image.shape[1::-1]) // 2)
+    _roll, _pitch, yaw = quart_to_euler([0, 0, qz, qw])
+    print("roll, pitch, yaw: ", _roll, _pitch, yaw)
     rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
     result = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
     return result
@@ -241,11 +244,10 @@ if __name__ == "__main__":
     pass
   ### ALMOST BUT WANT TO ADD PADDING FOR ROTATION
   fpv_img = map_img[x_start:x_end, y_start:yend, :]
-  # conditional logic for if crop isn't big enough
   # rotate around the center
   # crop again (2 crops ensures no white space)
   
-  print("need to reshape cv2 CHW to matplotlib HWC?)
+  print("need to reshape cv2 CHW to matplotlib HWC?")
   fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), interpolation=cv2.INTER_CUBIC) 
   
   # save in the format Tim's already using (i.e. csv)
