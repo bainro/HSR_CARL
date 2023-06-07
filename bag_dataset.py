@@ -224,7 +224,7 @@ if __name__ == "__main__":
   # region of interest's (i.e. centered at robot) relative width
   roi_rel_w = 0.07 # hyperparameter to be set by user
   print("assumes HxWxC image format!")
-  rot_w = int((map_img.shape[0] * roi_rel_w) // 1)
+  rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
   map_img = rotate_image(map_img, path_x[0], path_y[0], path_z[0], path_w[0])
   plt.imshow(map_img)
