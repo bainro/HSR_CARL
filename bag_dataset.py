@@ -223,6 +223,8 @@ if __name__ == "__main__":
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     yaw_degs = yaw * 180 / math.pi
     print("FOR DBG'ING!")
+    x = int(x//1)
+    y = int(y//1)
     image[x:x+10,y:y+10,:] = 255
     # print("figure out the offset for each map's 0 degrees rotation")
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
