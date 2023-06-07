@@ -211,6 +211,7 @@ if __name__ == "__main__":
   plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=5, label="end")
   plt.legend(loc="lower right")
   # fig.savefig('/tmp/test.svg', format='svg', dpi=1200)
+  plt.clf()
   
   print("path_x[0] end: ", path_x[0])
   print("path_y[0] end: ", path_y[0])
