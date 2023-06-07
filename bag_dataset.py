@@ -106,11 +106,12 @@ if __name__ == "__main__":
   del path_nsecs # don't need nsecs anymore
   
   print("FOR DBG'ING!")
-  path_x = path_x[::100]
-  path_y = path_y[::100]
-  path_z = path_z[::100]
-  path_w = path_w[::100]
-  path_secs = path_secs[::100]
+  skip_factor = 500
+  path_x = path_x[::skip_factor]
+  path_y = path_y[::skip_factor]
+  path_z = path_z[::skip_factor]
+  path_w = path_w[::skip_factor]
+  path_secs = path_secs[::skip_factor]
   
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 2nd floor")
@@ -235,6 +236,7 @@ if __name__ == "__main__":
   
   for i in range(len(trans_path_x)):
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
+    
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
     # plt.imshow(rot_map)
     # plt.show()
@@ -279,4 +281,4 @@ if __name__ == "__main__":
   
   # === FUTURE FEATURES ===
   # Include history channels (i.e. multiple stacked FPV images)
-  # Generating GMP images using the blueprint images instead of map.pgm 
+  # Include LIDAR as separate image channel (only affects 1st conv, which scales linearly)
