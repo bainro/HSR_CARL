@@ -222,7 +222,10 @@ if __name__ == "__main__":
   print("assumes HxWxC image format!")
   rot_w = map_img.shape[0] * rot_rel_w
   fpv_img = np.zeros(size=(rot_w, rot_w, 3))
-  
+  # crop out around the robot 
+  # conditional logic for if crop isn't big enough
+  # rotate around the center
+  # crop again (2 crops ensures no white space)
   
   # save in the format Tim's already using (i.e. csv)
   # save cropped image of map & resized camera image
