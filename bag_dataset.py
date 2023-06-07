@@ -114,11 +114,11 @@ if __name__ == "__main__":
   path_secs = path_secs[::skip_factor]#[:16]
   
   # use keys to translate, rotate, & scale the path
-  print("specific settings for SBSG 2nd floor")
+  print("specific settings for SBSG 5th floor")
   for i in range(len(path_x)):
-    path_x[i] = path_x[i] + 39.50 # 53.38
-    path_y[i] = path_y[i] + 28.19 # 4.8
-  rot = -0.0231 # radians
+    path_x[i] = path_x[i] + 39.40 # 53.38
+    path_y[i] = path_y[i] + 28.69 # 4.8
+  rot = -0.0291 # radians
   scale = 20 # 127.25
   shift_on = False
   enter_pressed = False
