@@ -242,11 +242,11 @@ if __name__ == "__main__":
   if y_start < 0:
     ypo = abs(y_start)
     y_start = 0
-  print("assumes HxWxC image format!")
-  if x_end > map_img.shape[0]: 
-    x_end = map_img.shape[0]
-  if y_end > map_img.shape[1]:
-    y_end = map_img.shape[1]
+  print("assumes WxHxC image format!")
+  if x_end > map_img.shape[1]: 
+    x_end = map_img.shape[1]
+  if y_end > map_img.shape[0]:
+    y_end = map_img.shape[0]
   
   fpv_img[xpo:x_end-x_start, ypo:y_end-y_start, :] = map_img[x_start:x_end, y_start:y_end, :]
   plt.imshow(fpv_img)
