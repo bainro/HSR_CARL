@@ -282,7 +282,7 @@ if __name__ == "__main__":
     ax.axes.get_yaxis().set_visible(False)
     ax.imshow(fpv_img)
   
-  plt.subplots_adjust(wspace=0.03, hspace=0.01)
+  fig2.subplots_adjust(wspace=0.03, hspace=0.01)
   ax1 = plt.subplot(5,1,5)
   ax1.imshow(map_img)
   ax1.scatter(x=trans_path_x, y=trans_path_y, c='b', s=3)
