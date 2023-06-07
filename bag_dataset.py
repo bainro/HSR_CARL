@@ -105,22 +105,33 @@ if __name__ == "__main__":
     path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
   del path_nsecs # don't need nsecs anymore
   
-  # hyperparameter of relative path width to filter poses
-  rel_filter_dx = 0.1
+  # change angle in radians to filter consecutive poses
+  filter_dr = 0.375 # 0.375 rads ~= 21 degs
+  # relative path width change to filter consecutive poses
+  rel_filter_dx = 0.1 # hyperparameter to tune for each map
   path_w = max(path_x) - min(path_x)
   filter_dx = path_w * rel_filter_dx
-  last_pt = [200, 200] # last non-filtered (i.e. included) pose
+  # last non-filtered (i.e. included) pose. 
+  last_pt = [math.inf, math.inf, math.inf] 
   # filter out poses based on (dx, dr) wrt last included pose
   for i in range(len(path_secs)):
     x = path_x[i]
     y = path_y[i]
-    dx = pass
+    # triangle maths
+    dx = ((last_pt[0] - x) ** 2) + (last_pt[1] - y) ** 2)) ** 0.5
+  
     qz = path_z[i]
     qw = path_w[i]
     _r, _p, yaw = t.euler_from_quaternion([0, 0, qz, qw])
-    dr = pass
+    yaw = yaw + math.pi # make smallest possible value == 0
+    # have to check for wrap around!
+    if abs(yaw - last_pt[2]) > math.pi:
+      dr = 2 * math.pi - abs(yaw - last_pt[2]) 
+    else:
+      dr = abs(yaw - last_pt[2])
+  
     if dx > filter_dx or dr > filter_dr:
-      last_pt = [x, y, qz, qw]
+      last_pt = [x, y, yaw]
     else: # bye-bye!
       del path_x[i], path_y[i], path_z[i], path_w[i], path_secs[i]
   
