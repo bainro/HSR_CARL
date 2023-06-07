@@ -289,7 +289,7 @@ if __name__ == "__main__":
       fpv_img[ypo:y_end-y_start, xpo:x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
     fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
-    plt.imshow(fpv_img)
+    plt.imshow(fpv_img, cmap='gray', vmin=0, vmax=255)
     plt.show()
     
     '''
