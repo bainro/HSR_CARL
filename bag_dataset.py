@@ -181,17 +181,14 @@ if __name__ == "__main__":
   plt.scatter(x=trans_path_x[0], y=trans_path_y[0], c='g', s=5, label="start")
   plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=5, label="end")
   plt.legend(loc="lower right")
-  fig.savefig('/tmp/test.svg', format='svg', dpi=1200)
+  # fig.savefig('/tmp/test.svg', format='svg', dpi=1200)
   
   print("path_x[0] end: ", path_x[0])
   print("path_y[0] end: ", path_y[0])
   print("scale: ", scale)
   print("rot: ", rot)
   
-  # add buffer to map to enable rotate + crop
-  # crop with robot position at center
-  # rotate, then crop to final size
-  # draw robot's pose (start simple, like an arrow)
+  # rotate & crop with robot position at center
   
   # save in the format Tim's already using (i.e. csv)
   # save cropped image of map & resized camera image
