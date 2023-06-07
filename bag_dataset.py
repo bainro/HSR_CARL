@@ -203,6 +203,7 @@ if __name__ == "__main__":
   plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=5, label="end")
   plt.legend(loc="lower right")
   # fig.savefig('/tmp/test.svg', format='svg', dpi=1200)
+  plt.clf()
   
   print("path_x[0] end: ", path_x[0])
   print("path_y[0] end: ", path_y[0])
@@ -225,7 +226,7 @@ if __name__ == "__main__":
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
-  for i in range(len(path_x)):
+  for i in [0, 100, 200, 300, 400, 500, 600, 700]: # range(len(path_x)):
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
     # plt.imshow(rot_map)
