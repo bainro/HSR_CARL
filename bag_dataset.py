@@ -106,11 +106,12 @@ if __name__ == "__main__":
   del path_nsecs # don't need nsecs anymore
   
   skip_factor = 70
-  path_x = path_x[::skip_factor]
-  path_y = path_y[::skip_factor]
-  path_z = path_z[::skip_factor]
-  path_w = path_w[::skip_factor]
-  path_secs = path_secs[::skip_factor]
+  print("DBG ONLY!!!!!")
+  path_x = path_x[::skip_factor][:16]
+  path_y = path_y[::skip_factor][:16]
+  path_z = path_z[::skip_factor][:16]
+  path_w = path_w[::skip_factor][:16]
+  path_secs = path_secs[::skip_factor][:16]
   
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 2nd floor")
