@@ -304,19 +304,26 @@ if __name__ == "__main__":
     
     fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
-    plt.imshow(fpv_img, cmap='gray', vmin=0, vmax=255)
-    plt.show()
+    if i == 0:
+      plt.imshow(fpv_img, cmap='gray', vmin=0, vmax=255)
+      plt.show()
   
+  out_dir = os.path.join("/tmp/test_data/")
+  os.makedirs(out_dir, exist_ok=True)
   # save each FPV image with the corresponding GMP image
   bag = rosbag.Bag(args.bag_file)
   with open(os.path.join(destination_dir, "meta_data.csv"), "w") as meta_data_file:
     meta_data_file.write("frame,time,heading\n")
+    i = 0
     for topic, msg, t in bag.read_messages(topics=['/image_proc_resize/image']):
       meta_data_file.write("%s,%s,%.2f\n" % (i, irvine_time.strftime('%H'), heading))
-      # map_img = Image.open(io.BytesIO(map_img_data))
-      # map_img.save(os.path.join(destination_dir, "%i_map.png" % i))
-      cv2.imwrite(os.path.join(destination_dir, "%i_map.png" % i), map_view)
-      cv2.imwrite(os.path.join(destination_dir, "%i_camera.png" % i), camera_view)
+      msg_t = msg.header.stamp.secs + (msg.header.stamp.nsecs / 1e9)
+      if msg_t < path_secs[i]:
+        continue
+      ### @TODO SAVE MAP.PNG's IN PREVIOUS LOOP!
+      # cv2.imwrite(os.path.join(out_dir, "%i_map.png" % i), map_view)
+      cv2.imwrite(os.path.join(out_dir, "%i_camera.png" % i), camera_view)
+      i = i + 1
   bag.close()
   
   print("EXITING")
