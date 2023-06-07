@@ -228,8 +228,8 @@ if __name__ == "__main__":
     print("FOR DBG'ING!")
     print("yaw: ", yaw)
     if yaw < 0: yaw * -1
-    _x = 50 * math.cos(yaw)
-    _y = 50 * math.sin(yaw)
+    _x = 50 * math.sin(yaw)
+    _y = 50 * math.cos(yaw)
     _x = x + int(_x//1)
     _y = y + int(_y//1)
     image[y:y+20,x:x+20,:] = 0
