@@ -187,7 +187,7 @@ if __name__ == "__main__":
     plt.clf()
     plt.imshow(map_img, resample=False, interpolation='none')
     trans_path_x, trans_path_y = [], []
-    for i in [0, 400, 700, 1000, 1600, 2200]: # range(len(path_x)):
+    for i in [0, 400, 700, 1000, 1600, 3200]: # range(len(path_x)):
       x = path_x[i] * math.cos(rot) - path_y[i] * math.sin(rot)
       trans_path_x.append(x * scale)
       y = path_y[i] * math.cos(rot) + path_x[i] * math.sin(rot)
