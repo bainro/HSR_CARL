@@ -249,7 +249,7 @@ if __name__ == "__main__":
   for i in range(len(trans_path_x)):
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
     
-    plt.imshow(rot_map)
+    plt.imshow(map_img)
     plt.show()
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
     
