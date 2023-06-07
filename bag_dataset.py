@@ -225,6 +225,7 @@ if __name__ == "__main__":
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     yaw_degs = yaw * 180 / math.pi
     print("FOR DBG'ING!")
+    print("yaw: ", yaw)
     for i in range(50):
       _x = x * math.cos(yaw) - y * math.sin(yaw)
       _y = y * math.cos(yaw) + x * math.sin(yaw)
