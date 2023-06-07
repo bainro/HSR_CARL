@@ -277,6 +277,7 @@ if __name__ == "__main__":
     
     if c > 15: break
     ax = plt.subplot(5,4,c+1)
+    ax.imshow(fpv_img)
   
   ax1 = plt.subplot(5,1,5)
   ax1.imshow(map_img)
