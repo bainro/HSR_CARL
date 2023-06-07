@@ -105,21 +105,21 @@ if __name__ == "__main__":
     path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
   del path_nsecs # don't need nsecs anymore
   
-  skip_factor = 250
-  print("DBG ONLY!!!!!")
-  path_x = path_x[::skip_factor][:16]
-  path_y = path_y[::skip_factor][:16]
-  path_z = path_z[::skip_factor][:16]
-  path_w = path_w[::skip_factor][:16]
-  path_secs = path_secs[::skip_factor][:16]
+  skip_factor = 10
+  # print("DBG ONLY!!!!!")
+  path_x = path_x[::skip_factor]#[:16]
+  path_y = path_y[::skip_factor]#[:16]
+  path_z = path_z[::skip_factor]#[:16]
+  path_w = path_w[::skip_factor]#[:16]
+  path_secs = path_secs[::skip_factor]#[:16]
   
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 2nd floor")
   for i in range(len(path_x)):
-    path_x[i] = path_x[i] + 53.38
-    path_y[i] = path_y[i] + 4.8
+    path_x[i] = path_x[i] + 10 # 53.38
+    path_y[i] = path_y[i] + 10 # 4.8
   rot = 0.03999 # radians
-  scale = 127.25
+  scale = 20 # 127.25
   shift_on = False
   enter_pressed = False
   
@@ -183,9 +183,9 @@ if __name__ == "__main__":
    
   # load the picture of the map
   map_img = None
-  # with open("/tmp/map.pgm", 'rb') as pgmf:
   # @TODO hardcoded for SBSG 2nd floor
-  with open("/tmp/test.png", 'rb') as pgmf:
+  # with open("/tmp/test.png", 'rb') as pgmf:
+  with open("/tmp/map.pgm", 'rb') as pgmf:
     map_img = plt.imread(pgmf)
     
   print("path_x[0] start: ", path_x[0])  
@@ -225,7 +225,7 @@ if __name__ == "__main__":
     rotation_pt = (x,y)
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     yaw_degs = yaw * 180 / math.pi
-    # print("FOR DBG'ING!")
+    # print("FOR DBG'ING FPV ROTATION!")
     # print("yaw: ", yaw)
     # _x = 50 * math.cos(yaw)
     # _y = 50 * math.sin(yaw)
@@ -244,7 +244,7 @@ if __name__ == "__main__":
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
-  fig2 = plt.figure(figsize=(10, 12))
+  # fig2 = plt.figure(figsize=(10, 12))
   
   for c, i in enumerate(range(len(trans_path_x))):
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
@@ -273,16 +273,18 @@ if __name__ == "__main__":
     fpv_img[ypo:y_end-y_start, xpo:x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
     fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
-    # plt.imshow(fpv_img)
-    # plt.show()
+    plt.imshow(fpv_img)
+    plt.show()
     
+    '''
     if c > 15: break
     ax = plt.subplot(5,4,c+1)
     ax.axes.get_xaxis().set_visible(False)
     ax.axes.get_yaxis().set_visible(False)
     ax.imshow(fpv_img)
+    '''
   
-  #fig2.subplots_adjust(wspace=0.03, hspace=0.0034)
+  '''
   plt.tight_layout(0.55)
   ax1 = plt.subplot(5,1,5)
   ax1.imshow(map_img)
@@ -291,6 +293,7 @@ if __name__ == "__main__":
   ax1.axes.get_yaxis().set_visible(False)
   fig2.savefig('/tmp/test2.svg', format='svg', dpi=1200)
   plt.show()
+  '''
   
   # save in the format Tim's already using (i.e. csv)
   # save cropped image of map & resized camera image
