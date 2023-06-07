@@ -244,7 +244,7 @@ if __name__ == "__main__":
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
-  fig2 = plt.figure(figsize=(10, 15))
+  fig2 = plt.figure(figsize=(10, 12))
   
   for c, i in enumerate(range(len(trans_path_x))):
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
@@ -282,7 +282,8 @@ if __name__ == "__main__":
     ax.axes.get_yaxis().set_visible(False)
     ax.imshow(fpv_img)
   
-  fig2.subplots_adjust(wspace=0.03, hspace=0.0034)
+  #fig2.subplots_adjust(wspace=0.03, hspace=0.0034)
+  plt.tight_layout(0.55)
   ax1 = plt.subplot(5,1,5)
   ax1.imshow(map_img)
   ax1.scatter(x=trans_path_x, y=trans_path_y, c='b', s=3)
