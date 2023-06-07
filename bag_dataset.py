@@ -307,16 +307,20 @@ if __name__ == "__main__":
     plt.imshow(fpv_img, cmap='gray', vmin=0, vmax=255)
     plt.show()
   
-  # save in the format Tim's already using (i.e. csv)
-  # save cropped image of map & resized camera image
-  # loop over the bag to save each image with it's pose
+  # save each FPV image with the corresponding GMP image
+  bag = rosbag.Bag(args.bag_file)
+  with open(os.path.join(destination_dir, "meta_data.csv"), "w") as meta_data_file:
+    meta_data_file.write("frame,time,heading\n")
+    for topic, msg, t in bag.read_messages(topics=['/image_proc_resize/image']):
+      meta_data_file.write("%s,%s,%.2f\n" % (i, irvine_time.strftime('%H'), heading))
+      # map_img = Image.open(io.BytesIO(map_img_data))
+      # map_img.save(os.path.join(destination_dir, "%i_map.png" % i))
+      cv2.imwrite(os.path.join(destination_dir, "%i_map.png" % i), map_view)
+      cv2.imwrite(os.path.join(destination_dir, "%i_camera.png" % i), camera_view)
+  bag.close()
+  
   print("EXITING")
   exit()
-  bag = rosbag.Bag('/tmp/loc.bag')
-  path_x, path_y = [], []
-  for topic, msg, t in bag.read_messages(topics=['/image_proc_resize/image']):
-    print(msg)
-  bag.close()
   
   # === FUTURE FEATURES ===
   # Include history channels (i.e. multiple stacked FPV images)
