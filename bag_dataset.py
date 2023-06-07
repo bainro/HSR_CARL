@@ -211,8 +211,8 @@ if __name__ == "__main__":
   plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=20, label="end")
   l = plt.legend(loc="upper right", fontsize=20)
   # hack to scale legend's icons with bigger font size
-  l.legendHandles[0]._sizes = [30]
-  l.legendHandles[1]._sizes = [30]
+  l.legendHandles[0]._sizes = [300]
+  l.legendHandles[1]._sizes = [300]
   plt.show()
   fig.savefig('/tmp/overlay.svg', format='svg', dpi=1200)
   plt.clf()
