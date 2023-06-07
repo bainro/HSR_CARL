@@ -244,7 +244,7 @@ if __name__ == "__main__":
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
-  plt.figure(figsize=(10, 16))
+  plt.figure(figsize=(7, 16))
   
   for c, i in enumerate(range(len(trans_path_x))):
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
