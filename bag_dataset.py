@@ -244,9 +244,6 @@ if __name__ == "__main__":
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
   plt.figure(figsize=(12, 4))
-  ax1 = plt.subplot(5,4,1)
-  ax1.imshow(map_img)
-  ax1.scatter(x=trans_path_x, y=trans_path_y, c='b', s=3)
   
   for c, i in enumerate(range(len(trans_path_x))):
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
@@ -278,8 +275,12 @@ if __name__ == "__main__":
     # plt.imshow(fpv_img)
     # plt.show()
     
-    ax = plt.subplot(5,4,c+2)
+    if c > 
+    ax = plt.subplot(5,4,c+1)
   
+  ax1 = plt.subplot(5,1,5)
+  ax1.imshow(map_img)
+  ax1.scatter(x=trans_path_x, y=trans_path_y, c='b', s=3)
   plt.show()
   
   # save in the format Tim's already using (i.e. csv)
