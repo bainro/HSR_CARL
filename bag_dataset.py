@@ -246,9 +246,9 @@ if __name__ == "__main__":
     with kb.Listener(on_press=on_press, on_release=on_release) as listener:
       listener.join() 
   
+  '''
   plt.scatter(x=trans_path_x[0], y=trans_path_y[0], c='lime', s=25, label="start")
   plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=25, label="end")
-  '''
   l = plt.legend(loc="upper right", fontsize=20)
   # hack to scale legend's icons with bigger font size
   l.legendHandles[0]._sizes = [240]
