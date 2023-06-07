@@ -282,12 +282,12 @@ if __name__ == "__main__":
     ax.axes.get_yaxis().set_visible(False)
     ax.imshow(fpv_img)
   
+  plt.subplots_adjust(wspace=0.03, hspace=0.02)
   ax1 = plt.subplot(5,1,5)
   ax1.imshow(map_img)
   ax1.scatter(x=trans_path_x, y=trans_path_y, c='b', s=3)
   ax1.axes.get_xaxis().set_visible(False)
   ax1.axes.get_yaxis().set_visible(False)
-  plt.subplots_adjust(wspace=0.03, hspace=0.01)
   fig2.savefig('/tmp/test2.svg', format='svg', dpi=1200)
   plt.show()
   
