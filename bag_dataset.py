@@ -118,7 +118,7 @@ if __name__ == "__main__":
     x = path_x[i]
     y = path_y[i]
     # triangle maths
-    dx = ((last_pt[0] - x) ** 2) + (last_pt[1] - y) ** 2)) ** 0.5
+    dx = (((last_pt[0] - x) ** 2) + ((last_pt[1] - y) ** 2)) ** 0.5
   
     qz = path_z[i]
     qw = path_w[i]
