@@ -275,8 +275,8 @@ if __name__ == "__main__":
     # plt.imshow(fpv_img)
     # plt.show()
     
-    if c > 
-    ax = plt.subplot(5,4,c+1)
+    if c < 15:
+      ax = plt.subplot(5,4,c+1)
   
   ax1 = plt.subplot(5,1,5)
   ax1.imshow(map_img)
