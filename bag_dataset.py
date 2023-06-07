@@ -183,9 +183,9 @@ if __name__ == "__main__":
    
   # load the picture of the map
   map_img = None
-  # @TODO hardcoded for SBSG 2nd floor
-  # with open("/tmp/test.png", 'rb') as pgmf:
-  with open("/tmp/map.pgm", 'rb') as pgmf:
+  # with open("/tmp/map.pgm", 'rb') as pgmf:
+  # @TODO hardcoded for SBSG 5th floor
+  with open("/tmp/test.pgm", 'rb') as pgmf:
     map_img = plt.imread(pgmf)
     
   print("path_x[0] start: ", path_x[0])  
