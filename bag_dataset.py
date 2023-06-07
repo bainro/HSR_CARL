@@ -229,10 +229,14 @@ if __name__ == "__main__":
   x_end = (trans_path_x[0] + rot_w // 2)
   y_start = (trans_path_y[0] - rot_w // 2)
   y_end = (trans_path_y[0] + rot_w // 2)
-  if x_start < 0 or y_start < 0:
+  if x_start < 0:
+    pass
+  if y_start < 0:
     pass
   print("assumes HxWxC image format!")
-  if x_end > map_img.shape[0] or y_end > map_img.shape[1]:
+  if x_end > map_img.shape[0]: 
+    pass
+  if y_end > map_img.shape[1]:
     pass
   crop_img = map_img[x_start:x_end, y_start:yend, :]
   # conditional logic for if crop isn't big enough
