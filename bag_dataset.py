@@ -10,6 +10,7 @@ import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 from pynput import keyboard as kb
+from tf import transformations as t
 
 parser = argparse.ArgumentParser()
 _help = "path to previously learned cartographer map (*.pbstream)"
@@ -212,11 +213,11 @@ if __name__ == "__main__":
   def rotate_image(image, qz, qw):
     print("assumes HxWxC image format!")
     image_center = tuple(np.array(image.shape[1::-1]) // 2)
-    _roll, _pitch, yaw = quart_to_euler([0, 0, qz, qw])
+    _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     print("roll, pitch, yaw: ", _roll, _pitch, yaw)
     rot_mat = cv2.getRotationMatrix2D(image_center, angle, 1.0)
-    result = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
-    return result
+    rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
+    return rot_img
   
   target_size = 128
   print(map_img.shape)
@@ -224,31 +225,32 @@ if __name__ == "__main__":
   roi_rel_w = 0.07 # hyperparameter to be set by user
   print("assumes HxWxC image format!")
   rot_w = map_img.shape[0] * rot_rel_w
-  # extra padding for the rotation and 2nd crop
-  fpv_img = np.zeros(size=(2*rot_w, 2*rot_w, 3))
+  fpv_img = np.zeros(size=(rot_w, rot_w, 3))
+  map_img = rotate_image(map_img, path_z[0], path_w[0])
   # crop out around the robot
-  assert False, "not enough padding"
-  assert False, "what about literal edge case"
   x_start = (trans_path_x[0] - rot_w // 2)
   x_end = (trans_path_x[0] + rot_w // 2)
   y_start = (trans_path_y[0] - rot_w // 2)
   y_end = (trans_path_y[0] + rot_w // 2)
+  # x and y (blank/white) padding offset
+  xpo, ypo = 0, 0
   if x_start < 0:
-    pass
+    xpo = abs(x_start)
+    x_start = 0
   if y_start < 0:
-    pass
+    ypo = abs(y_start)
+    y_start = 0
   print("assumes HxWxC image format!")
   if x_end > map_img.shape[0]: 
-    pass
+    x_end = map_img.shape[0]
   if y_end > map_img.shape[1]:
-    pass
-  ### ALMOST BUT WANT TO ADD PADDING FOR ROTATION
-  fpv_img = map_img[x_start:x_end, y_start:yend, :]
-  # rotate around the center
-  # crop again (2 crops ensures no white space)
+    y_end = map_img.shape[1]
+  
+  fpv_img[xpo:x_end-x_start, ypo:y_end-y_start, :] = map_img[x_start:x_end, y_start:yend, :]
   
   print("need to reshape cv2 CHW to matplotlib HWC?")
-  fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), interpolation=cv2.INTER_CUBIC) 
+  fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
+                       interpolation=cv2.INTER_CUBIC) 
   
   # save in the format Tim's already using (i.e. csv)
   # save cropped image of map & resized camera image
