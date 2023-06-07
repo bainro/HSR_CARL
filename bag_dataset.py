@@ -58,6 +58,7 @@ if __name__ == "__main__":
   path_x, path_y = [], []
   # quarternion rotation, but we only need 2
   path_z, path_w = [], []
+  path_yaw = []
   path_secs, path_nsecs = [], []
   with open('/tmp/x.log', 'r') as x_file:
     lines = x_file.readlines()
@@ -134,6 +135,7 @@ if __name__ == "__main__":
   
     if dx > filter_dx or dr > filter_dr:
       last_pt = [x, y, yaw]
+      path_yaw.append(yaw)
     else: # bye-bye!
       del path_x[i], path_y[i], path_z[i], path_w[i], path_secs[i]
       del_count = del_count + 1
@@ -274,9 +276,9 @@ if __name__ == "__main__":
   
   for c, i in enumerate(range(len(trans_path_x))):
     if len(map_img.shape) == 3: # e.g. RGB
-      fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
+      gmp_img = np.zeros(shape=(rot_w, rot_w, 3))
     else: # e.g. grayscale
-      fpv_img = np.zeros(shape=(rot_w, rot_w))
+      gmp_img = np.zeros(shape=(rot_w, rot_w))
  
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
     
@@ -300,16 +302,16 @@ if __name__ == "__main__":
       y_end = map_img.shape[0]
       
     if len(rot_map.shape) == 3: # e.g. RGB
-      fpv_img[ypo:y_end-y_start, xpo:x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
+      gmp_img[ypo:y_end-y_start, xpo:x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
     else: # e.g. grayscale
-      fpv_img[ypo:y_end-y_start, xpo:x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
+      gmp_img[ypo:y_end-y_start, xpo:x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
     
-    fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
+    gmp_img = cv2.resize(gmp_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
     # plt.savefig('/tmp/overlay.svg', format='svg', dpi=1200)
-    
+    cv2.imwrite(os.path.join(out_dir, "%i_map.png" % i), gmp_img)
     if i == 0:
-      plt.imshow(fpv_img, cmap='gray', vmin=0, vmax=255)
+      plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
       plt.show()
   
   # save each FPV image with the corresponding GMP image
@@ -318,13 +320,13 @@ if __name__ == "__main__":
     meta_data_file.write("frame,time,heading\n")
     i = 0
     for topic, msg, t in bag.read_messages(topics=['/image_proc_resize/image']):
-      meta_data_file.write("%s,%s,%.2f\n" % (i, irvine_time.strftime('%H'), heading))
+      meta_data_file.write("%s,%s,%.2f\n" % (i, path_secs[i], path_yaw[i]))
       msg_t = msg.header.stamp.secs + (msg.header.stamp.nsecs / 1e9)
       if msg_t < path_secs[i]:
         continue
-      ### @TODO SAVE MAP.PNG's IN PREVIOUS LOOP!
-      # cv2.imwrite(os.path.join(out_dir, "%i_map.png" % i), map_view)
-      cv2.imwrite(os.path.join(out_dir, "%i_camera.png" % i), camera_view)
+      ### @TODO RESIZE TO TARGET_SIZE & CROP TO CENTER!!!
+      fpv_img = cv2.resize() cv2.INTER_AREA # & other location above!
+      cv2.imwrite(os.path.join(out_dir, "%i_camera.png" % i), fpv_img)
       i = i + 1
   bag.close()
   
