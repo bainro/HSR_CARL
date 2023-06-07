@@ -227,7 +227,6 @@ if __name__ == "__main__":
     yaw_degs = yaw * 180 / math.pi
     print("FOR DBG'ING!")
     print("yaw: ", yaw)
-    if yaw < 0: yaw * -1
     _x = 50 * math.cos(yaw)
     _y = 50 * math.sin(yaw)
     _x = x + int(_x//1)
