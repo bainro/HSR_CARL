@@ -232,7 +232,9 @@ if __name__ == "__main__":
     _y = 50 * math.sin(yaw)
     _x = x + int(_x//1)
     _y = y + int(_y//1)
-    plt.plot(y, x, _y, _x, linewidth=25)
+    image[y:y+20,x:x+20,:] = 0
+    image[_y:_y+20,_x:_x+20,:] = 0
+    
     # print("figure out the offset for each map's 0 degrees rotation")
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
@@ -276,7 +278,6 @@ if __name__ == "__main__":
     fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
     plt.imshow(fpv_img)
-    plt.plot(10, 10, 110, 110, linewidth=25)
     plt.show()
   
   # save in the format Tim's already using (i.e. csv)
