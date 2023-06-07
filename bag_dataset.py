@@ -244,7 +244,7 @@ if __name__ == "__main__":
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
-  plt.figure(figsize=(5, 32))
+  fig2 = plt.figure(figsize=(5, 32))
   
   for c, i in enumerate(range(len(trans_path_x))):
     fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
@@ -287,7 +287,7 @@ if __name__ == "__main__":
   ax1.scatter(x=trans_path_x, y=trans_path_y, c='b', s=3)
   ax1.axes.get_xaxis().set_visible(False)
   ax1.axes.get_yaxis().set_visible(False)
-  fig.savefig('/tmp/test2.svg', format='svg', dpi=1200)
+  fig2.savefig('/tmp/test2.svg', format='svg', dpi=1200)
   plt.show()
   
   # save in the format Tim's already using (i.e. csv)
