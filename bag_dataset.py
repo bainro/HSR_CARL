@@ -252,6 +252,9 @@ if __name__ == "__main__":
   fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
                        interpolation=cv2.INTER_CUBIC) 
   
+  plt.imshow(fpv_img)
+  plt.show()
+  
   # save in the format Tim's already using (i.e. csv)
   # save cropped image of map & resized camera image
   # loop over the bag to save each image with it's pose
