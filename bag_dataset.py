@@ -248,10 +248,12 @@ if __name__ == "__main__":
   
   plt.scatter(x=trans_path_x[0], y=trans_path_y[0], c='lime', s=25, label="start")
   plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=25, label="end")
+  '''
   l = plt.legend(loc="upper right", fontsize=20)
   # hack to scale legend's icons with bigger font size
   l.legendHandles[0]._sizes = [240]
   l.legendHandles[1]._sizes = [240]
+  '''
   plt.show()
   fig.savefig('/tmp/overlay.svg', format='svg', dpi=1200)
   plt.clf()
