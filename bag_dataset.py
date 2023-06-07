@@ -276,17 +276,12 @@ if __name__ == "__main__":
       x_end = map_img.shape[1]
     if y_end > map_img.shape[0]:
       y_end = map_img.shape[0]
-
-    print("ypo: ", ypo)
-    print("xpo: ", xpo)
-    print("x_end: ", x_end)
-    print("y_end: ", y_end)
-    print("fpv_img.shape: ", fpv_img.shape)
-    print("rot_map.shape: ", rot_map.shape)
+      
     if len(rot_map.shape) == 3: # e.g. RGB
       fpv_img[ypo:y_end-y_start, xpo:x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
     else: # e.g. grayscale
       fpv_img[ypo:y_end-y_start, xpo:x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
+    
     fpv_img = cv2.resize(fpv_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
     plt.imshow(fpv_img, cmap='gray', vmin=0, vmax=255)
