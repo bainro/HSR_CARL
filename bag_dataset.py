@@ -251,7 +251,10 @@ if __name__ == "__main__":
   # fig2 = plt.figure(figsize=(10, 12))
   
   for c, i in enumerate(range(len(trans_path_x))):
-    fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
+    if len(map_img.shape) == 3: # e.g. RGB
+      fpv_img = np.zeros(shape=(rot_w, rot_w, 3))
+    else: # e.g. grayscale
+      fpv_img = np.zeros(shape=(rot_w, rot_w))
  
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
     
@@ -280,7 +283,7 @@ if __name__ == "__main__":
     print("y_end: ", y_end)
     print("fpv_img.shape: ", fpv_img.shape)
     print("rot_map.shape: ", rot_map.shape)
-    if len(fpv_img.shape) == 3: # e.g. RGB
+    if len(rot_map.shape) == 3: # e.g. RGB
       fpv_img[ypo:y_end-y_start, xpo:x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
     else: # e.g. grayscale
       fpv_img[ypo:y_end-y_start, xpo:x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
