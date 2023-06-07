@@ -238,10 +238,13 @@ if __name__ == "__main__":
     pass
   if y_end > map_img.shape[1]:
     pass
-  crop_img = map_img[x_start:x_end, y_start:yend, :]
+  ### ALMOST BUT WANT TO ADD PADDING FOR ROTATION
+  fpv_img = map_img[x_start:x_end, y_start:yend, :]
   # conditional logic for if crop isn't big enough
   # rotate around the center
   # crop again (2 crops ensures no white space)
+  
+  fpv_img.reshape(target_size, target_size, 3)
   
   # save in the format Tim's already using (i.e. csv)
   # save cropped image of map & resized camera image
