@@ -52,7 +52,7 @@ if __name__ == "__main__":
     os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs:' | grep -v 'nsecs' > /tmp/secs.log")
     os.system("grep -C4 position /tmp/traj.txt | grep -e 'nsecs:' > /tmp/nsecs.log")
     os.system("grep -C4 'w:' /tmp/traj.txt | grep -e 'z:' > /tmp/rot_z.log")
-    os.system("grep -C4 'w:' /tmp/traj.txt > /tmp/rot_w.log")
+    os.system("grep     'w:' /tmp/traj.txt > /tmp/rot_w.log")
 
   # read the files into parallel lists
   path_x, path_y = [], []
