@@ -244,7 +244,7 @@ if __name__ == "__main__":
   
   target_size = 128
   # region of interest's (i.e. centered at robot) relative width
-  roi_rel_w = 0.08 # hyperparameter to be set by user
+  roi_rel_w = 0.15 # hyperparameter to be set by user
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
