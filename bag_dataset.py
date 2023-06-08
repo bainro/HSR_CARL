@@ -341,12 +341,15 @@ if __name__ == "__main__":
       assert msg.width > msg.height, "image width must be greater than image height"
       
       print("type(msg.data[0]): ", type(msg.data[0]))
+      print("msg.data[0]: ", msg.data[0])
+      print("list(msg.data)[0]: ", list(msg.data)[0])
       cam_img = np.asarray(list(msg.data), dtype=np.int8)
       cam_img = cam_img.reshape((msg.height, msg.width, 3))
       # crop to center
       x_offset = int(msg.width - msg.height // 2)
       cam_img = cam_img[:, x_offset:-x_offset, :]
-      assert cam_img.shape[0] == cam_img.shape[1], "image should be square asepect ratio"
+      assert_str = f"image should be square. {cam_img.shape[1]} != {cam_img.shape[0]}"
+      assert cam_img.shape[0] == cam_img.shape[1], assert_str
       fpv_img = cv2.resize(cam_img, dsize=(target_size, target_size, 3), 
                            interpolation=cv2.INTER_AREA)
       cv2.imwrite(os.path.join(out_dir, "%i_camera.png" % i), fpv_img)
