@@ -301,9 +301,9 @@ if __name__ == "__main__":
     if y_end > map_img.shape[0]:
       y_end = map_img.shape[0]
     
-    print("xpo: ", xpo)
-    print("x_start: ", x_start)
-    print("x_end: ", x_end)
+    # print("xpo: ", xpo)
+    # print("x_start: ", x_start)
+    # print("x_end: ", x_end)
     if xpo != 0: # literal edge (of map) case
       if len(rot_map.shape) == 3: # e.g. RGB
         gmp_img[:y_end-y_start, xpo+1:, :] = rot_map[y_start:y_end, x_start:x_end+1, :]
