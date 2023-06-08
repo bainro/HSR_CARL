@@ -365,7 +365,7 @@ if __name__ == "__main__":
       assert cam_img.shape[0] == cam_img.shape[1], assert_str
       resize_dims = (target_size, target_size)
       fpv_img = cv2.resize(cam_img, dsize=resize_dims, interpolation=cv2.INTER_AREA)
-      cv2.imwrite(os.path.join(out_dir, f'{i + prior_data}_camera.png'), fpv_img)
+      cv2.imwrite(os.path.join(out_dir[...,::-1], f'{i + prior_data}_camera.png'), fpv_img)
       i = i + 1
   bag.close()
   
