@@ -224,7 +224,7 @@ if __name__ == "__main__":
     
   print("path_x[0] start: ", path_x[0])  
   print("path_y[0] start: ", path_y[0])  
-  colors = cm.gist_rainbow(np.linspace(0, 1, len(trans_path_x)))
+  colors = cm.gist_rainbow(np.linspace(0, 1, len(path_x)))
   fig = plt.figure(figsize=(36,12))
   while not enter_pressed:
     plt.clf()
