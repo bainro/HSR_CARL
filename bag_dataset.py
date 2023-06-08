@@ -330,7 +330,7 @@ if __name__ == "__main__":
   
   # save each FPV image with the corresponding GMP image
   bag = rosbag.Bag(args.bag_file)
-  with open(os.path.join(destination_dir, "meta_data.csv"), "w") as meta_data_file:
+  with open(os.path.join(out_dir, "meta_data.csv"), "w") as meta_data_file:
     meta_data_file.write("frame,time,heading\n")
     i = 0
     for topic, msg, _t in bag.read_messages(topics=['/image_proc_resize/image']):
