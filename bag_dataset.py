@@ -339,11 +339,8 @@ if __name__ == "__main__":
       if msg_t < path_secs[i]:
         continue
       assert msg.width > msg.height, "image width must be greater than image height"
-      print("max(list(msg.data)): ", max(list(msg.data)))
       cam_img = np.asarray(list(msg.data), dtype=np.float32)
       cam_img = cam_img.reshape((msg.height, msg.width, 3))
-      # cam_img = cam_img // 255
-      # cam_img = cam_img[...,::-1] # RGB to BGR
       # crop to center
       x_offset = int((msg.width - msg.height) // 2)
       cam_img = cam_img[:, x_offset:-x_offset, :]
