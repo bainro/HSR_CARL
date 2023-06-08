@@ -350,7 +350,7 @@ if __name__ == "__main__":
       cam_img = cam_img[:, x_offset:-x_offset, :]
       assert_str = f"image should be square. {cam_img.shape[1]} != {cam_img.shape[0]}"
       assert cam_img.shape[0] == cam_img.shape[1], assert_str
-      resize_dims = (target_size, target_size, 3)
+      resize_dims = (target_size, target_size)
       fpv_img = cv2.resize(cam_img, dsize=resize_dims, interpolation=cv2.INTER_AREA)
       cv2.imwrite(os.path.join(out_dir, "%i_camera.png" % i), fpv_img)
       plt.clf()
