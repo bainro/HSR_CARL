@@ -319,14 +319,23 @@ if __name__ == "__main__":
   with open(os.path.join(destination_dir, "meta_data.csv"), "w") as meta_data_file:
     meta_data_file.write("frame,time,heading\n")
     i = 0
-    for topic, msg, t in bag.read_messages(topics=['/image_proc_resize/image']):
+    for topic, msg, _t in bag.read_messages(topics=['/image_proc_resize/image']):
       meta_data_file.write("%s,%s,%.2f\n" % (i, path_secs[i], path_yaw[i]))
       msg_t = msg.header.stamp.secs + (msg.header.stamp.nsecs / 1e9)
       if msg_t < path_secs[i]:
         continue
-      ### @TODO RESIZE TO TARGET_SIZE & CROP TO CENTER!!!
-      fpv_img = cv2.resize() cv2.INTER_AREA # & other location above!
+      assert m.width > m.height, "image width must be greater than image height"
+      cam_img = np.array(msg.data, shape=(m.height, m.width, 3))
+      # crop to center
+      x_offset = int(m.width - m.height // 2)
+      cam_img = cam_img[:, x_offset:-x_offset, :]
+      assert cam_img.shape[0] == cam_img.shape[1], "image should be square asepect ratio"
+      fpv_img = cv2.resize(cam_img, dsize=(target_size, target_size, 3), 
+                           interpolation=cv2.INTER_AREA)
       cv2.imwrite(os.path.join(out_dir, "%i_camera.png" % i), fpv_img)
+      plt.clf()
+      plt.imshow(fpv_img)
+      plt.show()
       i = i + 1
   bag.close()
   
