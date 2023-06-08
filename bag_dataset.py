@@ -235,7 +235,7 @@ if __name__ == "__main__":
       y = path_y[i] * math.cos(rot) + path_x[i] * math.sin(rot)
       trans_path_y.append(y * scale)
     # overlay the path on the map 
-    colors = cm.rainbow(np.linspace(0, 1, len(trans_path_x)))
+    colors = cm.gist_rainbow(np.linspace(0, 1, len(trans_path_x)))
     plt.scatter(x=trans_path_x, y=trans_path_y, c=colors, s=3)
     plt.show(block=False)
     plt.pause(0.01)
