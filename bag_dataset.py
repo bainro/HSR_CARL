@@ -8,6 +8,7 @@ import math
 import rosbag
 import argparse
 import numpy as np
+import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 from pynput import keyboard as kb
 from tf import transformations as t
