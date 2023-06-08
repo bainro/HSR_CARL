@@ -329,7 +329,6 @@ if __name__ == "__main__":
     
     gmp_img = cv2.resize(gmp_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
-    # plt.savefig('/tmp/overlay.svg', format='svg', dpi=1200)
     cv2.imwrite(os.path.join(out_dir, "%i_map.png" % i), gmp_img)
     if i == 0:
       plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
