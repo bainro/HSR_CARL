@@ -342,7 +342,7 @@ if __name__ == "__main__":
       print("max(list(msg.data)): ", max(list(msg.data)))
       cam_img = np.asarray(list(msg.data), dtype=np.float32)
       cam_img = cam_img.reshape((msg.height, msg.width, 3))
-      cam_img = cam_img // 255
+      # cam_img = cam_img // 255
       # cam_img = cam_img[...,::-1] # RGB to BGR
       # crop to center
       x_offset = int((msg.width - msg.height) // 2)
@@ -353,7 +353,7 @@ if __name__ == "__main__":
       fpv_img = cv2.resize(cam_img, dsize=resize_dims, interpolation=cv2.INTER_AREA)
       cv2.imwrite(os.path.join(out_dir, "%i_camera.png" % i), fpv_img)
       plt.clf()
-      plt.imshow(fpv_img)
+      plt.imshow(fpv_img, vmin=0, vmax=255)
       plt.show()
       i = i + 1
   bag.close()
