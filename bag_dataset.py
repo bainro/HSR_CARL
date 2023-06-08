@@ -350,7 +350,7 @@ if __name__ == "__main__":
       fpv_img = cv2.resize(cam_img, dsize=resize_dims, interpolation=cv2.INTER_AREA)
       cv2.imwrite(os.path.join(out_dir, "%i_camera.png" % i), fpv_img)
       i = i + 1
-      print("len(path_x), i: " len(path_x), i)
+      print("len(path_x), i: ", len(path_x), i)
   bag.close()
   
   print("EXITING")
