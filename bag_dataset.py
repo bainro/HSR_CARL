@@ -284,7 +284,7 @@ if __name__ == "__main__":
   if args.combine:
     with open(os.path.join(out_dir, "meta_data.csv"), "r") as meta_file:
       prior_data = len(meta_file.readlines())
-  
+  '''
   for c, i in enumerate(range(len(trans_path_x))):
     if len(map_img.shape) == 3: # e.g. RGB
       gmp_img = np.zeros(shape=(rot_w, rot_w, 3))
@@ -341,6 +341,7 @@ if __name__ == "__main__":
     if i == 0:
       plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
       plt.show()
+  '''
   
   # save each FPV image with the corresponding GMP image
   bag = rosbag.Bag(args.bag_file)
@@ -365,7 +366,8 @@ if __name__ == "__main__":
       assert cam_img.shape[0] == cam_img.shape[1], assert_str
       resize_dims = (target_size, target_size)
       fpv_img = cv2.resize(cam_img, dsize=resize_dims, interpolation=cv2.INTER_AREA)
-      cv2.imwrite(os.path.join(args.out_dir[...,::-1], f'{i + prior_data}_camera.png'), fpv_img)
+      save_name = os.path.join(args.out_dir, f'{i + prior_data}_camera.png')
+      cv2.imwrite(save_name, fpv_img[...,::-1])
       i = i + 1
   bag.close()
   
