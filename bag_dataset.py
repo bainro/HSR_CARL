@@ -273,13 +273,17 @@ if __name__ == "__main__":
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
     return rot_img
   
-  out_dir = args.out_dir
-  os.makedirs(out_dir, exist_ok=True)
+  os.makedirs(args.out_dir, exist_ok=True)
   target_size = 256
   # region of interest's (i.e. centered at robot) relative width
   roi_rel_w = 0.08 # hyperparameter to be set by user
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
+  
+  prior_data = 0
+  if args.combine:
+    with open(os.path.join(out_dir, "meta_data.csv"), "r") as meta_file:
+      prior_data = len(meta_file.readlines())
   
   for c, i in enumerate(range(len(trans_path_x))):
     if len(map_img.shape) == 3: # e.g. RGB
@@ -333,15 +337,16 @@ if __name__ == "__main__":
     
     gmp_img = cv2.resize(gmp_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
-    cv2.imwrite(os.path.join(out_dir, "%i_map.png" % i), gmp_img*255)
+    cv2.imwrite(os.path.join(args.out_dir, f'{i + prior_data}_map.png'), gmp_img*255)
     if i == 0:
       plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
       plt.show()
   
   # save each FPV image with the corresponding GMP image
   bag = rosbag.Bag(args.bag_file)
-  with open(os.path.join(out_dir, "meta_data.csv"), "w") as meta_data_file:
-    meta_data_file.write("frame,time,heading\n")
+  with open(os.path.join(args.out_dir, "meta_data.csv"), "a") as meta_data_file:
+    if prior_data == 0:
+      meta_data_file.write("frame,time,heading\n")
     i = 0
     for topic, msg, _t in bag.read_messages(topics=['/image_proc_resize/image']):
       if i >= len(path_x):
@@ -360,7 +365,7 @@ if __name__ == "__main__":
       assert cam_img.shape[0] == cam_img.shape[1], assert_str
       resize_dims = (target_size, target_size)
       fpv_img = cv2.resize(cam_img, dsize=resize_dims, interpolation=cv2.INTER_AREA)
-      cv2.imwrite(os.path.join(out_dir, "%i_camera.png" % i), fpv_img)
+      cv2.imwrite(os.path.join(out_dir, f'{i + prior_data}_camera.png'), fpv_img)
       i = i + 1
   bag.close()
   
