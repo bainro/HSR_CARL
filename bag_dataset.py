@@ -149,7 +149,7 @@ if __name__ == "__main__":
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 5th floor")
   for i in range(len(path_x)):
-    path_x[i] = path_x[i] + 30.38
+    path_x[i] = path_x[i] + 22.38
     path_y[i] = path_y[i] + 5.8
   rot = 0.03999 # radians
   scale = 127.25
