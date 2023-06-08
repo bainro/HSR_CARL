@@ -344,15 +344,14 @@ if __name__ == "__main__":
       print("msg.data[0]: ", msg.data[0])
       print("list(msg.data)[0]: ", list(msg.data)[0])
       cam_img = np.asarray(list(msg.data), dtype=np.int8)
-      import pdb; pdb.set_trace()
       cam_img = cam_img.reshape((msg.height, msg.width, 3))
       # crop to center
       x_offset = int((msg.width - msg.height) // 2)
       cam_img = cam_img[:, x_offset:-x_offset, :]
       assert_str = f"image should be square. {cam_img.shape[1]} != {cam_img.shape[0]}"
       assert cam_img.shape[0] == cam_img.shape[1], assert_str
-      fpv_img = cv2.resize(cam_img, dsize=(target_size, target_size, 3), 
-                           interpolation=cv2.INTER_AREA)
+      resize_dims = (target_size, target_size, 3)
+      fpv_img = cv2.resize(cam_img, dsize=resize_dims, interpolation=cv2.INTER_AREA)
       cv2.imwrite(os.path.join(out_dir, "%i_camera.png" % i), fpv_img)
       plt.clf()
       plt.imshow(fpv_img)
