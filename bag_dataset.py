@@ -304,10 +304,21 @@ if __name__ == "__main__":
     print("xpo: ", xpo)
     print("x_start: ", x_start)
     print("x_end: ", x_end)
-    if len(rot_map.shape) == 3: # e.g. RGB
-      gmp_img[ypo:y_end-y_start, xpo:x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
-    else: # e.g. grayscale
-      gmp_img[ypo:y_end-y_start, xpo:x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
+    if xpo != 0: # literal edge case
+      if len(rot_map.shape) == 3: # e.g. RGB
+        gmp_img[:y_end-y_start, xpo:, :] = rot_map[y_start:y_end, x_start:x_end, :]
+      else: # e.g. grayscale
+        gmp_img[:y_end-y_start, xpo:] = rot_map[y_start:y_end, x_start:x_end]
+    elif ypo != 0: # literal edge case
+      if len(rot_map.shape) == 3: # e.g. RGB
+        gmp_img[ypo:, :x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
+      else: # e.g. grayscale
+        gmp_img[ypo:, :x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
+    else:
+      if len(rot_map.shape) == 3: # e.g. RGB
+        gmp_img[:y_end-y_start, :x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
+      else: # e.g. grayscale
+        gmp_img[:y_end-y_start, :x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
     
     gmp_img = cv2.resize(gmp_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
