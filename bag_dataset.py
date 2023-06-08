@@ -48,14 +48,14 @@ if __name__ == "__main__":
     time.sleep(3)
     os.system("rosservice call /trajectory_query 'trajectory_id: 1' > /tmp/traj.txt")
     time.sleep(3)
-    os.system("pkill cart")
-    # get just the pose position (x,y) and the corresponding timestamp (secs)
-    os.system("grep -C4 position /tmp/traj.txt | grep -e 'x:' > /tmp/x.log")
-    os.system("grep -C4 position /tmp/traj.txt | grep -e 'y:' > /tmp/y.log")
-    os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs:' | grep -v 'nsecs' > /tmp/secs.log")
-    os.system("grep -C4 position /tmp/traj.txt | grep -e 'nsecs:' > /tmp/nsecs.log")
-    os.system("grep -C4 'w:' /tmp/traj.txt | grep -e 'z:' > /tmp/rot_z.log")
-    os.system("grep     'w:' /tmp/traj.txt > /tmp/rot_w.log")
+  os.system("pkill cart")
+  # get just the pose position (x,y) and the corresponding timestamp (secs)
+  os.system("grep -C4 position /tmp/traj.txt | grep -e 'x:' > /tmp/x.log")
+  os.system("grep -C4 position /tmp/traj.txt | grep -e 'y:' > /tmp/y.log")
+  os.system("grep -C4 position /tmp/traj.txt | grep -e 'secs:' | grep -v 'nsecs' > /tmp/secs.log")
+  os.system("grep -C4 position /tmp/traj.txt | grep -e 'nsecs:' > /tmp/nsecs.log")
+  os.system("grep -C4 'w:' /tmp/traj.txt | grep -e 'z:' > /tmp/rot_z.log")
+  os.system("grep     'w:' /tmp/traj.txt > /tmp/rot_w.log")
 
   # read the files into parallel lists
   path_x, path_y = [], []
