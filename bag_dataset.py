@@ -261,6 +261,7 @@ if __name__ == "__main__":
     y = int(y//1)
     rotation_pt = (x,y)
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
+    yaw = yaw * -1 # flip rotation
     yaw_degs = yaw * 180 / math.pi
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
@@ -336,10 +337,10 @@ if __name__ == "__main__":
     for topic, msg, _t in bag.read_messages(topics=['/image_proc_resize/image']):
       if i >= len(path_x):
         break
-      meta_data_file.write("%s,%s,%.2f\n" % (i, path_secs[i], path_yaw[i]))
       msg_t = msg.header.stamp.secs + (msg.header.stamp.nsecs / 1e9)
       if msg_t < path_secs[i]:
         continue
+      meta_data_file.write("%s,%s,%.2f\n" % (i, path_secs[i], path_yaw[i]))  
       assert msg.width > msg.height, "image width must be greater than image height"
       cam_img = np.asarray(list(msg.data), dtype=np.float32)
       cam_img = cam_img.reshape((msg.height, msg.width, 3))
