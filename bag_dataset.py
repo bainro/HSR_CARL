@@ -22,6 +22,8 @@ _help = "directory to save the training data"
 parser.add_argument("--out_dir", type=str, required=True, help=_help)
 _help = "reuse previous path calculations"
 parser.add_argument('--reuse_path', default=False, action='store_true', help=_help)
+_help = "append to previous dataset instead of overwriting"
+parser.add_argument('--combine', default=False, action='store_true', help=_help)
 args = parser.parse_args()
 assert args.map_file != "" and args.bag_file != "", "Must specify path to *.pbstream & *.bag files!"
 
