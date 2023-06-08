@@ -334,6 +334,8 @@ if __name__ == "__main__":
     meta_data_file.write("frame,time,heading\n")
     i = 0
     for topic, msg, _t in bag.read_messages(topics=['/image_proc_resize/image']):
+      if i >= len(path_x):
+        break
       meta_data_file.write("%s,%s,%.2f\n" % (i, path_secs[i], path_yaw[i]))
       msg_t = msg.header.stamp.secs + (msg.header.stamp.nsecs / 1e9)
       if msg_t < path_secs[i]:
@@ -350,7 +352,6 @@ if __name__ == "__main__":
       fpv_img = cv2.resize(cam_img, dsize=resize_dims, interpolation=cv2.INTER_AREA)
       cv2.imwrite(os.path.join(out_dir, "%i_camera.png" % i), fpv_img)
       i = i + 1
-      print("len(path_x), i: ", len(path_x), i)
   bag.close()
   
   print("EXITING")
