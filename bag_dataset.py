@@ -338,10 +338,10 @@ if __name__ == "__main__":
       msg_t = msg.header.stamp.secs + (msg.header.stamp.nsecs / 1e9)
       if msg_t < path_secs[i]:
         continue
-      assert m.width > m.height, "image width must be greater than image height"
-      cam_img = np.array(msg.data, shape=(m.height, m.width, 3))
+      assert msg.width > msg.height, "image width must be greater than image height"
+      cam_img = np.array(msg.data, shape=(msg.height, msg.width, 3))
       # crop to center
-      x_offset = int(m.width - m.height // 2)
+      x_offset = int(msg.width - msg.height // 2)
       cam_img = cam_img[:, x_offset:-x_offset, :]
       assert cam_img.shape[0] == cam_img.shape[1], "image should be square asepect ratio"
       fpv_img = cv2.resize(cam_img, dsize=(target_size, target_size, 3), 
