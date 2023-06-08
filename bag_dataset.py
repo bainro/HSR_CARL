@@ -17,6 +17,8 @@ _help = "path to previously learned cartographer map (*.pbstream)"
 parser.add_argument("--map_file", type=str, required=True, help=_help)
 _help = "path to previously recorded rosbag"
 parser.add_argument("--bag_file", type=str, required=True, help=_help)
+_help = "directory to save the training data"
+parser.add_argument("--out_dir", type=str, required=True, help=_help)
 _help = "reuse previous path calculations"
 parser.add_argument('--reuse_path', default=False, action='store_true', help=_help)
 args = parser.parse_args()
@@ -267,7 +269,7 @@ if __name__ == "__main__":
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
     return rot_img
   
-  out_dir = os.path.join("/tmp/test_data/")
+  out_dir = args.out_dir
   os.makedirs(out_dir, exist_ok=True)
   target_size = 256
   # region of interest's (i.e. centered at robot) relative width
