@@ -278,8 +278,12 @@ if __name__ == "__main__":
   for c, i in enumerate(range(len(trans_path_x))):
     if len(map_img.shape) == 3: # e.g. RGB
       gmp_img = np.zeros(shape=(rot_w, rot_w, 3))
+      # assumes padding color is same as top-left map px
+      gmp_img[:,:,0] = map_img[0,0,0]
+      gmp_img[:,:,1] = map_img[0,0,1]
+      gmp_img[:,:,2] = map_img[0,0,2]
     else: # e.g. grayscale
-      gmp_img = np.zeros(shape=(rot_w, rot_w))
+      gmp_img = np.zeros(shape=(rot_w, rot_w)) + map_img[0,0]
  
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
     
