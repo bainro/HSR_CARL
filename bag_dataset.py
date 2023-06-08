@@ -149,9 +149,9 @@ if __name__ == "__main__":
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 5th floor")
   for i in range(len(path_x)):
-    path_x[i] = path_x[i] + 22.38
-    path_y[i] = path_y[i] + 5.8
-  rot = 0.03999 # radians
+    path_x[i] = path_x[i] + 24.98
+    path_y[i] = path_y[i] + 7.2
+  rot = 0.0249899999 # radians
   scale = 127.25
   shift_on = False
   enter_pressed = False
@@ -234,18 +234,19 @@ if __name__ == "__main__":
       y = path_y[i] * math.cos(rot) + path_x[i] * math.sin(rot)
       trans_path_y.append(y * scale)
     # overlay the path on the map 
-    plt.scatter(x=trans_path_x, y=trans_path_y, c='b', s=3)
+    colors = cm.rainbow(np.linspace(0, 1, len(trans_path_x)))
+    plt.scatter(x=trans_path_x, y=trans_path_y, c=colors, s=3)
     plt.show(block=False)
     plt.pause(0.01)
     with kb.Listener(on_press=on_press, on_release=on_release) as listener:
       listener.join() 
   
-  plt.scatter(x=trans_path_x[0], y=trans_path_y[0], c='lime', s=25, label="start")
-  plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=25, label="end")
-  l = plt.legend(loc="upper right", fontsize=20)
+  # plt.scatter(x=trans_path_x[0], y=trans_path_y[0], c='lime', s=25, label="start")
+  # plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=25, label="end")
+  # l = plt.legend(loc="lower right", fontsize=16)
   # hack to scale legend's icons with bigger font size
-  l.legendHandles[0]._sizes = [240]
-  l.legendHandles[1]._sizes = [240]
+  # l.legendHandles[0]._sizes = [200]
+  # l.legendHandles[1]._sizes = [200]
   plt.show()
   fig.savefig('/tmp/overlay.svg', format='svg', dpi=1200)
   plt.clf()
