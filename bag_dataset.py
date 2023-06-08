@@ -300,7 +300,10 @@ if __name__ == "__main__":
       x_end = map_img.shape[1]
     if y_end > map_img.shape[0]:
       y_end = map_img.shape[0]
-      
+    
+    print("xpo: ", xpo)
+    print("x_start: ", x_start)
+    print("x_end: ", x_end)
     if len(rot_map.shape) == 3: # e.g. RGB
       gmp_img[ypo:y_end-y_start, xpo:x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
     else: # e.g. grayscale
