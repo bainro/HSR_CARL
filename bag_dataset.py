@@ -343,7 +343,7 @@ if __name__ == "__main__":
       print("type(msg.data[0]): ", type(msg.data[0]))
       print("msg.data[0]: ", msg.data[0])
       print("list(msg.data)[0]: ", list(msg.data)[0])
-      cam_img = np.asarray(list(msg.data), dtype=np.int8)
+      cam_img = np.asarray(list(msg.data), dtype=np.float33)
       cam_img = cam_img.reshape((msg.height, msg.width, 3))
       # crop to center
       x_offset = int((msg.width - msg.height) // 2)
