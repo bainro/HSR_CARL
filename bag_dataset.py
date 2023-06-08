@@ -107,9 +107,9 @@ if __name__ == "__main__":
   del path_nsecs # don't need nsecs anymore
   
   # change angle in radians to filter consecutive poses
-  filter_dr = 0.75 # 0.75 rads ~= 45 degs
+  filter_dr = 0.3 # 0.3 rads ~= 17 degs
   # relative path width change to filter consecutive poses
-  rel_filter_dx = 0.015 # hyperparameter to tune for each map
+  rel_filter_dx = 0.0075 # hyperparameter to tune for each map
   path_width = max(path_x) - min(path_x)
   filter_dx = path_width * rel_filter_dx
   # last non-filtered (i.e. included) pose. 
@@ -147,10 +147,10 @@ if __name__ == "__main__":
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 5th floor")
   for i in range(len(path_x)):
-    path_x[i] = path_x[i] + 39.40 # 53.38
-    path_y[i] = path_y[i] + 28.69 # 4.8
-  rot = -0.0291 # radians
-  scale = 20 # 127.25
+    path_x[i] = path_x[i] + 53.38
+    path_y[i] = path_y[i] + 4.8
+  rot = 0.03999 # radians
+  scale = 127.25
   shift_on = False
   enter_pressed = False
   
@@ -215,8 +215,8 @@ if __name__ == "__main__":
   # load the picture of the map
   map_img = None
   # with open("/tmp/map.pgm", 'rb') as pgmf:
-  # @TODO hardcoded for SBSG 5th floor
-  with open("/tmp/test.pgm", 'rb') as pgmf:
+  # @TODO hardcoded for SBSG 2nd floor
+  with open("/tmp/test.png", 'rb') as pgmf:
     map_img = plt.imread(pgmf)
     
   print("path_x[0] start: ", path_x[0])  
@@ -238,14 +238,12 @@ if __name__ == "__main__":
     with kb.Listener(on_press=on_press, on_release=on_release) as listener:
       listener.join() 
   
-  '''
   plt.scatter(x=trans_path_x[0], y=trans_path_y[0], c='lime', s=25, label="start")
   plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=25, label="end")
   l = plt.legend(loc="upper right", fontsize=20)
   # hack to scale legend's icons with bigger font size
   l.legendHandles[0]._sizes = [240]
   l.legendHandles[1]._sizes = [240]
-  '''
   plt.show()
   fig.savefig('/tmp/overlay.svg', format='svg', dpi=1200)
   plt.clf()
@@ -262,6 +260,8 @@ if __name__ == "__main__":
     rotation_pt = (x,y)
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     yaw = yaw * -1 # flip rotation
+    # make the robot look up instead of to the right
+    yaw = yaw + (math.pi / 2)
     yaw_degs = yaw * 180 / math.pi
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
     rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
@@ -269,9 +269,9 @@ if __name__ == "__main__":
   
   out_dir = os.path.join("/tmp/test_data/")
   os.makedirs(out_dir, exist_ok=True)
-  target_size = 128
+  target_size = 256
   # region of interest's (i.e. centered at robot) relative width
-  roi_rel_w = 0.15 # hyperparameter to be set by user
+  roi_rel_w = 0.08 # hyperparameter to be set by user
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
@@ -332,6 +332,7 @@ if __name__ == "__main__":
     if i == 0:
       plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
       plt.show()
+      exit()
   
   # save each FPV image with the corresponding GMP image
   bag = rosbag.Bag(args.bag_file)
