@@ -224,6 +224,7 @@ if __name__ == "__main__":
     
   print("path_x[0] start: ", path_x[0])  
   print("path_y[0] start: ", path_y[0])  
+  colors = cm.gist_rainbow(np.linspace(0, 1, len(trans_path_x)))
   fig = plt.figure(figsize=(36,12))
   while not enter_pressed:
     plt.clf()
@@ -235,16 +236,15 @@ if __name__ == "__main__":
       y = path_y[i] * math.cos(rot) + path_x[i] * math.sin(rot)
       trans_path_y.append(y * scale)
     # overlay the path on the map 
-    colors = cm.gist_rainbow(np.linspace(0, 1, len(trans_path_x)))
     plt.scatter(x=trans_path_x, y=trans_path_y, c=colors, s=3)
     plt.show(block=False)
     plt.pause(0.01)
     with kb.Listener(on_press=on_press, on_release=on_release) as listener:
       listener.join() 
   
-  # plt.scatter(x=trans_path_x[0], y=trans_path_y[0], c='lime', s=25, label="start")
-  # plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c='r', s=25, label="end")
-  # l = plt.legend(loc="lower right", fontsize=16)
+  plt.scatter(x=trans_path_x[0], y=trans_path_y[0], c=colors[0], s=25, label="start")
+  plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c=colors[-1], s=25, label="end")
+  l = plt.legend(loc="lower right", fontsize=16)
   # hack to scale legend's icons with bigger font size
   # l.legendHandles[0]._sizes = [200]
   # l.legendHandles[1]._sizes = [200]
@@ -335,7 +335,6 @@ if __name__ == "__main__":
     if i == 0:
       plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
       plt.show()
-      exit()
   
   # save each FPV image with the corresponding GMP image
   bag = rosbag.Bag(args.bag_file)
