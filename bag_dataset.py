@@ -354,7 +354,7 @@ if __name__ == "__main__":
       msg_t = msg.header.stamp.secs + (msg.header.stamp.nsecs / 1e9)
       if msg_t < path_secs[i]:
         continue
-      meta_data_file.write("%s,%s,%.2f\n" % (i, path_secs[i], path_yaw[i]))  
+      meta_data_file.write("%s,%s,%.2f\n" % (i+prior_data, path_secs[i], path_yaw[i]))  
       assert msg.width > msg.height, "image width must be greater than image height"
       cam_img = np.asarray(list(msg.data), dtype=np.float32)
       cam_img = cam_img.reshape((msg.height, msg.width, 3))
