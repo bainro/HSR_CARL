@@ -152,10 +152,10 @@ if __name__ == "__main__":
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 1st floor")
   for i in range(len(path_x)):
-    path_x[i] = path_x[i] + 13.38
-    path_y[i] = path_y[i] + 4.8
-  rot = 0.03999 # radians
-  scale = 30.25
+    path_x[i] = path_x[i] + 24.48
+    path_y[i] = path_y[i] + 9.5
+  rot = 0.006989 # radians
+  scale = 19.9
   shift_on = False
   enter_pressed = False
   
@@ -276,7 +276,7 @@ if __name__ == "__main__":
   os.makedirs(args.out_dir, exist_ok=True)
   target_size = 256
   # region of interest's (i.e. centered at robot) relative width
-  roi_rel_w = 0.08 # hyperparameter to be set by user
+  roi_rel_w = 0.12 # hyperparameter to be set by user
   # print("assumes HxWxC image format!")
   rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
   
