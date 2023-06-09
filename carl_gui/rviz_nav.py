@@ -3,10 +3,11 @@ import tf
 import time
 import rospy
 import trajectory_msgs.msg
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 from tmc_base_path_planner.msg import BasePathPlanActionResult
 
 goal_pub = None
+pose_pub = None
 head_pub = None
 
 def goal_callback(data):
@@ -18,6 +19,20 @@ def goal_listener(spin):
     if (spin):
         rospy.spin() # keeps python running
 
+def pose_callback(data):
+    # Listens for RVIZ nav goal, then remaps it to HSR's /goal topic
+    pose_pub.publish(data)
+
+def pose_listener(spin):
+    rospy.Subscriber('/tracked_pose', PoseStamped, pose_callback)
+    ### @TODO
+    ### Figure out how to set initalpose for cartographer from this message! start_trajectory service?
+    # rospy.Subscriber('/laser_2d_correct_pose', PoseWithCovarianceStamped, init_pose_callback)
+    # This will require killing more default TMC ROS nodes that publish LIDAR matches! See rqt ROS graph for details
+    if (spin):
+        rospy.spin()
+
+# bring head back up to viewing height when finished navigating
 def path_finish(_data):
     # fill ROS message
     traj = trajectory_msgs.msg.JointTrajectory()
@@ -32,9 +47,8 @@ def path_finish(_data):
 if __name__ == '__main__':
     rospy.init_node('nav_goal_listener', anonymous=True)
 
-    goal_pub = rospy.Publisher('/goal', PoseStamped, queue_size=10)
     # Create publisher
-    head_pub = rospy.Publisher('/hsrb/head_trajectory_controller/command', 
+    head_pub = rospy.Publisher('/hsrb/head_trajectory_controller/command',
                                trajectory_msgs.msg.JointTrajectory,
                                queue_size=10)
     # Wait to establish connection between the controller
@@ -42,15 +56,20 @@ if __name__ == '__main__':
         rospy.sleep(0.1)
 
     rospy.Subscriber("/base_path_plan/result", BasePathPlanActionResult, path_finish)
-    goal_listener(spin=False)
 
+    pose_pub = rospy.Publisher('/global_pose', PoseStamped, queue_size=10)
+    pose_listener(spin=False)
+
+    goal_pub = rospy.Publisher('/goal', PoseStamped, queue_size=10)
+    goal_listener(spin=True)
+
+
+    '''
     # recreating pose_integrator's /global_pose since we kill it for cartographer
     tf_listener = tf.TransformListener()
     rate = rospy.Rate(10.0)
-    gp_pub = rospy.Publisher('/global_pose', PoseStamped, queue_size=10)
 
     time.sleep(3)
-
     while not rospy.is_shutdown():
         (trans, rot) = tf_listener.lookupTransform('/map', '/base_link', rospy.Time(0))
         tmc_global_pose = PoseStamped()
@@ -65,7 +84,7 @@ if __name__ == '__main__':
         tmc_global_pose.pose.orientation.w = rot[3]
         gp_pub.publish(tmc_global_pose)
         rate.sleep()
-
+    '''
 
 ### Not currently used
 '''
