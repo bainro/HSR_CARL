@@ -306,10 +306,10 @@ if __name__ == "__main__":
     # x and y (blank/white) padding offset
     xpo, ypo = 0, 0
     if x_start < 0:
-      xpo = abs(x_start)
+      xpo = abs(x_start) - 1
       x_start = 0
     if y_start < 0:
-      ypo = abs(y_start)
+      ypo = abs(y_start) - 1
       y_start = 0
     # print("assumes HxWxC image format!")
     if x_end > map_img.shape[1]: 
@@ -322,14 +322,14 @@ if __name__ == "__main__":
     # print("x_end: ", x_end)
     if xpo != 0: # literal edge (of map) case
       if len(rot_map.shape) == 3: # e.g. RGB
-        gmp_img[:y_end-y_start, :-xpo+1, :] = rot_map[y_start:y_end, x_start:x_end+1, :]
+        gmp_img[:y_end-y_start, :-xpo, :] = rot_map[y_start:y_end, x_start:x_end+1, :]
       else: # e.g. grayscale
-        gmp_img[:y_end-y_start, :-xpo+1] = rot_map[y_start:y_end, x_start:x_end+1]
+        gmp_img[:y_end-y_start, :-xpo] = rot_map[y_start:y_end, x_start:x_end+1]
     elif ypo != 0: # literal edge (of map) case
       if len(rot_map.shape) == 3: # e.g. RGB
-        gmp_img[:-ypo+1, :x_end-x_start, :] = rot_map[y_start:y_end+1, x_start:x_end, :]
+        gmp_img[:-ypo, :x_end-x_start, :] = rot_map[y_start:y_end+1, x_start:x_end, :]
       else: # e.g. grayscale
-        gmp_img[:-ypo+1, :x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
+        gmp_img[:-ypo, :x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
     else:
       if len(rot_map.shape) == 3: # e.g. RGB
         gmp_img[:y_end-y_start, :x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
