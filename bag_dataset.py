@@ -287,7 +287,6 @@ if __name__ == "__main__":
   
   # add padding to simplify edge cases after rotating and remove later.
   if len(map_img.shape) == 3: # e.g. RGB
-    gmp_img = np.zeros(shape=(rot_w, rot_w, 3))
     # assumes padding color is same as top-left map px
     tl_color = map_img[0,0,:]
     old_shape = list(map_img.shape)
@@ -298,7 +297,6 @@ if __name__ == "__main__":
     _tmp_map[rot_w:-rot_w, rot_w:-rot_w, :] = map_img[...]
     map_img = _tmp_map
   else: # e.g. grayscale
-    gmp_img = np.zeros(shape=(rot_w, rot_w))
     tl_color = 205 # map_img[0,0]
     old_shape = list(map_img.shape)
     padding_shape = [2*rot_w, 2*rot_w]
@@ -309,6 +307,10 @@ if __name__ == "__main__":
     map_img = _tmp_map
       
   for c, i in enumerate(range(len(trans_path_x))):
+    if len(map_img.shape) == 3: # e.g. RGB
+      gmp_img = np.zeros(shape=(rot_w, rot_w, 3))
+    else:
+      gmp_img = np.zeros(shape=(rot_w, rot_w))
     # rotation origin
     rx = trans_path_x[i] + rot_w
     ry = trans_path_y[i] + rot_w
