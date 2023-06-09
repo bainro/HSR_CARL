@@ -14,8 +14,8 @@ from pynput import keyboard as kb
 from tf import transformations as t
 
 parser = argparse.ArgumentParser()
-_help = "path to previously learned cartographer map (*.pbstream)"
-parser.add_argument("--map_file", type=str, required=True, help=_help)
+_help = "use this image instead of Cartographer's SLAM map"
+parser.add_argument("--map_file", type=str, help=_help)
 _help = "path to previously recorded rosbag"
 parser.add_argument("--bag_file", type=str, required=True, help=_help)
 _help = "directory to save the training data"
@@ -38,24 +38,24 @@ if __name__ == "__main__":
   if not args.reuse_path:
     # run a bag in offline localization-only mode (requires a previously learned SLAM map)
     os.system("rosparam set use_sim_time true")
-
     os.system("pkill cart")
-    # carl_localize.launch expects the map to be here
-    os.system("cp " + args.map_file + " /tmp/current.pbstream")
-    os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
-    # could ask user to provide this, but we have the .pbstream anyway
-    os.system("rosrun map_server map_saver --occ 49 --free 40 -f '/tmp/map'")
-    os.system("pkill cart")
-
     # now run cart in offline mode
     offline_cmd = "roslaunch cartographer_toyota_hsr carl_offline.launch bag_filenames:='" 
     offline_cmd = offline_cmd + args.bag_file + "' save_file:='/tmp/offline.pbstream'"
     os.system(offline_cmd)
+    # carl_localize.launch expects the protobuf to be here
     os.system("cp /tmp/offline.pbstream /tmp/current.pbstream")
-
+    # carl_localize.launch expects the map to be here
+    os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
+    # could ask user to provide this, but we have the .pbstream anyway
+    os.system("rosrun map_server map_saver --occ 49 --free 40 -f '/tmp/map'")
+    print("@TODO find where the new map.pgm saves")
+    exit()
+    os.system("pkill cart")
+    
     os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
     time.sleep(3)
-    os.system("rosservice call /trajectory_query 'trajectory_id: 1' > /tmp/traj.txt")
+    os.system("rosservice call /trajectory_query 'trajectory_id: 0' > /tmp/traj.txt")
     time.sleep(3)
   os.system("pkill cart")
   # get just the pose position (x,y) and the corresponding timestamp (secs)
@@ -154,7 +154,7 @@ if __name__ == "__main__":
   
   def on_release(key):
     # print('{0} released'.format(key))
-    global shift_on
+    global shift_on, enter_pressed
     if key == kb.Key.shift:
       shift_on = False
     elif key == kb.Key.left:
@@ -166,7 +166,6 @@ if __name__ == "__main__":
     elif key == kb.Key.up:
       scale, path_y = up_cb(shift_on, scale, path_y)
     elif key == kb.Key.enter:
-      global enter_pressed
       enter_pressed = True
     return False
   
