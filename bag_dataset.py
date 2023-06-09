@@ -111,6 +111,13 @@ if __name__ == "__main__":
     path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
   del path_nsecs # don't need nsecs anymore
   
+  print("DBG ONLY! REMOVE ME :)")
+  path_x = path_x[:5000]
+  path_y = path_y[:5000]
+  path_z = path_z[:5000]
+  path_w = path_w[:5000]
+  path_secs = path_secs[:5000]
+  
   # change angle in radians to filter consecutive poses
   filter_dr = 0.23 # 0.3 rads ~= 17 degs
   # relative path width change to filter consecutive poses
