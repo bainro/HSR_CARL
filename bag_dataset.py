@@ -24,8 +24,15 @@ _help = "reuse previous path calculations"
 parser.add_argument('--reuse_path', default=False, action='store_true', help=_help)
 _help = "append to previous dataset instead of overwriting"
 parser.add_argument('--combine', default=False, action='store_true', help=_help)
+_help = "rotation of path in radians"
+parser.add_argument('--rot', type=float, default=0.006989, help=_help)
+_help = "scale of path"
+parser.add_argument('--scale', type=float, default=20.0, help=_help)
+_help = "higher moves the path more to the right"
+parser.add_argument('--x_off', type=float, default=24.38, help=_help)
+_help = "higher moves the path further down"
+parser.add_argument('--y_off', type=float, default=10.5, help=_help)
 args = parser.parse_args()
-assert args.map_file != "" and args.bag_file != "", "Must specify path to *.pbstream & *.bag files!"
 
 if __name__ == "__main__":
   if not args.reuse_path:
@@ -119,17 +126,12 @@ if __name__ == "__main__":
   
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 1st floor")
-  rot = args.rot or 0.006989 # radians
-  scale = args.scale or 19.9
-  x_off = args.x_off or 24.38
-  y_off = args.y_off or 10.5
+  rot = args.rot, scale = args.scale, x_off = args.x_off, y_off = args.y_off
   for i in range(len(path_x)):
     path_x[i] = path_x[i] + x_off
     path_y[i] = path_y[i] + y_off
-  print("rot: ", rot)
-  print("scale: ", scale)
-  print("x_off: ", x_off)
-  print("y_off: ", y_off)
+  print("rot: ", rot),     print("scale: ", scale)
+  print("x_off: ", x_off), print("y_off: ", y_off)
   
   # key callback generator
   def key_cb_gen(dv, dsor):
