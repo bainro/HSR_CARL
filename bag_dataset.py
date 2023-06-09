@@ -328,7 +328,7 @@ if __name__ == "__main__":
       if len(rot_map.shape) == 3: # e.g. RGB
         gmp_img[ypo+1:, :x_end-x_start, :] = rot_map[y_start:y_end+1, x_start:x_end, :]
       else: # e.g. grayscale
-        gmp_img[ypo+1:, :x_end-x_start] = rot_map[y_start:y_end+1, x_start:x_end]
+        gmp_img[ypo+1:, :x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
     else:
       if len(rot_map.shape) == 3: # e.g. RGB
         gmp_img[:y_end-y_start, :x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
