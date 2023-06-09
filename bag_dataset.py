@@ -284,6 +284,8 @@ if __name__ == "__main__":
   if args.combine:
     with open(os.path.join(args.out_dir, "meta_data.csv"), "r") as meta_file:
       prior_data = len(meta_file.readlines())
+  else
+    os.system(f"rm {os.path.join(args.out_dir, 'meta_data.csv')}")
   
   # add padding to simplify edge cases after rotating and remove later.
   if len(map_img.shape) == 3: # e.g. RGB
