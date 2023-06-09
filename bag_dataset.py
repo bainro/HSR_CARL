@@ -294,7 +294,7 @@ if __name__ == "__main__":
       gmp_img[:,:,2] = map_img[0,0,2]
     else: # e.g. grayscale
       gmp_img = np.zeros(shape=(rot_w, rot_w)) 
-      gmp_img[:,:] = map_img[0,0]
+      gmp_img[:,:] = 205 # map_img[0,0]
  
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
     
@@ -338,7 +338,10 @@ if __name__ == "__main__":
     
     gmp_img = cv2.resize(gmp_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
-    cv2.imwrite(os.path.join(args.out_dir, f'{i + prior_data}_map.png'), gmp_img*255)
+    if len(gmp_img.shape) == 3: # eg RGB
+      cv2.imwrite(os.path.join(args.out_dir, f'{i + prior_data}_map.png'), gmp_img*255)
+    else:
+      cv2.imwrite(os.path.join(args.out_dir, f'{i + prior_data}_map.png'), gmp_img)
     if i == 0:
       plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
       plt.show()
