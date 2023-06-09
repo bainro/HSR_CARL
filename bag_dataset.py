@@ -294,8 +294,7 @@ if __name__ == "__main__":
       gmp_img[:,:,2] = map_img[0,0,2]
     else: # e.g. grayscale
       gmp_img = np.zeros(shape=(rot_w, rot_w)) 
-      gmp_img = map_img[0,0]
-      gmp_img = gmp_img.as_type(np.float32)
+      gmp_img[:,:] = map_img[0,0]
  
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
     
