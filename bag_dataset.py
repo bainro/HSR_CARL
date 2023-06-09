@@ -306,10 +306,10 @@ if __name__ == "__main__":
     # x and y (blank/white) padding offset
     xpo, ypo = 0, 0
     if x_start < 0:
-      xpo = abs(x_start) - 1
+      xpo = abs(x_start) + 1
       x_start = 0
     if y_start < 0:
-      ypo = abs(y_start) - 1
+      ypo = abs(y_start) + 1
       y_start = 0
     # print("assumes HxWxC image format!")
     if x_end > map_img.shape[1]: 
