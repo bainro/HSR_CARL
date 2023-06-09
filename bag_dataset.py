@@ -322,9 +322,9 @@ if __name__ == "__main__":
     y_end = int(trans_path_y[i] + 3 * rot_w / 2)
       
     if len(rot_map.shape) == 3: # e.g. RGB
-      gmp_img[:y_end-y_start, :x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
+      gmp_img[:, :, :] = rot_map[y_start:y_end, x_start:x_end, :]
     else: # e.g. grayscale
-      gmp_img[:y_end-y_start, :x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
+      gmp_img[:, :] = rot_map[y_start:y_end, x_start:x_end]
     
     gmp_img = cv2.resize(gmp_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
@@ -332,9 +332,9 @@ if __name__ == "__main__":
       cv2.imwrite(os.path.join(args.out_dir, f'{i + prior_data}_map.png'), gmp_img*255)
     else:
       cv2.imwrite(os.path.join(args.out_dir, f'{i + prior_data}_map.png'), gmp_img)
-    if i == 0:
-      plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
-      plt.show()
+    #if i == 0:
+    plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
+    plt.show()
   
   # remove the padding added for rotation
   
