@@ -311,10 +311,10 @@ if __name__ == "__main__":
   for c, i in enumerate(range(len(trans_path_x))):
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
     # crop out around the robot
-    x_start = int(trans_path_x[i] + rot_w // 2)
-    x_end = int(trans_path_x[i] - rot_w // 2)
-    y_start = int(trans_path_y[i] + rot_w // 2)
-    y_end = int(trans_path_y[i] - rot_w // 2)
+    x_start = int(trans_path_x[i])
+    x_end = int(trans_path_x[i] + rot_w)
+    y_start = int(trans_path_y[i])
+    y_end = int(trans_path_y[i] + rot_w)
       
     if len(rot_map.shape) == 3: # e.g. RGB
       gmp_img[:y_end-y_start, :x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
