@@ -285,56 +285,45 @@ if __name__ == "__main__":
     with open(os.path.join(args.out_dir, "meta_data.csv"), "r") as meta_file:
       prior_data = len(meta_file.readlines())
   
-  for c, i in enumerate(range(len(trans_path_x))):
-    if len(map_img.shape) == 3: # e.g. RGB
+  # add padding to simplify edge cases after rotating and remove later.
+  if len(map_img.shape) == 3: # e.g. RGB
       gmp_img = np.zeros(shape=(rot_w, rot_w, 3))
       # assumes padding color is same as top-left map px
-      gmp_img[:,:,0] = map_img[0,0,0]
-      gmp_img[:,:,1] = map_img[0,0,1]
-      gmp_img[:,:,2] = map_img[0,0,2]
+      tl_color = map_img[0,0,:]
+      new_shape = list(map_img.shape) + [2*rot_w, 2*rot_w, 0]
+      _tmp_map = np.zeros(tuple(new_shape))
+      _tmp_map[...] = tl_color
+      _tmp_map[rot_w:-rot_w, rot_w:-rot_w, :] = map_img[...]
+      map_img = _tmp_map
     else: # e.g. grayscale
-      gmp_img = np.zeros(shape=(rot_w, rot_w)) 
-      gmp_img[:,:] = 205 # map_img[0,0]
- 
+      gmp_img = np.zeros(shape=(rot_w, rot_w))
+      tl_color = 205 # map_img[0,0]
+      new_shape = list(map_img.shape) + [2*rot_w, 2*rot_w]
+      _tmp_map = np.zeros(tuple(new_shape))
+      _tmp_map[...] = tl_color
+      _tmp_map[rot_w:-rot_w, rot_w:-rot_w] = map_img[...]
+      map_img = _tmp_map
+      
+  for c, i in enumerate(range(len(trans_path_x))):
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
-    
     # crop out around the robot
     x_start = int(trans_path_x[i] - rot_w // 2)
     x_end = int(trans_path_x[i] + rot_w // 2)
     y_start = int(trans_path_y[i] - rot_w // 2)
     y_end = int(trans_path_y[i] + rot_w // 2)
-    # x and y (blank/white) padding offset
-    xpo, ypo = 0, 0
     if x_start < 0:
-      xpo = abs(x_start) + 1
       x_start = 0
     if y_start < 0:
-      ypo = abs(y_start) + 1
       y_start = 0
-    # print("assumes HxWxC image format!")
     if x_end > map_img.shape[1]: 
       x_end = map_img.shape[1]
     if y_end > map_img.shape[0]:
       y_end = map_img.shape[0]
-    
-    # print("xpo: ", xpo)
-    # print("x_start: ", x_start)
-    # print("x_end: ", x_end)
-    if xpo != 0: # literal edge (of map) case
-      if len(rot_map.shape) == 3: # e.g. RGB
-        gmp_img[:y_end-y_start, :-xpo, :] = rot_map[y_start:y_end, x_start:x_end+1, :]
-      else: # e.g. grayscale
-        gmp_img[:y_end-y_start, :-xpo] = rot_map[y_start:y_end, x_start:x_end+1]
-    elif ypo != 0: # literal edge (of map) case
-      if len(rot_map.shape) == 3: # e.g. RGB
-        gmp_img[:-ypo, :x_end-x_start, :] = rot_map[y_start:y_end+1, x_start:x_end, :]
-      else: # e.g. grayscale
-        gmp_img[:-ypo, :x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
-    else:
-      if len(rot_map.shape) == 3: # e.g. RGB
-        gmp_img[:y_end-y_start, :x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
-      else: # e.g. grayscale
-        gmp_img[:y_end-y_start, :x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
+      
+    if len(rot_map.shape) == 3: # e.g. RGB
+      gmp_img[:y_end-y_start, :x_end-x_start, :] = rot_map[y_start:y_end, x_start:x_end, :]
+    else: # e.g. grayscale
+      gmp_img[:y_end-y_start, :x_end-x_start] = rot_map[y_start:y_end, x_start:x_end]
     
     gmp_img = cv2.resize(gmp_img, dsize=(target_size, target_size), 
                          interpolation=cv2.INTER_AREA) 
@@ -345,6 +334,8 @@ if __name__ == "__main__":
     if i == 0:
       plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
       plt.show()
+  
+  # remove the padding added for rotation
   
   # save each FPV image with the corresponding GMP image
   bag = rosbag.Bag(args.bag_file)
