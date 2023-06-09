@@ -129,7 +129,7 @@ if __name__ == "__main__":
     dx = (((last_pt[0] - x) ** 2) + ((last_pt[1] - y) ** 2)) ** 0.5
   
     qz = path_z[i]
-    qw = path_w[i]
+    qw = path_w[i]c
     _r, _p, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     yaw = yaw + math.pi # make smallest possible value == 0
     # have to check for wrap around!
@@ -150,12 +150,12 @@ if __name__ == "__main__":
   assert len(path_y) == len(path_z) == len(path_w), "No longer parallel lists!"
   
   # use keys to translate, rotate, & scale the path
-  print("specific settings for SBSG 5th floor")
+  print("specific settings for SBSG 1st floor")
   for i in range(len(path_x)):
-    path_x[i] = path_x[i] + 53.38
+    path_x[i] = path_x[i] + 13.38
     path_y[i] = path_y[i] + 4.8
   rot = 0.03999 # radians
-  scale = 127.25
+  scale = 30.25
   shift_on = False
   enter_pressed = False
   
