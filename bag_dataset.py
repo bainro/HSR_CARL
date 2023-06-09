@@ -290,7 +290,9 @@ if __name__ == "__main__":
     gmp_img = np.zeros(shape=(rot_w, rot_w, 3))
     # assumes padding color is same as top-left map px
     tl_color = map_img[0,0,:]
-    new_shape = list(map_img.shape) + [2*rot_w, 2*rot_w, 0]
+    old_shape = list(map_img.shape)
+    padding_shape = [2*rot_w, 2*rot_w, 0]
+    new_shape = [sum(x) for x in zip(old_shape, padding_shape)]
     _tmp_map = np.zeros(tuple(new_shape))
     _tmp_map[...] = tl_color
     _tmp_map[rot_w:-rot_w, rot_w:-rot_w, :] = map_img[...]
@@ -298,7 +300,9 @@ if __name__ == "__main__":
   else: # e.g. grayscale
     gmp_img = np.zeros(shape=(rot_w, rot_w))
     tl_color = 205 # map_img[0,0]
-    new_shape = list(map_img.shape) + [2*rot_w, 2*rot_w]
+    old_shape = list(map_img.shape)
+    padding_shape = [2*rot_w, 2*rot_w]
+    new_shape = [sum(x) for x in zip(old_shape, padding_shape)]
     _tmp_map = np.zeros(tuple(new_shape))
     _tmp_map[...] = tl_color
     _tmp_map[rot_w:-rot_w, rot_w:-rot_w] = map_img[...]
