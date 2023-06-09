@@ -58,13 +58,6 @@ if __name__ == "__main__":
   os.system("grep -C4 position /tmp/traj.txt | grep -e 'nsecs:' > /tmp/nsecs.log")
   os.system("grep -C4 'w:' /tmp/traj.txt | grep -e 'z:' > /tmp/rot_z.log")
   os.system("grep     'w:' /tmp/traj.txt > /tmp/rot_w.log")
-
-  # read the files into parallel lists
-  path_x, path_y = [], []
-  # quarternion rotation, but we only need 2
-  path_z, path_w = [], []
-  path_yaw = []
-  path_secs, path_nsecs = [], []
   
   def extract(fname, str_bias):
     with open(fname, 'r') as _f:
@@ -74,56 +67,17 @@ if __name__ == "__main__":
       path_var.append(float(l[str_bias:]))
     return path_var
   
+  # read the files into parallel lists
   path_x = extract('/tmp/x.log', 3)
   path_y = extract('/tmp/y.log', 3)
-
-  with open('/tmp/y.log', 'r') as y_file:
-    lines = y_file.readlines()
-
-  for l in lines:
-    l = l.strip()
-    path_y.append(-1 * float(l[3:]))
-    
-  with open('/tmp/rot_z.log', 'r') as rot_z_file:
-    lines = rot_z_file.readlines()
-
-  for l in lines:
-    l = l.strip()
-    path_z.append(float(l[3:]))
-    
-  with open('/tmp/rot_w.log', 'r') as rot_w_file:
-    lines = rot_w_file.readlines()
-
-  for l in lines:
-    l = l.strip()
-    path_w.append(float(l[3:]))
-    
-  with open('/tmp/secs.log', 'r') as secs_file:
-    lines = secs_file.readlines()
-
-  for l in lines:
-    l = l.strip()
-    path_secs.append(float(l[6:]))
-
-  with open('/tmp/nsecs.log', 'r') as nsecs_file:
-    lines = nsecs_file.readlines()
-
-  for l in lines:
-    l = l.strip()
-    path_nsecs.append(float(l[6:]))
-
+  # quarternion rotation, but we only need 2
+  path_z = extract('tmp/rot_z.log', 3)  
+  path_w = extract('tmp/rot_w.log', 3)  
+  path_secs = extract('tmp/secs.log', 6)
+  path_nsecs = extract('tmp/nsecs.log', 6)
   for i in range(len(path_secs)):
     path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
   del path_nsecs # don't need nsecs anymore
-  
-  '''
-  print("DBG ONLY! REMOVE ME :)")
-  path_x = path_x[:5000]
-  path_y = path_y[:5000]
-  path_z = path_z[:5000]
-  path_w = path_w[:5000]
-  path_secs = path_secs[:5000]
-  '''
   
   # change angle in radians to filter consecutive poses
   filter_dr = 0.23 # 0.3 rads ~= 17 degs
@@ -165,50 +119,36 @@ if __name__ == "__main__":
   
   # use keys to translate, rotate, & scale the path
   print("specific settings for SBSG 1st floor")
+  rot = args.rot or 0.006989 # radians
+  scale = args.scale or 19.9
+  x_off = args.x_off or 24.38
+  y_off = args.y_off or 10.5
   for i in range(len(path_x)):
-    path_x[i] = path_x[i] + 24.38
-    path_y[i] = path_y[i] + 10.5
-  rot = 0.006989 # radians
-  scale = 19.9
+    path_x[i] = path_x[i] + x_off
+    path_y[i] = path_y[i] + y_off
+  print("rot: ", rot)
+  print("scale: ", scale)
+  print("x_off: ", x_off)
+  print("y_off: ", y_off)
+  
+  # key callback generator
+  def key_cb_gen(dv, dsor):
+    def ky_cb(shift, scale_or_rot, path_v):      
+      if shift:
+        scale_or_rot = scale_or_rot + deither
+      else:
+        # translate points
+        path_v = [_v + dv for _v in path_v]  
+      return scale_or_rot, path_v
+    return ky_cb
+  
+  up_cb = key_cb_gen(0.15, -0.1)
+  down_cb = key_cb_gen(-0.15, 0.1)
+  left_cb = key_cb_gen(0.003, -0.1)
+  right_cb = key_cb_gen(-0.003, 0.1)        
+  
   shift_on = False
   enter_pressed = False
-  
-  def up_cb(shift):
-    global scale, path_y
-    if shift:
-      scale = scale + 0.15
-    else:
-      # translate points up
-      path_y = [y - .1 for y in path_y]
-      
-  def down_cb(shift):
-    global scale, path_y
-    if shift:
-      scale = scale - 0.15
-    else:
-      # translate points down
-      path_y = [y + .1 for y in path_y]    
-      
-  def left_cb(shift):
-    global rot, path_x
-    if shift:
-      rot = rot + 0.003
-    else:
-      # translate points to the left
-      path_x = [x - .1 for x in path_x]
-      
-  def right_cb(shift):
-    global rot, path_x
-    if shift:
-      rot = rot - 0.003
-    else:
-      # translate points to the right
-      path_x = [x + .1 for x in path_x]        
-  
-  def on_press(key):
-    if key == kb.Key.shift:
-      global shift_on
-      shift_on = True
   
   def on_release(key):
     # print('{0} released'.format(key))
@@ -216,18 +156,22 @@ if __name__ == "__main__":
     if key == kb.Key.shift:
       shift_on = False
     elif key == kb.Key.left:
-      left_cb(shift_on)
+      rot, path_x = left_cb(shift_on, rot, path_x)
     elif key == kb.Key.right:
-      right_cb(shift_on)
+      rot, path_x = right_cb(shift_on, rot, path_x)
     elif key == kb.Key.down:
-      down_cb(shift_on)
+      scale, path_y = down_cb(shift_on, scale, path_y)
     elif key == kb.Key.up:
-      up_cb(shift_on)
+      scale, path_y = up_cb(shift_on, scale, path_y)
     elif key == kb.Key.enter:
       global enter_pressed
       enter_pressed = True
-      
     return False
+  
+  def on_press(key):
+    if key == kb.Key.shift:
+      global shift_on
+      shift_on = True
   
   print("use the arrow keys and shift to rotate, translate, & scale the path")
    
