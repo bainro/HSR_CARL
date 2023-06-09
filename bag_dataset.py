@@ -129,7 +129,7 @@ if __name__ == "__main__":
     dx = (((last_pt[0] - x) ** 2) + ((last_pt[1] - y) ** 2)) ** 0.5
   
     qz = path_z[i]
-    qw = path_w[i]c
+    qw = path_w[i]
     _r, _p, yaw = t.euler_from_quaternion([0, 0, qz, qw])
     yaw = yaw + math.pi # make smallest possible value == 0
     # have to check for wrap around!
