@@ -307,6 +307,9 @@ if __name__ == "__main__":
     _tmp_map[...] = tl_color
     _tmp_map[rot_w:-rot_w, rot_w:-rot_w] = map_img[...]
     map_img = _tmp_map
+    
+  plt.imshow(map_img, cmap='gray', vmin=0, vmax=255)
+  plt.show()  
       
   for c, i in enumerate(range(len(trans_path_x))):
     rot_map = rotate_image(map_img, trans_path_x[i], trans_path_y[i], path_z[i], path_w[i])
