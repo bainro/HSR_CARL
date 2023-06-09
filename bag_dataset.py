@@ -313,6 +313,8 @@ if __name__ == "__main__":
     rx = trans_path_x[i] + rot_w
     ry = trans_path_y[i] + rot_w
     rot_map = rotate_image(map_img, rx, ry, path_z[i], path_w[i])
+    plt.imshow(rot_map, cmap='gray', vmin=0, vmax=255)
+    plt.show()
     # crop out around the robot
     x_start = int(trans_path_x[i] + rot_w / 2)
     x_end = int(trans_path_x[i] + 3 * rot_w / 2)
