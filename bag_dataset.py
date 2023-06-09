@@ -65,12 +65,17 @@ if __name__ == "__main__":
   path_z, path_w = [], []
   path_yaw = []
   path_secs, path_nsecs = [], []
-  with open('/tmp/x.log', 'r') as x_file:
-    lines = x_file.readlines()
-
-  for l in lines:
-    l = l.strip()
-    path_x.append(float(l[3:]))
+  
+  def extract(fname, str_bias):
+    with open(fname, 'r') as _f:
+      lines = _file.readlines()
+    for l in lines:
+      l = l.strip()
+      path_var.append(float(l[str_bias:]))
+    return path_var
+  
+  path_x = extract('/tmp/x.log', 3)
+  path_y = extract('/tmp/y.log', 3)
 
   with open('/tmp/y.log', 'r') as y_file:
     lines = y_file.readlines()
