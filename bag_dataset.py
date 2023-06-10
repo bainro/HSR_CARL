@@ -248,7 +248,6 @@ if __name__ == "__main__":
     tl_color = 205 # map_img[0,0]
     old_shape = list(map_img.shape)
     padding_shape = [2*gmp_w, 2*gmp_w]
-    print("old_shape: ", old_shape)
     new_shape = [sum(x) for x in zip(old_shape, padding_shape)]
     _tmp_map = np.zeros(tuple(new_shape))
     _tmp_map[...] = tl_color
