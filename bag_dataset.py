@@ -228,7 +228,7 @@ if __name__ == "__main__":
     yaw = yaw + (math.pi / 2)
     yaw_degs = yaw * 180 / math.pi
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
-    rot_img = cv2.warpAffine(im, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
+    rot_img = cv2.warpAffine(im, rot_mat, im.shape[1::-1], flags=cv2.INTER_LINEAR)
     return rot_img
   
   # global map perspective's width (centered at robot)
