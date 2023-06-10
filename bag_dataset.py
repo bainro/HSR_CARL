@@ -122,6 +122,8 @@ if __name__ == "__main__":
   assert len(path_y) == len(path_z) == len(path_w), "No longer parallel lists!"
   
   # use keys to translate, rotate, & scale the path
+  shift_on = False
+  enter_pressed = False
   rot = args.rot
   scale = args.scale
   x_off = args.x_off
@@ -166,9 +168,6 @@ if __name__ == "__main__":
     else:
       # translate points to the right
       path_x = [x + .1 for x in path_x] 
-  
-  shift_on = False
-  enter_pressed = False
   
   def on_press(key):
     if key == kb.Key.shift:
