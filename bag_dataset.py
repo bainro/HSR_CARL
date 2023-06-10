@@ -122,7 +122,10 @@ if __name__ == "__main__":
   assert len(path_y) == len(path_z) == len(path_w), "No longer parallel lists!"
   
   # use keys to translate, rotate, & scale the path
-  rot = args.rot, scale = args.scale, x_off = args.x_off, y_off = args.y_off
+  rot = args.rot
+  scale = args.scale
+  x_off = args.x_off
+  y_off = args.y_off
   for i in range(len(path_x)):
     path_x[i] = path_x[i] + x_off
     path_y[i] = path_y[i] + y_off
