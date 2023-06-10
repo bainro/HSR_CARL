@@ -328,9 +328,12 @@ if __name__ == "__main__":
   bag.close()
   print("DONE!")
   
-  # === FUTURE FEATURES ===
+  # === FUTURE THOUGHTS ===
   # Include history channels (i.e. multiple stacked FPV images)
   # Fully connect lidar in 1st VAE layer alongside image?
-  # 16 segmentation classes has the same resolution of 4-bit grayscale
+  # 16 segmentation classifier has the same resolution as 4-bit grayscale
   # Doesn't require the reparam of a VAE necessarily
+  # Would want to build and test with just 2 classes. Then extrapolate.
   # Can the loss fx be weighted to be forgiving to closer inferences?
+  # Don't run the softmax and use cross-entropy with a softened/fuzzed/widened gt/label.
+  
