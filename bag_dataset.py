@@ -331,11 +331,10 @@ if __name__ == "__main__":
   # === FUTURE THOUGHTS ===
   # Include history channels (i.e. multiple stacked FPV images)
   # Fully connect lidar in 1st VAE layer alongside image?
-  # 16 segmentation classifier has the same resolution as 4-bit grayscale
   # Doesn't require the reparam trick of a VAE necessarily
   # Would want to build and test with just 2 classes. Then extrapolate.
-  # Can the loss fx be weighted to be forgiving to closer inferences? + decay scheduler
-  # Don't run the softmax and use cross-entropy with a softened/fuzzed/widened gt/label.
   # What's the NS angle? Give it a time signal to condition on to explain 
   # some of the variance from people or environmental/map changes. 
-  # recurrence, pytorch -> CARLsim 5 SNN segmentation classifier on Jetson Nano.
+  # recurrence? pytorch -> CARLsim 5 SNN segmentation classifier on Jetson Nano?
+  # continuous time training ideas? 
+  # Autonomous foraging model / exploration of 2nd floor.
