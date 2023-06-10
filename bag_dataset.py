@@ -66,11 +66,11 @@ if __name__ == "__main__":
   os.system("grep     'w:' /tmp/traj.txt > /tmp/rot_w.log")
   
   def extract(fname, str_bias):
-    with open(fname, 'r') as _f:
-      lines = _f.readlines()
-    for l in lines:
-      l = l.strip()
-      path_var.append(float(l[str_bias:]))
+    path_var = []
+    with open(fname, 'r') as f:
+      for l in f.readlines():
+        l = l.strip()
+        path_var.append(float(l[str_bias:]))
     return path_var
   
   # read the files into parallel lists
