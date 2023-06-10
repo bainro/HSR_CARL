@@ -130,24 +130,16 @@ if __name__ == "__main__":
     path_x[i] = path_x[i] + x_off
     path_y[i] = path_y[i] + y_off
   
-  # key callback generator
-  def key_cb_gen(dv, dsor):
-    def ky_cb(self, shift, scale_or_rot, path_v):      
-      if shift:
-        print("shift")
-        scale_or_rot = scale_or_rot + dsor
-      else:
-        print("no shift")
-        # translate points
-        path_v = [_v + dv for _v in path_v]  
-      return scale_or_rot, path_v
-    return ky_cb
-  
-  up_cb = key_cb_gen(0.15, 0.1)
-  down_cb = key_cb_gen(-0.15, -0.1)
-  left_cb = key_cb_gen(-0.15, -0.1)
-  right_cb = key_cb_gen(-0.15, 0.1)
-  # right_cb = key_cb_gen(0.15, 0.1)
+  # key callback 
+  def ky_cb(dv, dsor, shift, scale_or_rot, path_v):      
+    if shift:
+      print("shift")
+      scale_or_rot = scale_or_rot + dsor
+    else:
+      print("no shift")
+      # translate points
+      path_v = [_v + dv for _v in path_v]  
+    return scale_or_rot, path_v
   
   shift_on = False
   enter_pressed = False
@@ -159,13 +151,13 @@ if __name__ == "__main__":
     if key == kb.Key.shift:
       shift_on = False
     elif key == kb.Key.left:
-      rot, path_x = left_cb(shift_on, rot, path_x)
+      rot, path_x = ky_cb(-0.15, -0.1, shift_on, rot, path_x)
     elif key == kb.Key.right:
-      rot, path_x = right_cb(shift_on, rot, path_x)
+      rot, path_x = ky_cb(0.15, 0.1, shift_on, rot, path_x)
     elif key == kb.Key.down:
-      scale, path_y = down_cb(shift_on, scale, path_y)
+      scale, path_y = ky_cb(-0.15, -0.1, shift_on, scale, path_y)
     elif key == kb.Key.up:
-      scale, path_y = up_cb(shift_on, scale, path_y)
+      scale, path_y = key_cb(0.15, 0.1, shift_on, scale, path_y)
     elif key == kb.Key.enter:
       enter_pressed = True
     return False
