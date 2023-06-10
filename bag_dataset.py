@@ -129,8 +129,6 @@ if __name__ == "__main__":
   for i in range(len(path_x)):
     path_x[i] = path_x[i] + x_off
     path_y[i] = path_y[i] + y_off
-  print("\n\nrot: ", rot), print("scale: ", scale)
-  print("x_off: ", x_off), print("y_off: ", y_off)
   
   # key callback generator
   def key_cb_gen(dv, dsor):
@@ -151,7 +149,7 @@ if __name__ == "__main__":
   shift_on = False
   enter_pressed = False
   
-  def on_release(key):
+  def kr(key): # key released
     # print('{0} released'.format(key))
     global shift_on, enter_pressed
     if key == kb.Key.shift:
@@ -168,7 +166,7 @@ if __name__ == "__main__":
       enter_pressed = True
     return False
   
-  def on_press(key):
+  def kp(key): # key pressed
     if key == kb.Key.shift:
       global shift_on
       shift_on = True
@@ -200,8 +198,11 @@ if __name__ == "__main__":
     plt.scatter(x=trans_path_x, y=trans_path_y, c=colors, s=3)
     plt.show(block=False)
     plt.pause(0.)
-    with kb.Listener(on_press=press, on_release=rel) as listener:
+    with kb.Listener(on_press=kp, on_release=kr) as listener:
       listener.join() 
+  
+  print("\n\nrot: ", rot), print("scale: ", scale)
+  print("x_off: ", x_off), print("y_off: ", y_off)
   
   plt.scatter(x=trans_path_x[0], 
               y=trans_path_y[0], 
