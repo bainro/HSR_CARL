@@ -41,7 +41,7 @@ args = parser.parse_args()
 if __name__ == "__main__":
   if not args.reuse_path:
     # run a bag in offline localization-only mode (requires a previously learned SLAM map)
-    os.system("rosparam set use_sim_time true")
+    _ = os.system("rosparam set use_sim_time true")
     os.system("pkill cart")
     # now run cart in offline mode
     offline_cmd = "roslaunch cartographer_toyota_hsr carl_offline.launch bag_filenames:='" 
@@ -125,7 +125,7 @@ if __name__ == "__main__":
   for i in range(len(path_x)):
     path_x[i] = path_x[i] + x_off
     path_y[i] = path_y[i] + y_off
-  print("rot: ", rot),     print("scale: ", scale)
+  print("\n\nrot: ", rot), print("scale: ", scale)
   print("x_off: ", x_off), print("y_off: ", y_off)
   
   # key callback generator
