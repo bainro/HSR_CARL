@@ -318,9 +318,7 @@ if __name__ == "__main__":
       cv2.imwrite(save_name, fpv_img[...,::-1])
       i = i + 1
   bag.close()
-  
-  print("EXITING")
-  exit()
+  print("DONE!")
   
   # === FUTURE FEATURES ===
   # Include history channels (i.e. multiple stacked FPV images)
