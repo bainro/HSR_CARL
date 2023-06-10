@@ -114,6 +114,8 @@ if __name__ == "__main__":
     if dx > filter_dx or dr > filter_dr:
       last_pt = [x, y, yaw]
       path_yaw.append(yaw)
+      print("dx: ", dx)
+      print("dr: ", dr)
     else: # bye-bye!
       del path_x[i], path_y[i], path_z[i], path_w[i], path_secs[i]
       del_count = del_count + 1
