@@ -337,4 +337,5 @@ if __name__ == "__main__":
   # Can the loss fx be weighted to be forgiving to closer inferences? + decay scheduler
   # Don't run the softmax and use cross-entropy with a softened/fuzzed/widened gt/label.
   # What's the NS angle? Give it a time signal to condition on to explain 
-  # some of the variance from people or environmental/map changes.
+  # some of the variance from people or environmental/map changes. 
+  # recurrence, pytorch -> CARLsim 5 SNN segmentation classifier on Jetson Nano.
