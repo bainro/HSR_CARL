@@ -134,8 +134,10 @@ if __name__ == "__main__":
   def key_cb_gen(dv, dsor):
     def ky_cb(shift, scale_or_rot, path_v):      
       if shift:
+        print("shift")
         scale_or_rot = scale_or_rot + dsor
       else:
+        print("no shift")
         # translate points
         path_v = [_v + dv for _v in path_v]  
       return scale_or_rot, path_v
