@@ -33,7 +33,7 @@ parser.add_argument('--x_off', type=float, default=24.38, help=_help)
 _help = "higher moves the path further down"
 parser.add_argument('--y_off', type=float, default=10.5, help=_help)
 _help = "larger values increase width of global map perspective"
-parser.add_argument('--gmp_w', type=float, default=120, help=_help)
+parser.add_argument('--gmp_w', type=int, default=120, help=_help)
 _help = "size in pixels to save the dataset images"
 parser.add_argument('--size', type=float, default=256, help=_help)
 args = parser.parse_args()
@@ -232,7 +232,7 @@ if __name__ == "__main__":
     return rot_img
   
   # global map perspective's width (centered at robot)
-  gmp_w = int(map_img.shape[1] * args.gmp_w)
+  gmp_w = args.gmp_w
   # add padding to simplify edge cases after rotating and remove later.
   if len(map_img.shape) == 3: # e.g. RGB
     # assumes padding color is same as top-left map px
