@@ -131,20 +131,20 @@ if __name__ == "__main__":
     path_y[i] = path_y[i] + y_off
   
   # key callback generator
-  def key_cb_gen(dv, dsor):
+  def key_cb_gen(dv, dSoR):
     def ky_cb(shift, scale_or_rot, path_v):      
       if shift:
-        scale_or_rot = scale_or_rot + deither
+        scale_or_rot = scale_or_rot + dSoR
       else:
         # translate points
         path_v = [_v + dv for _v in path_v]  
       return scale_or_rot, path_v
     return ky_cb
   
-  up_cb = key_cb_gen(0.15, -0.1)
-  down_cb = key_cb_gen(-0.15, 0.1)
-  left_cb = key_cb_gen(0.003, -0.1)
-  right_cb = key_cb_gen(-0.003, 0.1)        
+  up_cb = key_cb_gen(-0.15, -0.1)
+  down_cb = key_cb_gen(0.15, 0.1)
+  left_cb = key_cb_gen(-0.003, -0.1)
+  right_cb = key_cb_gen(0.003, 0.1)        
   
   shift_on = False
   enter_pressed = False
