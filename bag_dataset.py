@@ -149,7 +149,7 @@ if __name__ == "__main__":
   def kr(key): # key released
     # print('{0} released'.format(key))
     global shift_on, enter_pressed
-    global rot, scale, path_x, path_y
+    global rot, scale, x_off, y_off
     if key == kb.Key.shift:
       shift_on = False
     elif key == kb.Key.left:
