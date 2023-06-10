@@ -77,10 +77,10 @@ if __name__ == "__main__":
   path_x = extract('/tmp/x.log', 3)
   path_y = extract('/tmp/y.log', 3)
   # quarternion rotation, but we only need 2
-  path_z = extract('tmp/rot_z.log', 3)  
-  path_w = extract('tmp/rot_w.log', 3)  
-  path_secs = extract('tmp/secs.log', 6)
-  path_nsecs = extract('tmp/nsecs.log', 6)
+  path_z = extract('/tmp/rot_z.log', 3)  
+  path_w = extract('/tmp/rot_w.log', 3)  
+  path_secs = extract('/tmp/secs.log', 6)
+  path_nsecs = extract('/tmp/nsecs.log', 6)
   for i in range(len(path_secs)):
     path_secs[i] = path_secs[i] + path_nsecs[i] / 1e9
   del path_nsecs # don't need nsecs anymore
