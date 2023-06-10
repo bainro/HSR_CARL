@@ -132,6 +132,7 @@ if __name__ == "__main__":
   
   # key callbacks 
   def up_cb(shift):
+    print("up_cb")
     global scale, path_y
     if shift:
       scale = scale + 0.15
@@ -140,6 +141,7 @@ if __name__ == "__main__":
       path_y = [y - .1 for y in path_y]
       
   def down_cb(shift):
+    print("down_cb")
     global scale, path_y
     if shift:
       scale = scale - 0.15
@@ -148,6 +150,7 @@ if __name__ == "__main__":
       path_y = [y + .1 for y in path_y]    
       
   def left_cb(shift):
+    print("left_cb")
     global rot, path_x
     if shift:
       rot = rot + 0.003
@@ -156,6 +159,7 @@ if __name__ == "__main__":
       path_x = [x - .1 for x in path_x]
       
   def right_cb(shift):
+    print("right_cb")
     global rot, path_x
     if shift:
       rot = rot - 0.003
