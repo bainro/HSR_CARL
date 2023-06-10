@@ -317,6 +317,10 @@ if __name__ == "__main__":
       save_name = os.path.join(args.out_dir, f'{i + prior_data}_camera.png')
       cv2.imwrite(save_name, fpv_img[...,::-1])
       i = i + 1
+      if i == 1:
+        plt.title("verify first person view (i.e. camera image)")
+        plt.imshow(fpv_img, vmin=0, vmax=255)
+        plt.show()
   bag.close()
   print("DONE!")
   
