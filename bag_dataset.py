@@ -132,8 +132,7 @@ if __name__ == "__main__":
   
   # key callback generator
   def key_cb_gen(dv, dsor):
-    
-    def ky_cb(shift, scale_or_rot, path_v):      
+    def ky_cb(self, shift, scale_or_rot, path_v):      
       if shift:
         print("shift")
         scale_or_rot = scale_or_rot + dsor
