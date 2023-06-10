@@ -256,14 +256,13 @@ if __name__ == "__main__":
     _tmp_map[gmp_w:-gmp_w, gmp_w:-gmp_w] = map_img[...]
     map_img = _tmp_map
       
-  os.makedirs(args.out_dir, exist_ok=True)
   prior_data = 0
   if args.combine:
     with open(os.path.join(args.out_dir, "meta_data.csv"), "r") as meta_file:
       prior_data = len(meta_file.readlines())
   else:
-    del_csv = f"rm {os.path.join(args.out_dir, 'meta_data.csv')} > /dev/null 2>&1"
-    _ = os.system(del_csv)
+    _ = os.system(f"rm -fr {args.out_dir} > /dev/null 2>&1")
+    os.makedirs(args.out_dir, exist_ok=True)
       
   for c, i in enumerate(range(len(trans_path_x))):
     if len(map_img.shape) == 3: # e.g. RGB
