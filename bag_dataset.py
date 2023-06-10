@@ -87,9 +87,9 @@ if __name__ == "__main__":
   del path_nsecs # don't need nsecs anymore
   
   # change angle in radians to filter consecutive poses
-  filter_dr = 0.23 # 0.3 rads ~= 17 degs
+  filter_dr = 0.53 # 0.3 rads ~= 17 degs
   # relative path width change to filter consecutive poses
-  rel_filter_dx = 0.03 # hyperparameter to tune for each map
+  rel_filter_dx = 0.53 # hyperparameter to tune for each map
   path_width = max(path_x) - min(path_x)
   filter_dx = path_width * rel_filter_dx
   # last non-filtered (i.e. included) pose. 
@@ -105,10 +105,11 @@ if __name__ == "__main__":
   
     rpy = t.euler_from_quaternion([0, 0, path_z[i], path_w[i]])
     yaw = rpy[2] + math.pi # make smallest possible value == 0
-    dr = abs(yaw - last_pt[2])
     # have to check for wrap around!
     if abs(yaw - last_pt[2]) > math.pi:
       dr = 2 * math.pi - abs(yaw - last_pt[2]) 
+    else:
+      dr = abs(yaw - last_pt[2])
   
     if dx > filter_dx or dr > filter_dr:
       last_pt = [x, y, yaw]
