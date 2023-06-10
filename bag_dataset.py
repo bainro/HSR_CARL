@@ -141,8 +141,8 @@ if __name__ == "__main__":
       return scale_or_rot, path_v
     return ky_cb
   
-  up_cb = key_cb_gen(-0.15, 0.1)
-  down_cb = key_cb_gen(0.15, -0.1)
+  up_cb = key_cb_gen(0.15, 0.1)
+  down_cb = key_cb_gen(-0.15, -0.1)
   left_cb = key_cb_gen(-0.15, -0.1)
   right_cb = key_cb_gen(0.15, 0.1)        
   
