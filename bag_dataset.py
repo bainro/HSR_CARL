@@ -132,6 +132,7 @@ if __name__ == "__main__":
   
   # key callback generator
   def key_cb_gen(dv, dsor):
+    
     def ky_cb(shift, scale_or_rot, path_v):      
       if shift:
         print("shift")
@@ -146,7 +147,8 @@ if __name__ == "__main__":
   up_cb = key_cb_gen(0.15, 0.1)
   down_cb = key_cb_gen(-0.15, -0.1)
   left_cb = key_cb_gen(-0.15, -0.1)
-  right_cb = key_cb_gen(0.15, 0.1)        
+  right_cb = key_cb_gen(-0.15, 0.1)
+  # right_cb = key_cb_gen(0.15, 0.1)
   
   shift_on = False
   enter_pressed = False
