@@ -126,19 +126,16 @@ if __name__ == "__main__":
   scale = args.scale
   x_off = args.x_off
   y_off = args.y_off
-  for i in range(len(path_x)):
-    path_x[i] = path_x[i] + x_off
-    path_y[i] = path_y[i] + y_off
   
   # key callback generator
   def key_cb_gen(dv, dSoR):
-    def ky_cb(shift, scale_or_rot, path_v):      
+    def ky_cb(shift, scale_or_rot, offset):      
       if shift:
         scale_or_rot = scale_or_rot + dSoR
       else:
         # translate points
-        path_v = [_v + dv for _v in path_v]  
-      return scale_or_rot, path_v
+        offset = offset + dv
+      return scale_or_rot, offset
     return ky_cb
   
   up_cb = key_cb_gen(-0.15, 0.1)
@@ -156,13 +153,13 @@ if __name__ == "__main__":
     if key == kb.Key.shift:
       shift_on = False
     elif key == kb.Key.left:
-      rot, path_x = left_cb(shift_on, rot, path_x)
+      rot, x_off = left_cb(shift_on, rot, x_off)
     elif key == kb.Key.right:
-      rot, path_x = right_cb(shift_on, rot, path_x)
+      rot, x_off = right_cb(shift_on, rot, x_off)
     elif key == kb.Key.down:
-      scale, path_y = down_cb(shift_on, scale, path_y)
+      scale, y_off = down_cb(shift_on, scale, y_off)
     elif key == kb.Key.up:
-      scale, path_y = up_cb(shift_on, scale, path_y)
+      scale, y_off = up_cb(shift_on, scale, y_off)
     elif key == kb.Key.enter:
       enter_pressed = True
     return False
@@ -192,9 +189,9 @@ if __name__ == "__main__":
     trans_path_x, trans_path_y = [], []
     for i in range(len(path_x)):
       x = path_x[i] * math.cos(rot) - path_y[i] * math.sin(rot)
-      trans_path_x.append(x * scale)
+      trans_path_x.append(scale * (x + x_off))
       y = path_y[i] * math.cos(rot) + path_x[i] * math.sin(rot)
-      trans_path_y.append(y * scale)
+      trans_path_y.append(scale * (y + y_off))
     # overlay the path on the map 
     plt.scatter(x=trans_path_x, y=trans_path_y, c=colors, s=3)
     plt.show(block=False)
