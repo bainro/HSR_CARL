@@ -330,4 +330,7 @@ if __name__ == "__main__":
   
   # === FUTURE FEATURES ===
   # Include history channels (i.e. multiple stacked FPV images)
-  # Fully connect lidar in 1st VAE layer alongside image? 
+  # Fully connect lidar in 1st VAE layer alongside image?
+  # 16 segmentation classes has the same resolution of 4-bit grayscale
+  # Doesn't require the reparam of a VAE necessarily
+  # Can the loss fx be weighted to be forgiving to closer inferences?
