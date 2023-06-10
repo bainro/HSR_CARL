@@ -223,7 +223,7 @@ if __name__ == "__main__":
     # print("assumes HxWxC image format!")
     rotation_pt = (int(x),int(y))
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
-    yaw = yaw * -1 # flip rotation direction
+    # yaw = yaw * -1 # flip rotation direction
     # offset to make the robot look up wrt to the map
     yaw = yaw + (math.pi / 2)
     yaw_degs = yaw * 180 / math.pi
