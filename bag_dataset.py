@@ -207,7 +207,7 @@ if __name__ == "__main__":
   plt.scatter(x=trans_path_x[-1], 
               y=trans_path_y[-1], 
               c=colors[-1],
-              label="end"
+              label="end",
               s=25)
   l = plt.legend(loc="lower right", fontsize=15)
   # hack to scale legend's icons with bigger font size
