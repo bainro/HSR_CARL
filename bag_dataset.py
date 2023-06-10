@@ -15,7 +15,7 @@ from tf import transformations as t
 
 parser = argparse.ArgumentParser()
 _help = "use this image instead of Cartographer's SLAM map"
-parser.add_argument("--map_file", type=str, help=_help)
+parser.add_argument("--map_file", type=str, default=False, help=_help)
 _help = "path to previously recorded rosbag"
 parser.add_argument("--bag_file", type=str, required=True, help=_help)
 _help = "directory to save the training data"
@@ -32,6 +32,10 @@ _help = "higher moves the path more to the right"
 parser.add_argument('--x_off', type=float, default=24.38, help=_help)
 _help = "higher moves the path further down"
 parser.add_argument('--y_off', type=float, default=10.5, help=_help)
+_help = "larger values increase width of global map perspective"
+parser.add_argument('--gmp_w', type=float, default=120, help=_help)
+_help = "size in pixels to save the dataset images"
+parser.add_argument('--size', type=float, default=256, help=_help)
 args = parser.parse_args()
 
 if __name__ == "__main__":
@@ -49,15 +53,10 @@ if __name__ == "__main__":
     os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
     # could ask user to provide this, but we have the .pbstream anyway
     os.system("rosrun map_server map_saver --occ 49 --free 40 -f '/tmp/map'")
-    print("@TODO find where the new map.pgm saves")
-    exit()
     os.system("pkill cart")
-    
     os.system("roslaunch cartographer_toyota_hsr carl_localize.launch &")
-    time.sleep(3)
+    time.sleep(1)
     os.system("rosservice call /trajectory_query 'trajectory_id: 0' > /tmp/traj.txt")
-    time.sleep(3)
-  os.system("pkill cart")
   # get just the pose position (x,y) and the corresponding timestamp (secs)
   os.system("grep -C4 position /tmp/traj.txt | grep -e 'x:' > /tmp/x.log")
   os.system("grep -C4 position /tmp/traj.txt | grep -e 'y:' > /tmp/y.log")
@@ -98,20 +97,17 @@ if __name__ == "__main__":
   # filter out poses based on (dx, dr) wrt last included pose
   for i in range(len(path_secs)):
     i = i - del_count
-    x = path_x[i]
-    y = path_y[i]
-    # triangle maths
-    dx = (((last_pt[0] - x) ** 2) + ((last_pt[1] - y) ** 2)) ** 0.5
+    x = last_pt[0] - path_x[i]
+    y = last_pt[1] - path_y[i]
+    # pythagorean theorem
+    dx = (x**2 + y**2) ** 0.5
   
-    qz = path_z[i]
-    qw = path_w[i]
-    _r, _p, yaw = t.euler_from_quaternion([0, 0, qz, qw])
-    yaw = yaw + math.pi # make smallest possible value == 0
+    rpy = t.euler_from_quaternion([0, 0, path_z[i], path_w[i]])
+    yaw = rpy[2] + math.pi # make smallest possible value == 0
+    dr = abs(yaw - last_pt[2])
     # have to check for wrap around!
     if abs(yaw - last_pt[2]) > math.pi:
       dr = 2 * math.pi - abs(yaw - last_pt[2]) 
-    else:
-      dr = abs(yaw - last_pt[2])
   
     if dx > filter_dx or dr > filter_dr:
       last_pt = [x, y, yaw]
@@ -125,7 +121,6 @@ if __name__ == "__main__":
   assert len(path_y) == len(path_z) == len(path_w), "No longer parallel lists!"
   
   # use keys to translate, rotate, & scale the path
-  print("specific settings for SBSG 1st floor")
   rot = args.rot, scale = args.scale, x_off = args.x_off, y_off = args.y_off
   for i in range(len(path_x)):
     path_x[i] = path_x[i] + x_off
@@ -173,23 +168,24 @@ if __name__ == "__main__":
     if key == kb.Key.shift:
       global shift_on
       shift_on = True
-  
-  print("use the arrow keys and shift to rotate, translate, & scale the path")
    
   # load the picture of the map
   map_img = None
-  # @TODO hardcoded for SBSG 2nd floor
-  # with open("/tmp/test.png", 'rb') as pgmf:
-  with open("/tmp/map.pgm", 'rb') as pgmf:
-    map_img = plt.imread(pgmf)
+  map_file = args.map_file or "/tmp/map.pgm"
+  with open(map_file, 'rb') as mf:
+    map_img = plt.imread(mf)
     
-  print("path_x[0] start: ", path_x[0])  
-  print("path_y[0] start: ", path_y[0])  
   colors = cm.gist_rainbow(np.linspace(0, 0.85, len(path_x)))
   fig = plt.figure(figsize=(36,12))
   while not enter_pressed:
     plt.clf()
-    plt.imshow(map_img, resample=False, interpolation='none', cmap='gray', vmin=0, vmax=255)
+    plt.title("use arrow keys and shift to align the path")
+    plt.imshow(map_img, 
+               resample=False, 
+               interpolation='none', 
+               cmap='gray', 
+               vmin=0, 
+               vmax=255)
     trans_path_x, trans_path_y = [], []
     for i in range(len(path_x)):
       x = path_x[i] * math.cos(rot) - path_y[i] * math.sin(rot)
@@ -199,105 +195,101 @@ if __name__ == "__main__":
     # overlay the path on the map 
     plt.scatter(x=trans_path_x, y=trans_path_y, c=colors, s=3)
     plt.show(block=False)
-    plt.pause(0.01)
-    with kb.Listener(on_press=on_press, on_release=on_release) as listener:
+    plt.pause(0.)
+    with kb.Listener(on_press=press, on_release=rel) as listener:
       listener.join() 
   
-  plt.scatter(x=trans_path_x[0], y=trans_path_y[0], c=colors[0], s=25, label="start")
-  plt.scatter(x=trans_path_x[-1], y=trans_path_y[-1], c=colors[-1], s=25, label="end")
+  plt.scatter(x=trans_path_x[0], 
+              y=trans_path_y[0], 
+              c=colors[0], 
+              label="start",
+              s=25)
+  plt.scatter(x=trans_path_x[-1], 
+              y=trans_path_y[-1], 
+              c=colors[-1],
+              label="end"
+              s=25)
   l = plt.legend(loc="lower right", fontsize=15)
   # hack to scale legend's icons with bigger font size
   l.legendHandles[0]._sizes = [200]
   l.legendHandles[1]._sizes = [200]
-  plt.show()
   fig.savefig('/tmp/overlay.svg', format='svg', dpi=1200)
   plt.clf()
-  
-  print("path_x[0] end: ", path_x[0])
-  print("path_y[0] end: ", path_y[0])
-  print("scale: ", scale)
-  print("rot: ", rot)
  
-  def rotate_image(image, x, y, qz, qw):
+  def rotate_image(im, x, y, qz, qw):
     # print("assumes HxWxC image format!")
-    x = int(x//1)
-    y = int(y//1)
-    rotation_pt = (x,y)
+    rotation_pt = (int(x),int(y))
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
-    yaw = yaw * -1 # flip rotation
-    # make the robot look up instead of to the right
+    yaw = yaw * -1 # flip rotation direction
+    # offset to make the robot look up wrt to the map
     yaw = yaw + (math.pi / 2)
     yaw_degs = yaw * 180 / math.pi
     rot_mat = cv2.getRotationMatrix2D(rotation_pt, yaw_degs, 1.0)
-    rot_img = cv2.warpAffine(image, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
+    rot_img = cv2.warpAffine(im, rot_mat, image.shape[1::-1], flags=cv2.INTER_LINEAR)
     return rot_img
   
-  os.makedirs(args.out_dir, exist_ok=True)
-  target_size = 256
-  # region of interest's (i.e. centered at robot) relative width
-  roi_rel_w = 0.12 # hyperparameter to be set by user
-  # print("assumes HxWxC image format!")
-  rot_w = int((map_img.shape[1] * roi_rel_w) // 1)
-  
-  prior_data = 0
-  if args.combine:
-    with open(os.path.join(args.out_dir, "meta_data.csv"), "r") as meta_file:
-      prior_data = len(meta_file.readlines())
-  else:
-    os.system(f"rm {os.path.join(args.out_dir, 'meta_data.csv')}")
-  
+  # global map perspective's width (centered at robot)
+  gmp_w = int(map_img.shape[1] * args.gmp_w)
   # add padding to simplify edge cases after rotating and remove later.
   if len(map_img.shape) == 3: # e.g. RGB
     # assumes padding color is same as top-left map px
     tl_color = map_img[0,0,:]
     old_shape = list(map_img.shape)
-    padding_shape = [2*rot_w, 2*rot_w, 0]
+    padding_shape = [2*gmp_w, 2*gmp_w, 0]
     new_shape = [sum(x) for x in zip(old_shape, padding_shape)]
     _tmp_map = np.zeros(tuple(new_shape))
     _tmp_map[...] = tl_color
-    _tmp_map[rot_w:-rot_w, rot_w:-rot_w, :] = map_img[...]
+    _tmp_map[gmp_w:-gmp_w, gmp_w:-gmp_w, :] = map_img[...]
     map_img = _tmp_map
   else: # e.g. grayscale
     tl_color = 205 # map_img[0,0]
     old_shape = list(map_img.shape)
-    padding_shape = [2*rot_w, 2*rot_w]
+    padding_shape = [2*gmp_w, 2*gmp_w]
     new_shape = [sum(x) for x in zip(old_shape, padding_shape)]
     _tmp_map = np.zeros(tuple(new_shape))
     _tmp_map[...] = tl_color
-    _tmp_map[rot_w:-rot_w, rot_w:-rot_w] = map_img[...]
+    _tmp_map[gmp_w:-gmp_w, gmp_w:-gmp_w] = map_img[...]
     map_img = _tmp_map
+      
+  os.makedirs(args.out_dir, exist_ok=True)
+  prior_data = 0
+  if args.combine:
+    with open(os.path.join(args.out_dir, "meta_data.csv"), "r") as meta_file:
+      prior_data = len(meta_file.readlines())
+  else:
+    del_csv = f"rm {os.path.join(args.out_dir, 'meta_data.csv')} > /dev/null 2>&1"
+    _ = os.system(del_csv)
       
   for c, i in enumerate(range(len(trans_path_x))):
     if len(map_img.shape) == 3: # e.g. RGB
-      gmp_img = np.zeros(shape=(rot_w, rot_w, 3))
+      gmp_img = np.zeros(shape=(gmp_w, gmp_w, 3))
     else:
-      gmp_img = np.zeros(shape=(rot_w, rot_w))
+      gmp_img = np.zeros(shape=(gmp_w, gmp_w))
     # rotation origin
-    rx = trans_path_x[i] + rot_w
-    ry = trans_path_y[i] + rot_w
+    rx = trans_path_x[i] + gmp_w
+    ry = trans_path_y[i] + gmp_w
     rot_map = rotate_image(map_img, rx, ry, path_z[i], path_w[i])
     # crop out around the robot
-    x_start = int(trans_path_x[i] + rot_w / 2)
-    x_end = int(trans_path_x[i] + 3 * rot_w / 2)
-    y_start = int(trans_path_y[i] + rot_w / 2)
-    y_end = int(trans_path_y[i] + 3 * rot_w / 2)
+    x_start = int(trans_path_x[i] + gmp_w / 2)
+    x_end = int(trans_path_x[i] + 3 * gmp_w / 2)
+    y_start = int(trans_path_y[i] + gmp_w / 2)
+    y_end = int(trans_path_y[i] + 3 * gmp_w / 2)
       
     if len(rot_map.shape) == 3: # e.g. RGB
       gmp_img[:, :, :] = rot_map[y_start:y_end, x_start:x_end, :]
     else: # e.g. grayscale
       gmp_img[:, :] = rot_map[y_start:y_end, x_start:x_end]
     
-    gmp_img = cv2.resize(gmp_img, dsize=(target_size, target_size), 
+    gmp_img = cv2.resize(gmp_img, dsize=(args.size, args.size), 
                          interpolation=cv2.INTER_AREA) 
     if len(gmp_img.shape) == 3: # eg RGB
       cv2.imwrite(os.path.join(args.out_dir, f'{i + prior_data}_map.png'), gmp_img*255)
     else:
       cv2.imwrite(os.path.join(args.out_dir, f'{i + prior_data}_map.png'), gmp_img)
     if i == 0:
+      plt.title("verify map region of interest quality")
       plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
       plt.show()
-  
-  # remove the padding added for rotation
   
   # save each FPV image with the corresponding GMP image
   bag = rosbag.Bag(args.bag_file)
@@ -320,7 +312,7 @@ if __name__ == "__main__":
       cam_img = cam_img[:, x_offset:-x_offset, :]
       assert_str = f"image should be square. {cam_img.shape[1]} != {cam_img.shape[0]}"
       assert cam_img.shape[0] == cam_img.shape[1], assert_str
-      resize_dims = (target_size, target_size)
+      resize_dims = (args.size, args.size)
       fpv_img = cv2.resize(cam_img, dsize=resize_dims, interpolation=cv2.INTER_AREA)
       save_name = os.path.join(args.out_dir, f'{i + prior_data}_camera.png')
       cv2.imwrite(save_name, fpv_img[...,::-1])
