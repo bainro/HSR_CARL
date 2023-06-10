@@ -130,16 +130,38 @@ if __name__ == "__main__":
     path_x[i] = path_x[i] + x_off
     path_y[i] = path_y[i] + y_off
   
-  # key callback 
-  def ky_cb(dv, dsor, shift, scale_or_rot, path_v):      
+  # key callbacks 
+  def up_cb(shift):
+    global scale, path_y
     if shift:
-      print("shift")
-      scale_or_rot = scale_or_rot + dsor
+      scale = scale + 0.15
     else:
-      print("no shift")
-      # translate points
-      path_v = [_v + dv for _v in path_v]  
-    return scale_or_rot, path_v
+      # translate points up
+      path_y = [y - .1 for y in path_y]
+      
+  def down_cb(shift):
+    global scale, path_y
+    if shift:
+      scale = scale - 0.15
+    else:
+      # translate points down
+      path_y = [y + .1 for y in path_y]    
+      
+  def left_cb(shift):
+    global rot, path_x
+    if shift:
+      rot = rot + 0.003
+    else:
+      # translate points to the left
+      path_x = [x - .1 for x in path_x]
+      
+  def right_cb(shift):
+    global rot, path_x
+    if shift:
+      rot = rot - 0.003
+    else:
+      # translate points to the right
+      path_x = [x + .1 for x in path_x] 
   
   shift_on = False
   enter_pressed = False
@@ -151,13 +173,13 @@ if __name__ == "__main__":
     if key == kb.Key.shift:
       shift_on = False
     elif key == kb.Key.left:
-      rot, path_x = ky_cb(-0.15, -0.1, shift_on, rot, path_x)
+      left_cb(shift_on)
     elif key == kb.Key.right:
-      rot, path_x = ky_cb(0.15, 0.1, shift_on, rot, path_x)
+      right_cb(shift_on)
     elif key == kb.Key.down:
-      scale, path_y = ky_cb(-0.15, -0.1, shift_on, scale, path_y)
+      down_cb(shift_on)
     elif key == kb.Key.up:
-      scale, path_y = key_cb(0.15, 0.1, shift_on, scale, path_y)
+      up_cb(shift_on)
     elif key == kb.Key.enter:
       enter_pressed = True
     return False
