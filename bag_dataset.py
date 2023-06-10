@@ -166,9 +166,14 @@ if __name__ == "__main__":
   shift_on = False
   enter_pressed = False
   
-  def kr(key): # key released
+  def on_press(key):
+    if key == kb.Key.shift:
+      global shift_on
+      shift_on = True
+  
+  def on_release(key):
     # print('{0} released'.format(key))
-    global shift_on, enter_pressed
+    global shift_on
     if key == kb.Key.shift:
       shift_on = False
     elif key == kb.Key.left:
@@ -180,13 +185,10 @@ if __name__ == "__main__":
     elif key == kb.Key.up:
       up_cb(shift_on)
     elif key == kb.Key.enter:
+      global enter_pressed
       enter_pressed = True
+      
     return False
-  
-  def kp(key): # key pressed
-    if key == kb.Key.shift:
-      global shift_on
-      shift_on = True
    
   # load the picture of the map
   map_img = None
@@ -215,7 +217,7 @@ if __name__ == "__main__":
     plt.scatter(x=trans_path_x, y=trans_path_y, c=colors, s=3)
     plt.show(block=False)
     plt.pause(0.001)
-    with kb.Listener(on_press=kp, on_release=kr) as listener:
+    with kb.Listener(on_press=on_press, on_release=on_release) as listener:
       listener.join() 
   
   print("\n\nrot: ", rot), print("scale: ", scale)
