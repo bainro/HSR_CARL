@@ -122,8 +122,6 @@ if __name__ == "__main__":
   assert len(path_y) == len(path_z) == len(path_w), "No longer parallel lists!"
   
   # use keys to translate, rotate, & scale the path
-  shift_on = False
-  enter_pressed = False
   rot = args.rot
   scale = args.scale
   x_off = args.x_off
@@ -132,66 +130,46 @@ if __name__ == "__main__":
     path_x[i] = path_x[i] + x_off
     path_y[i] = path_y[i] + y_off
   
-  # key callbacks 
-  def up_cb(shift):
-    print("up_cb")
-    global scale, path_y
-    if shift:
-      scale = scale + 0.15
-    else:
-      # translate points up
-      path_y = [y - .1 for y in path_y]
-      
-  def down_cb(shift):
-    print("down_cb")
-    global scale, path_y
-    if shift:
-      scale = scale - 0.15
-    else:
-      # translate points down
-      path_y = [y + .1 for y in path_y]    
-      
-  def left_cb(shift):
-    print("left_cb")
-    global rot, path_x
-    if shift:
-      rot = rot - 0.003
-    else:
-      # translate points to the left
-      path_x = [x - .1 for x in path_x]
-      
-  def right_cb(shift):
-    print("right_cb")
-    global rot, path_x
-    if shift:
-      rot = rot + 0.003
-    else:
-      # translate points to the right
-      path_x = [x + .1 for x in path_x] 
+  # key callback generator
+  def key_cb_gen(dv, dsor):
+    def ky_cb(shift, scale_or_rot, path_v):      
+      if shift:
+        scale_or_rot = scale_or_rot + deither
+      else:
+        # translate points
+        path_v = [_v + dv for _v in path_v]  
+      return scale_or_rot, path_v
+    return ky_cb
   
-  def on_press(key):
-    if key == kb.Key.shift:
-      global shift_on
-      shift_on = True
+  up_cb = key_cb_gen(0.15, -0.1)
+  down_cb = key_cb_gen(-0.15, 0.1)
+  left_cb = key_cb_gen(0.003, -0.1)
+  right_cb = key_cb_gen(-0.003, 0.1)        
   
-  def on_release(key):
+  shift_on = False
+  enter_pressed = False
+  
+  def kr(key): # key released
     # print('{0} released'.format(key))
-    global shift_on
+    global shift_on, enter_pressed
     if key == kb.Key.shift:
       shift_on = False
     elif key == kb.Key.left:
-      left_cb(shift_on)
+      rot, path_x = left_cb(shift_on, rot, path_x)
     elif key == kb.Key.right:
-      right_cb(shift_on)
+      rot, path_x = right_cb(shift_on, rot, path_x)
     elif key == kb.Key.down:
-      down_cb(shift_on)
+      scale, path_y = down_cb(shift_on, scale, path_y)
     elif key == kb.Key.up:
-      up_cb(shift_on)
+      scale, path_y = up_cb(shift_on, scale, path_y)
     elif key == kb.Key.enter:
-      global enter_pressed
       enter_pressed = True
-      
     return False
+  
+  def kp(key): # key pressed
+    if key == kb.Key.shift:
+      global shift_on
+      shift_on = True
    
   # load the picture of the map
   map_img = None
@@ -220,7 +198,7 @@ if __name__ == "__main__":
     plt.scatter(x=trans_path_x, y=trans_path_y, c=colors, s=3)
     plt.show(block=False)
     plt.pause(0.001)
-    with kb.Listener(on_press=on_press, on_release=on_release) as listener:
+    with kb.Listener(on_press=kp, on_release=kr) as listener:
       listener.join() 
   
   print("\n\nrot: ", rot), print("scale: ", scale)
