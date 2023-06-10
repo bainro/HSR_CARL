@@ -191,7 +191,7 @@ if __name__ == "__main__":
       x = path_x[i] * math.cos(rot) - path_y[i] * math.sin(rot)
       trans_path_x.append(scale * (x + x_off))
       y = path_y[i] * math.cos(rot) + path_x[i] * math.sin(rot)
-      trans_path_y.append(scale * (y + y_off))
+      trans_path_y.append(scale * (-y + y_off))
     # overlay the path on the map 
     plt.scatter(x=trans_path_x, y=trans_path_y, c=colors, s=3)
     plt.show(block=False)
@@ -223,7 +223,7 @@ if __name__ == "__main__":
     # print("assumes HxWxC image format!")
     rotation_pt = (int(x),int(y))
     _roll, _pitch, yaw = t.euler_from_quaternion([0, 0, qz, qw])
-    # yaw = yaw * -1 # flip rotation direction
+    yaw = yaw * -1 # flip rotation direction
     # offset to make the robot look up wrt to the map
     yaw = yaw + (math.pi / 2)
     yaw_degs = yaw * 180 / math.pi
