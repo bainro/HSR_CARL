@@ -67,7 +67,7 @@ if __name__ == "__main__":
   
   def extract(fname, str_bias):
     with open(fname, 'r') as _f:
-      lines = _file.readlines()
+      lines = _f.readlines()
     for l in lines:
       l = l.strip()
       path_var.append(float(l[str_bias:]))
@@ -326,4 +326,4 @@ if __name__ == "__main__":
   
   # === FUTURE FEATURES ===
   # Include history channels (i.e. multiple stacked FPV images)
-  # Include LIDAR as separate image channel (only affects 1st conv, which scales linearly)
+  # Fully connect lidar in 1st VAE layer alongside image? 
