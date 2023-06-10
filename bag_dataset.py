@@ -324,7 +324,7 @@ if __name__ == "__main__":
       i = i + 1
       if i == 1:
         plt.title("verify first person view (i.e. camera image)")
-        plt.imshow(fpv_img[...,::-1])
+        plt.imshow(fpv_img/255)
         plt.show()
   bag.close()
   print("DONE!")
