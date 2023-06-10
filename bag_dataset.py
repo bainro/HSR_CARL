@@ -155,7 +155,7 @@ if __name__ == "__main__":
     print("left_cb")
     global rot, path_x
     if shift:
-      rot = rot + 0.003
+      rot = rot - 0.003
     else:
       # translate points to the left
       path_x = [x - .1 for x in path_x]
@@ -164,7 +164,7 @@ if __name__ == "__main__":
     print("right_cb")
     global rot, path_x
     if shift:
-      rot = rot - 0.003
+      rot = rot + 0.003
     else:
       # translate points to the right
       path_x = [x + .1 for x in path_x] 
