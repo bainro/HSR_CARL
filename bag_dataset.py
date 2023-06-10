@@ -140,8 +140,8 @@ if __name__ == "__main__":
   
   up_cb = key_cb_gen(-0.15, 0.1)
   down_cb = key_cb_gen(0.15, -0.1)
-  left_cb = key_cb_gen(-0.15, -0.003)
-  right_cb = key_cb_gen(0.15, 0.003)        
+  left_cb = key_cb_gen(-0.15, 0.003)
+  right_cb = key_cb_gen(0.15, -0.003)        
   
   shift_on = False
   enter_pressed = False
