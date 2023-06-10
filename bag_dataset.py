@@ -93,7 +93,7 @@ if __name__ == "__main__":
   path_width = max(path_x) - min(path_x)
   filter_dx = path_width * rel_filter_dx
   # last non-filtered (i.e. included) pose. 
-  last_pt = [2e8, 2e8, 2e8] 
+  last_pt = [math.inf, math.inf, math.inf] 
   del_count = 0
   # filter out poses based on (dx, dr) wrt last included pose
   for i in range(len(path_secs)):
@@ -112,7 +112,7 @@ if __name__ == "__main__":
       dr = abs(yaw - last_pt[2])
   
     if dx > filter_dx or dr > filter_dr:
-      last_pt = [x, y, yaw]
+      last_pt = [path_x[i], path_y[i], yaw]
       path_yaw.append(yaw)
       print("dx: ", dx)
       print("dr: ", dr)
