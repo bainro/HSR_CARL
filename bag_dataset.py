@@ -342,7 +342,7 @@ if __name__ == "__main__":
   # ^ Would this require expanding pyCARL much?
   # continuous time training ideas? 
   # Autonomous foraging model / exploration of 2nd floor.
-  # How would place, grid, etc cells behave like 
-  # when traveling like the Jackal in Aldrich?
-  # specifically, cartographer SLAM assumes a flat plane. What are the 
-  # dynamics like in the temporal lobe that encodes this extra z-dim?
+  # What would place, grid, etc cell dynamics be
+  # when traveling around Aldrich like the Jackal?
+  # specifically, cartographer SLAM assumes a flat plane. What is 
+  # temporal lobe activity like that encodes this extra z-dim?
