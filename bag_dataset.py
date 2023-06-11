@@ -346,3 +346,4 @@ if __name__ == "__main__":
   # when traveling around Aldrich like the Jackal?
   # specifically, cartographer SLAM assumes a flat plane. What is 
   # temporal lobe activity like that encodes this extra z-dim?
+  # meta-landmark data in the 2D map
