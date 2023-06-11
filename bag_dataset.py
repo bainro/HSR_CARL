@@ -336,5 +336,13 @@ if __name__ == "__main__":
   # What's the NS angle? Give it a time signal to condition on to explain 
   # some of the variance from people or environmental/map changes. 
   # recurrence? pytorch -> CARLsim 5 SNN segmentation classifier on Jetson Nano?
+  # can evolve the network parameters with LEAP, 
+  # backprop giving us a decent performance starting point.
+  # and pytorch's userbase is HUGE, would generate interest in CARLsim.
+  # ^ Would this require expanding pyCARL much?
   # continuous time training ideas? 
   # Autonomous foraging model / exploration of 2nd floor.
+  # How would place, grid, etc cells behave like 
+  # when traveling like the Jackal in Aldrich?
+  # specifically, cartographer SLAM assumes a flat plane. What are the 
+  # dynamics like in the temporal lobe that encodes this extra z-dim?
