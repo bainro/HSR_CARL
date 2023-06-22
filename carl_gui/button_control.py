@@ -25,8 +25,6 @@ class BaseTrajectoryControl(object):
         self.actual_vel = (0, 0, 0)
         self.desired_vel = (0, 0, 0)
 
-        self.pgm = self.read_pgm("nutrition_map_v2/map.pgm", byteorder='<')
-
         with open("param.yaml", "r") as f:
             self.param = yaml.load(f, Loader=yaml.FullLoader)
 
@@ -254,7 +252,7 @@ class HeadControl(object):
         # Subscribe color image data from HSR
         self._image_sub = rospy.Subscriber('/hsrb/head_trajectory_controller/state', JointTrajectoryControllerState, self.receive_state)
         # Wait until connection
-        rospy.wait_for_message('/hsrb/head_trajectory_controller/state', JointTrajectoryControllerState, timeout=100.0)
+        rospy.wait_for_message('/hsrb/head_trajectory_controller/state', JointTrajectoryControllerState, timeout=10.0)
         # Store positions received from topic
         self.actual_positions = (0, 0)
         self.desired_positions = (0, 0)
@@ -265,6 +263,7 @@ class HeadControl(object):
         # Wait to establish connection between the controller
         while self._pub.get_num_connections() == 0:
             rospy.sleep(0.1)
+
         # Make sure the controller is running
         rospy.wait_for_service('/hsrb/controller_manager/list_controllers')
         list_controllers = rospy.ServiceProxy('/hsrb/controller_manager/list_controllers',

@@ -1,8 +1,8 @@
 import cv2
-from cv_bridge import CvBridge, CvBridgeError
 import rospy
-from sensor_msgs.msg import Image
 from PyQt5 import QtGui, QtCore
+from cv_bridge import CvBridge, CvBridgeError
+from sensor_msgs.msg import Image, CompressedImage
 
 
 class rgbOut(QtCore.QObject):
@@ -11,8 +11,9 @@ class rgbOut(QtCore.QObject):
 
     def __init__(self):
         super(rgbOut, self).__init__()
-        topic_name = '/hsrb/head_rgbd_sensor/rgb/image_raw'
-        #topic_name = '/hsrb/head_rgbd_sensor/rgb/image_rect_color'
+        # used to be '/hsrb/head_rgbd_sensor/rgb/image_raw'
+        # but it's too slow over UCI wifi, so doing a resize before sending :)
+        topic_name = '/rgbd_resize/image_proc_resize/image/compressed'
         self._bridge = CvBridge()
         self._input_image = None
         self.zoom_state = 1
@@ -20,15 +21,16 @@ class rgbOut(QtCore.QObject):
         self.minzoom = 1
         
         # Subscribe color image data from HSR
-        self._image_sub = rospy.Subscriber(topic_name, Image, self._color_image_cb)
+        self._image_sub = rospy.Subscriber(topic_name, CompressedImage, self._color_image_cb)
         # Wait until connection
-        rospy.wait_for_message(topic_name, Image, timeout=5.0)
+        rospy.wait_for_message(topic_name, CompressedImage, timeout=15.0)
 
     def _color_image_cb(self, data):
 
         try:
-            self._input_image = self._bridge.imgmsg_to_cv2(data, "bgr8")
+            self._input_image = self._bridge.compressed_imgmsg_to_cv2(data, "bgr8")
             rgbImage = cv2.cvtColor(self._input_image, cv2.COLOR_BGR2RGB)
+            rgbImage = cv2.resize(rgbImage, (640, 480), interpolation=cv2.INTER_AREA)
 
             h = 480
             w = 640

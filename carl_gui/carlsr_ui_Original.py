@@ -1,18 +1,19 @@
-# Authors: H J Kashyap , T Hwu, S Mohaddesi, & R Bain
-
-import os
+#Author: H J Kashyap and T Hwu
 import sys
-import math
-import yaml
-import rospy
-import grasping_ui
-import hsrb_interface
-import stereo_cam_channels
+from PyQt5.QtWidgets import QApplication, QDialog, QGridLayout, QGroupBox, QPushButton, QLabel
 from PyQt5 import QtGui, QtCore
-from get_click_xyz import Get3Dcoordinates
+import os
 import xtion_channels, button_control, arm_control, map_navigation, gripper_control, speech_control
-from PyQt5.QtWidgets import QApplication, QDialog, QGridLayout, QGroupBox, QPushButton, QLabel, QShortcut
-
+import rospy
+import yaml
+import hsrb_interface
+from get_click_xyz import Get3Dcoordinates
+import math
+import stereo_cam_channels
+import hand_control_ui
+import high_res_cam_ui
+from hsrb_interface import geometry
+import grasping_ui
 
 class Thread(QtCore.QThread):
     def run(self):
@@ -27,12 +28,15 @@ class ClientUI(QDialog):
         super(ClientUI, self).__init__()
         self.title = 'CARL-SR Interface'
         self.robot = hsrb_interface.Robot()
+        self.whole_body = self.robot.get('whole_body')
+        self.omni_base = self.robot.get('omni_base')
         self.gripper = self.robot.get('gripper')
 
         self.left = 500
         self.top = 100
         self.width =1350
         self.height = 900
+        self.active_reach_target = False
         self.current_cam = 0  # 0 for regular RGB camera and 1 for high resolution camera
 
         self.logopath = os.path.join(os.path.curdir, 'image', 'carl-logo.jpg')
@@ -136,6 +140,13 @@ class ClientUI(QDialog):
         arm_raise_button.clicked.connect(self.headMove.clicked_right_45)
         arm_raise_button.clicked.connect(self.armMove.clicked_arm_raise)
 
+        # arm_lower_button = QPushButton('Lower Hand')
+        # armMoveGridLayout.addWidget(arm_lower_button, 1, 0)
+        # arm_lower_button.clicked.connect(self.gripperMove.clicked_hand_gripper)
+        # arm_lower_button.clicked.connect(self.basePose.clicked_right_45)
+        # arm_lower_button.clicked.connect(self.headMove.clicked_left_45)
+        # arm_lower_button.clicked.connect(self.armMove.clicked_arm_lower)
+
         body_neutral_button = QPushButton('Neutral Arm Position')
         body_neutral_button.setStyleSheet("color: black; background-color: rgb(204, 153, 255)")
         armMoveGridLayout.addWidget(body_neutral_button, 1, 0)
@@ -193,7 +204,7 @@ class ClientUI(QDialog):
         except:
             print('Failed to close gripper properly!')
 
-    @QtCore.pyqtSlot()
+    @QtCore.pyqtSlot(QPushButton)
     def buildGraspingUIPopup(self):
         popup_win = grasping_ui.HandCam(self)
         popup_win.setGeometry(100, 200, 100, 100)
@@ -285,42 +296,53 @@ class ClientUI(QDialog):
                                        'padding-right: 10px; }')
 
     def register_click_to_reach(self, event):
-        rgb_h = event.pos().x()
-        rgb_v = event.pos().y()
-        self.find3D.twoD_to_threeD(rgb_h, rgb_v)
+        #self.whole_body.end_effector_frame = u'hand_palm_link'
+        if self.active_reach_target:
+            rgb_h = event.pos().x()
+            rgb_v = event.pos().y()
+            print(rgb_h, rgb_v)
+            self.find3D.twoD_to_threeD(rgb_h, rgb_v)
+            # while True:
+            #     if finder3D.found_3d:
+            #         break
+            if self.find3D.found_3d:
+                target_x = self.find3D.map_point.point.x
+                target_y = self.find3D.map_point.point.y
+                target_z = self.find3D.map_point.point.z
+                print('rgbd frame: ', target_x, target_y, target_z)
+            else:
+                print('The target location could not be found by the RGBD sensor, please try again!!')
 
-        if not self.find3D.found_3d:
-            print('The target location could not be found by the RGBD sensor, please try again!!')
-            return
+            if math.isnan(target_x) or math.isnan(target_y) or math.isnan(target_z):
+                print('The target location is not found (nan) by the RGBD sensor, try again!!')
 
-        target_x = self.find3D.map_point.point.x
-        target_y = self.find3D.map_point.point.y
-        target_z = self.find3D.map_point.point.z
-        print('rgbd frame: ', target_x, target_y, target_z)
+            else:
+                #current_pose = self.omni_base.get_pose()
 
-        if math.isnan(target_x) or math.isnan(target_y) or math.isnan(target_z):
-            print('The target location is not found (nan) by the RGBD sensor, try again!!')
-            return
+                #if current_pose.pos.x > target_x:
+                if self.autodrive.global_pose[0] > target_x:
+                    x_offset = 0.5
+                else:
+                    x_offset = -0.5
 
-        x_offset = 0.5
-        # if the target is ahead of us wrt map origin pose
-        if self.autodrive.global_pose[0] < target_x:
-            x_offset = -0.5
-            
-        y_offset = 0.5
-        # if we're to the right of the clicked target
-        if self.autodrive.global_pose[1] < target_y:
-            y_offset = -0.5
+                #if current_pose.pos.y > target_y:
+                if self.autodrive.global_pose[1] > target_y:
+                    y_offset = 0.5
+                else:
+                    y_offset = -0.5
 
-        try:
-            self.autodrive.go_to_mapXY(target_x, x_offset, target_y, y_offset)
-        except:
-            rospy.logerr('Failed to reach near the target')
-            return
+                try:
+                    self.autodrive.go_to_mapXY(target_x, x_offset, target_y, y_offset)
+                except:
+                    rospy.logerr('fail to reach near the target')
+                else:
+                    self.speech.speak('I will reach and point to the target object.')
+                    self.armMove.clicked_at_target(target_z)
+                    self.gripperMove.clicked_gripper_open()
+            self.active_reach_target = False
 
-        self.speech.speak('I will reach and point at your target object.')
-        self.armMove.clicked_at_target(target_z)
-        self.gripperMove.clicked_gripper_open()
+    def pointRandom(self):
+        self.active_reach_target = True
 
     def createClick2ReachGrid(self):
         self.click2reachGrid = QGroupBox('')
@@ -329,7 +351,7 @@ class ClientUI(QDialog):
         self.click2pointbutton = QPushButton('Click at Target')
         self.click2pointbutton.setStyleSheet("color: white; background-color: rgb(0, 153, 153)")
         click2reachLayout.addWidget(self.click2pointbutton, 0, 0)
-        # self.click2pointbutton.pressed.connect(self.pointRandom)
+        self.click2pointbutton.pressed.connect(self.pointRandom)
 
         self.click2reachGrid.setLayout(click2reachLayout)
         self.click2reachGrid.setStyleSheet('QGroupBox:title {'
@@ -400,6 +422,8 @@ class ClientUI(QDialog):
         else:
             self.speech.speak('Going backward.')
 
+        # self.autodrive.go_to_relXY(-0.5, 0)
+
     def finish_90_thread(self):
         self.left_90_button.setEnabled(True)
         self.right_90_button.setEnabled(True)
@@ -407,7 +431,6 @@ class ClientUI(QDialog):
     def createBaseMoveGrid(self):
         self.baseMoveGrid = QGroupBox('Move Base')
         baseMoveGridLayout = QGridLayout()
-        self.keyboardShortcuts()
 
         forward_button = QPushButton('^')
         forward_button.setStyleSheet("color: black; background-color: rgb(153, 255, 153)")
@@ -455,16 +478,6 @@ class ClientUI(QDialog):
                  'subcontrol-position: top center;'
                  'padding-left: 10px;'
                  'padding-right: 10px; }')
-    
-    def keyboardShortcuts(self):
-        QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Up),self, activated=self.baseMove.clicked_forward)
-        QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Left),self, activated=self.baseMove.clicked_left)
-        QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Right),self, activated=self.baseMove.clicked_right)
-        QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_W),self, activated=self.headMove.clicked_up)
-        QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_S),self, activated=self.headMove.clicked_down)
-        QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_A),self, activated=self.headMove.clicked_left)
-        QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_D),self, activated=self.headMove.clicked_right)
-        QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_R),self, activated=self.headMove.clicked_home)
 
     def shutdown(self):
         rospy.loginfo("Stopping the robot.....")
