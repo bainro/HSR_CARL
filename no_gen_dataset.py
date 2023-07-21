@@ -176,7 +176,8 @@ if __name__ == "__main__":
   map_file = args.map_file or "/tmp/map.pgm"
   with open(map_file, 'rb') as mf:
     map_img = plt.imread(mf)
-    
+  og_map_shape = map_img.shape
+  
   colors = cm.gist_rainbow(np.linspace(0, 0.85, len(path_x)))
   fig = plt.figure(figsize=(36,12))
   while not enter_pressed:
@@ -308,9 +309,9 @@ if __name__ == "__main__":
       if msg_t < path_secs[i]:
         continue
       assert_str = "assuming width is 2nd dimension"
-      assert map_img.shape[1] > map_img.shape[0], assert_str
-      norm_x = trans_path_x[i] / map_img.shape[1]
-      norm_y = trans_path_y[i] / map_img.shape[0]
+      assert og_map_shape[1] > og_map_shape[0], assert_str
+      norm_x = trans_path_x[i] / og_map_shape[1]
+      norm_y = trans_path_y[i] / og_map_shape[0]
       assert_str = "normalizing should result in values between 0 & 1"
       assert norm_x >= 0 and norm_x <= 1, assert_str
       assert norm_y >= 0 and norm_y <= 1, assert_str
