@@ -1,5 +1,5 @@
 '''
-Coverts a rosbag into a dataset for Perspective Transorming VAE(s)
+Coverts a rosbag into a dataset for DCNNs to estimate 2D location
 '''
 import os
 import cv2
