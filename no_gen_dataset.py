@@ -294,12 +294,12 @@ if __name__ == "__main__":
       plt.title("verify map region of interest quality")
       plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
       plt.show()
-  
+
   # save each FPV image with the corresponding GMP image
   bag = rosbag.Bag(args.bag_file)
   with open(os.path.join(args.out_dir, "meta_data.csv"), "a") as meta_data_file:
     if prior_data == 0:
-      meta_data_file.write("frame,time,heading\n")
+      meta_data_file.write("frame,time,heading,x,y\n")
     i = 0
     for topic, msg, _t in bag.read_messages(topics=['/image_proc_resize/image']):
       if i >= len(path_x):
@@ -307,7 +307,14 @@ if __name__ == "__main__":
       msg_t = msg.header.stamp.secs + (msg.header.stamp.nsecs / 1e9)
       if msg_t < path_secs[i]:
         continue
-      meta_data_file.write("%s,%s,%.2f\n" % (i+prior_data, path_secs[i], path_yaw[i]))  
+      assert_str = "assuming width is first tensor/array dimension"
+      assert map_img.shape[0] > map_img.shape[1], assert_str
+      norm_x = trans_path_x[i] / map_img.shape[0]
+      norm_y = trans_path_y[i] / map_img.shape[1]
+      assert_str = "normalizing should result in values between 0 & 1"
+      assert norm_x >= 0 and norm_x <= 1, assert_str
+      assert norm_y >= 0 and norm_y <= 1, assert_str
+      meta_data_file.write("%s,%s,%.2f,%f,%f\n" % (i+prior_data, path_secs[i], path_yaw[i]), norm_x, norm_y)  
       assert msg.width > msg.height, "image width must be greater than image height"
       cam_img = np.asarray(list(msg.data), dtype=np.float32)
       cam_img = cam_img.reshape((msg.height, msg.width, 3))
