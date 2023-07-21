@@ -314,7 +314,7 @@ if __name__ == "__main__":
       assert_str = "normalizing should result in values between 0 & 1"
       assert norm_x >= 0 and norm_x <= 1, assert_str
       assert norm_y >= 0 and norm_y <= 1, assert_str
-      meta_data_file.write("%s,%s,%.2f,%f,%f\n" % (i+prior_data, path_secs[i], path_yaw[i]), norm_x, norm_y)  
+      meta_data_file.write("%s,%s,%.2f,%f,%f\n" % (i+prior_data, path_secs[i], path_yaw[i], norm_x, norm_y))  
       assert msg.width > msg.height, "image width must be greater than image height"
       cam_img = np.asarray(list(msg.data), dtype=np.float32)
       cam_img = cam_img.reshape((msg.height, msg.width, 3))
