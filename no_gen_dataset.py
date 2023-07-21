@@ -307,10 +307,10 @@ if __name__ == "__main__":
       msg_t = msg.header.stamp.secs + (msg.header.stamp.nsecs / 1e9)
       if msg_t < path_secs[i]:
         continue
-      assert_str = "assuming width is first tensor/array dimension"
-      assert map_img.shape[0] > map_img.shape[1], assert_str
-      norm_x = trans_path_x[i] / map_img.shape[0]
-      norm_y = trans_path_y[i] / map_img.shape[1]
+      assert_str = "assuming width is 2nd dimension"
+      assert map_img.shape[1] > map_img.shape[0], assert_str
+      norm_x = trans_path_x[i] / map_img.shape[1]
+      norm_y = trans_path_y[i] / map_img.shape[0]
       assert_str = "normalizing should result in values between 0 & 1"
       assert norm_x >= 0 and norm_x <= 1, assert_str
       assert norm_y >= 0 and norm_y <= 1, assert_str
