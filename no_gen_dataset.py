@@ -328,7 +328,7 @@ if __name__ == "__main__":
         cam_img[:,:,1] = _cam_img.reshape((msg.height, msg.width, 3))[:,:,0]
         continue
       # latter conditions for the first couple FPV images
-      if msg_t < path_secs[i] or ch1 == False or ch2 == False:
+      if msg_t < path_secs[i] or ch1 == True or ch2 == True:
         continue
       ch1, ch2 = True, True
       assert_str = "assuming width is 2nd dimension"
