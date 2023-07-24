@@ -324,6 +324,7 @@ if __name__ == "__main__":
       meta_data_file.write("%s,%s,%.2f,%f,%f\n" % (i+prior_data, path_secs[i], path_yaw[i], norm_x, norm_y))  
       assert msg.width > msg.height, "image width must be greater than image height"
       cam_img = np.asarray(list(msg.data), dtype=np.float32)
+      cam_img[:,:,1] = cam_img.reshape((msg.height, msg.width, 3))[:,:,0]
       # whether still need to grab certain history channels
       ch1 = True
       for _, _msg, _t in bag.read_messages(topics=['/image_proc_resize/image']):
