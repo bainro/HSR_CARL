@@ -314,6 +314,7 @@ if __name__ == "__main__":
       if i >= len(path_x):
         break
       msg_t = msg.header.stamp.secs + (msg.header.stamp.nsecs / 1e9)
+      print(msg_t >= path_secs[i] - time_gap * 2)
       # history channels
       if ch1 and msg_t >= path_secs[i] - time_gap * 2:
         # only do this once
