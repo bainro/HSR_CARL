@@ -306,33 +306,14 @@ if __name__ == "__main__":
       meta_data_file.write("frame,time,heading,x,y\n")
     i = 0
     # @TODO make CLI arg instead of hard-coded
-    time_gap = 25
-    # whether still need to grab certain history channels
-    ch1, ch2 = True, True
+    time_gap = 5
     cam_img = None
     for topic, msg, _t in bag.read_messages(topics=['/image_proc_resize/image']):
       if i >= len(path_x):
         break
       msg_t = msg.header.stamp.secs + (msg.header.stamp.nsecs / 1e9)
-      print(msg_t >= path_secs[i] - time_gap * 2)
-      print("THIS LOGIC NEEDS FIXING!")
-      # history channels
-      if ch1 and msg_t >= path_secs[i] - time_gap * 2:
-        # only do this once
-        ch1 = False
-        cam_img = np.asarray(list(msg.data), dtype=np.float32)
-        cam_img = cam_img.reshape((msg.height, msg.width, 3))
+      if msg_t < path_secs[i]:
         continue
-      if ch2 and msg_t >= path_secs[i] - time_gap:
-        # only do this once
-        ch2 = False
-        _cam_img = np.asarray(list(msg.data), dtype=np.float32)
-        cam_img[:,:,1] = _cam_img.reshape((msg.height, msg.width, 3))[:,:,0]
-        continue
-      # latter conditions for the first couple FPV images
-      if msg_t < path_secs[i] or ch1 == True or ch2 == True:
-        continue
-      ch1, ch2 = True, True
       assert_str = "assuming width is 2nd dimension"
       assert og_map_shape[1] > og_map_shape[0], assert_str
       norm_x = trans_path_x[i] / og_map_shape[1]
@@ -342,8 +323,26 @@ if __name__ == "__main__":
       assert norm_y >= 0 and norm_y <= 1, assert_str
       meta_data_file.write("%s,%s,%.2f,%f,%f\n" % (i+prior_data, path_secs[i], path_yaw[i], norm_x, norm_y))  
       assert msg.width > msg.height, "image width must be greater than image height"
-      _cam_img = np.asarray(list(msg.data), dtype=np.float32)
-      cam_img[:,:,2] = _cam_img.reshape((msg.height, msg.width, 3))[:,:,0]
+      cam_img = np.asarray(list(msg.data), dtype=np.float32)
+      # whether still need to grab certain history channels
+      ch1 = True
+      for _, _msg, _t in bag.read_messages(topics=['/image_proc_resize/image']):
+        _msg_t = _msg.header.stamp.secs + (_msg.header.stamp.nsecs / 1e9)
+        # history channels
+        if ch1 and _msg_t >= path_secs[i] - time_gap * 2:
+          # only do this once
+          ch1 = False
+          _cam_img = np.asarray(list(_msg.data), dtype=np.float32)
+          cam_img[:,:,0] = _cam_img.reshape((_msg.height, _msg.width, 3))[:,:,0]
+          continue
+        if _msg_t >= path_secs[i] - time_gap:
+          _cam_img = np.asarray(list(_msg.data), dtype=np.float32)
+          cam_img[:,:,1] = _cam_img.reshape((_msg.height, _msg.width, 3))[:,:,0]
+          break
+      # not enough time since bag start to make history ch image!
+      if ch1:
+        i += 1
+        continue
       # crop to center
       x_offset = int((msg.width - msg.height) // 2)
       cam_img = cam_img[:, x_offset:-x_offset, :]
@@ -353,7 +352,7 @@ if __name__ == "__main__":
       fpv_img = cv2.resize(cam_img, dsize=resize_dims, interpolation=cv2.INTER_AREA)
       save_name = os.path.join(args.out_dir, f'{i + prior_data}_camera.png')
       cv2.imwrite(save_name, fpv_img[...,::-1])
-      i = i + 1
+      i += 1
       if i == 1:
         plt.title("verify first person view (i.e. camera image)")
         plt.imshow(fpv_img/255)
