@@ -295,6 +295,7 @@ if __name__ == "__main__":
       plt.title("verify map region of interest quality")
       plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
       plt.show()
+      print("hmm...")
 
   # save each FPV image with the corresponding GMP image
   bag = rosbag.Bag(args.bag_file)
