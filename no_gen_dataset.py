@@ -306,7 +306,7 @@ if __name__ == "__main__":
       meta_data_file.write("frame,time,heading,x,y\n")
     i = 0
     # @TODO make CLI arg instead of hard-coded
-    sec_gap = 5
+    time_gap = 25
     # whether still need to grab certain history channels
     ch1, ch2 = True, True
     cam_img = None
@@ -315,13 +315,13 @@ if __name__ == "__main__":
         break
       msg_t = msg.header.stamp.secs + (msg.header.stamp.nsecs / 1e9)
       # history channels
-      if ch1 and msg_t >= path_secs[i] - sec_gap * 2:
+      if ch1 and msg_t >= path_secs[i] - time_gap * 2:
         # only do this once
         ch1 = False
         cam_img = np.asarray(list(msg.data), dtype=np.float32)
         cam_img = cam_img.reshape((msg.height, msg.width, 3))
         continue
-      if ch2 and msg_t >= path_secs[i] - sec_gap:
+      if ch2 and msg_t >= path_secs[i] - time_gap:
         # only do this once
         ch2 = False
         _cam_img = np.asarray(list(msg.data), dtype=np.float32)
