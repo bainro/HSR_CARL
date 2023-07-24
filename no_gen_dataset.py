@@ -324,8 +324,10 @@ if __name__ == "__main__":
         _cam_img = np.asarray(list(msg.data), dtype=np.float32)
         cam_img[:,:,1] = _cam_img.reshape((msg.height, msg.width, 3))[:,:,1]
         continue
-      if msg_t < path_secs[i]:
+      # latter conditions for the first couple FPV images
+      if msg_t < path_secs[i] or ch1 == False or ch2 == False:
         continue
+      ch1, ch2 = True, True
       assert_str = "assuming width is 2nd dimension"
       assert og_map_shape[1] > og_map_shape[0], assert_str
       norm_x = trans_path_x[i] / og_map_shape[1]
