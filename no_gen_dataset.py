@@ -359,19 +359,3 @@ if __name__ == "__main__":
   # === FUTURE THOUGHTS ===
   # Include history channels (i.e. multiple stacked FPV images)
   # Fully connect lidar in 1st VAE layer alongside image?
-  # Doesn't require the reparam trick of a VAE necessarily
-  # Would want to build and test with just 2 classes. Then extrapolate.
-  # What's the NS angle? Give it a time signal to condition on to explain 
-  # some of the variance from people or environmental/map changes. 
-  # recurrence? pytorch -> CARLsim 5 SNN segmentation classifier on Jetson Nano?
-  # can evolve the network parameters with LEAP, 
-  # backprop giving us a decent performance starting point.
-  # and pytorch's userbase is HUGE, would generate interest in CARLsim.
-  # ^ Would this require expanding pyCARL much?
-  # continuous time training ideas? 
-  # Autonomous foraging model / exploration of 2nd floor.
-  # What would place, grid, etc cell dynamics be
-  # when traveling around Aldrich like the Jackal?
-  # specifically, cartographer SLAM assumes a flat plane. What is 
-  # temporal lobe activity like that encodes this extra z-dim?
-  # meta-landmark data in the 2D map
