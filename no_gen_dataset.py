@@ -331,6 +331,8 @@ if __name__ == "__main__":
         _msg_t = _msg.header.stamp.secs + (_msg.header.stamp.nsecs / 1e9)
         # history channels
         if ch1 and _msg_t >= path_secs[i] - time_gap * 2:
+          if _msg_t == msg_t:
+            break
           # only do this once
           ch1 = False
           _cam_img = np.asarray(list(_msg.data), dtype=np.float32)
