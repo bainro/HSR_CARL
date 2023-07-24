@@ -264,7 +264,8 @@ if __name__ == "__main__":
   else:
     _ = os.system(f"rm -fr {args.out_dir} > /dev/null 2>&1")
     os.makedirs(args.out_dir, exist_ok=True)
-      
+
+  '''
   for i in range(len(trans_path_x)):
     if len(map_img.shape) == 3: # e.g. RGB
       gmp_img = np.zeros(shape=(gmp_w, gmp_w, 3))
@@ -295,6 +296,8 @@ if __name__ == "__main__":
       plt.title("verify map region of interest quality")
       plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
       plt.show()
+  '''
+  print("SKIPPING GMP IMAGE GENERATION!")
 
   # save each FPV image with the corresponding GMP image
   bag = rosbag.Bag(args.bag_file)
@@ -322,7 +325,7 @@ if __name__ == "__main__":
         # only do this once
         ch2 = False
         _cam_img = np.asarray(list(msg.data), dtype=np.float32)
-        cam_img[:,:,1] = _cam_img.reshape((msg.height, msg.width, 3))[:,:,1]
+        cam_img[:,:,1] = _cam_img.reshape((msg.height, msg.width, 3))[:,:,0]
         continue
       # latter conditions for the first couple FPV images
       if msg_t < path_secs[i] or ch1 == False or ch2 == False:
@@ -338,7 +341,7 @@ if __name__ == "__main__":
       meta_data_file.write("%s,%s,%.2f,%f,%f\n" % (i+prior_data, path_secs[i], path_yaw[i], norm_x, norm_y))  
       assert msg.width > msg.height, "image width must be greater than image height"
       _cam_img = np.asarray(list(msg.data), dtype=np.float32)
-      cam_img[:,:,2] = _cam_img.reshape((msg.height, msg.width, 3))[:,:,2]
+      cam_img[:,:,2] = _cam_img.reshape((msg.height, msg.width, 3))[:,:,0]
       # crop to center
       x_offset = int((msg.width - msg.height) // 2)
       cam_img = cam_img[:, x_offset:-x_offset, :]
