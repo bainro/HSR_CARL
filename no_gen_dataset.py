@@ -302,10 +302,28 @@ if __name__ == "__main__":
     if prior_data == 0:
       meta_data_file.write("frame,time,heading,x,y\n")
     i = 0
+    # @TODO make CLI arg instead of hard-coded
+    sec_gap = 5
+    # whether still need to grab certain history channels
+    ch1, ch2 = True, True
+    cam_img = None
     for topic, msg, _t in bag.read_messages(topics=['/image_proc_resize/image']):
       if i >= len(path_x):
         break
       msg_t = msg.header.stamp.secs + (msg.header.stamp.nsecs / 1e9)
+      # history channels
+      if ch1 and msg_t >= path_secs[i] - sec_gap * 2:
+        # only do this once
+        ch1 = False
+        cam_img = np.asarray(list(msg.data), dtype=np.float32)
+        cam_img = cam_img.reshape((msg.height, msg.width, 3))
+        continue
+      if ch2 and msg_t >= path_secs[i] - sec_gap:
+        # only do this once
+        ch2 = False
+        _cam_img = np.asarray(list(msg.data), dtype=np.float32)
+        cam_img[:,:,1] = _cam_img.reshape((msg.height, msg.width, 3))[:,:,1]
+        continue
       if msg_t < path_secs[i]:
         continue
       assert_str = "assuming width is 2nd dimension"
@@ -317,8 +335,8 @@ if __name__ == "__main__":
       assert norm_y >= 0 and norm_y <= 1, assert_str
       meta_data_file.write("%s,%s,%.2f,%f,%f\n" % (i+prior_data, path_secs[i], path_yaw[i], norm_x, norm_y))  
       assert msg.width > msg.height, "image width must be greater than image height"
-      cam_img = np.asarray(list(msg.data), dtype=np.float32)
-      cam_img = cam_img.reshape((msg.height, msg.width, 3))
+      _cam_img = np.asarray(list(msg.data), dtype=np.float32)
+      cam_img[:,:,2] = _cam_img.reshape((msg.height, msg.width, 3))[:,:,2]
       # crop to center
       x_offset = int((msg.width - msg.height) // 2)
       cam_img = cam_img[:, x_offset:-x_offset, :]
