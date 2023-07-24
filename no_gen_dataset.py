@@ -258,6 +258,7 @@ if __name__ == "__main__":
     map_img = _tmp_map
       
   prior_data = 0
+  '''
   if args.combine:
     with open(os.path.join(args.out_dir, "meta_data.csv"), "r") as meta_file:
       prior_data = len(meta_file.readlines())
@@ -265,7 +266,6 @@ if __name__ == "__main__":
     _ = os.system(f"rm -fr {args.out_dir} > /dev/null 2>&1")
     os.makedirs(args.out_dir, exist_ok=True)
 
-  '''
   for i in range(len(trans_path_x)):
     if len(map_img.shape) == 3: # e.g. RGB
       gmp_img = np.zeros(shape=(gmp_w, gmp_w, 3))
