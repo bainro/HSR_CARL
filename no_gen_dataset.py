@@ -325,7 +325,6 @@ if __name__ == "__main__":
       assert msg.width > msg.height, "image width must be greater than image height"
       cam_img = np.asarray(list(msg.data), dtype=np.float32)
       cam_img = cam_img.reshape((msg.height, msg.width, 3))
-      print(f'cam_img[:,:,2] time: {msg_t}')
       # whether still need to grab certain history channels
       ch1 = True
       # @TODO HORRIBLY INEFFICIENT XD 
@@ -340,12 +339,10 @@ if __name__ == "__main__":
           ch1 = False
           _cam_img = np.asarray(list(_msg.data), dtype=np.float32)
           cam_img[:,:,0] = _cam_img.reshape((_msg.height, _msg.width, 3))[:,:,0]
-          print(f'cam_img[:,:,0] time: {_msg_t}')
           continue
         if _msg_t >= path_secs[i] - time_gap:
           _cam_img = np.asarray(list(_msg.data), dtype=np.float32)
           cam_img[:,:,1] = _cam_img.reshape((_msg.height, _msg.width, 3))[:,:,0]
-          print(f'cam_img[:,:,1] time: {_msg_t}')
           break
       # not enough time since bag start to make history ch image!
       if ch1:
