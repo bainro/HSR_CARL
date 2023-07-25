@@ -149,7 +149,6 @@ if __name__ == "__main__":
   enter_pressed = False
   
   def kr(key): # key released
-    # print('{0} released'.format(key))
     global shift_on, enter_pressed
     global rot, scale, x_off, y_off
     if key == kb.Key.shift:
@@ -321,7 +320,6 @@ if __name__ == "__main__":
       assert_str = "normalizing should result in values between 0 & 1"
       assert norm_x >= 0 and norm_x <= 1, assert_str
       assert norm_y >= 0 and norm_y <= 1, assert_str
-      meta_data_file.write("%s,%s,%.2f,%f,%f\n" % (i+prior_data, path_secs[i], path_yaw[i], norm_x, norm_y))  
       assert msg.width > msg.height, "image width must be greater than image height"
       cam_img = np.asarray(list(msg.data), dtype=np.float32)
       cam_img = cam_img.reshape((msg.height, msg.width, 3))
@@ -348,6 +346,7 @@ if __name__ == "__main__":
       if ch1:
         i += 1
         continue
+      meta_data_file.write("%s,%s,%.2f,%f,%f\n" % (i+prior_data, path_secs[i], path_yaw[i], norm_x, norm_y))    
       # crop to center
       x_offset = int((msg.width - msg.height) // 2)
       cam_img = cam_img[:, x_offset:-x_offset, :]
