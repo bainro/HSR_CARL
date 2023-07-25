@@ -258,14 +258,14 @@ if __name__ == "__main__":
     map_img = _tmp_map
       
   prior_data = 0
-  '''
   if args.combine:
     with open(os.path.join(args.out_dir, "meta_data.csv"), "r") as meta_file:
-      prior_data = len(meta_file.readlines())
+      prior_data = len(meta_file.readlines())  
   else:
-    _ = os.system(f"rm -fr {args.out_dir} > /dev/null 2>&1")
+    # _ = os.system(f"rm -fr {args.out_dir} > /dev/null 2>&1")
+    print("SKIPPING RM ARGS.OUT_DIR!") # @TODO REMOVE
     os.makedirs(args.out_dir, exist_ok=True)
-
+  '''
   for i in range(len(trans_path_x)):
     if len(map_img.shape) == 3: # e.g. RGB
       gmp_img = np.zeros(shape=(gmp_w, gmp_w, 3))
@@ -325,8 +325,11 @@ if __name__ == "__main__":
       assert msg.width > msg.height, "image width must be greater than image height"
       cam_img = np.asarray(list(msg.data), dtype=np.float32)
       cam_img = cam_img.reshape((msg.height, msg.width, 3))
+      print(f'cam_img[:,:,2] time: {msg_t}')
       # whether still need to grab certain history channels
       ch1 = True
+      # @TODO HORRIBLY INEFFICIENT XD 
+      # @TODO Grab from future instead of past or rolling!
       for _, _msg, _t in bag.read_messages(topics=['/image_proc_resize/image']):
         _msg_t = _msg.header.stamp.secs + (_msg.header.stamp.nsecs / 1e9)
         # history channels
@@ -337,10 +340,12 @@ if __name__ == "__main__":
           ch1 = False
           _cam_img = np.asarray(list(_msg.data), dtype=np.float32)
           cam_img[:,:,0] = _cam_img.reshape((_msg.height, _msg.width, 3))[:,:,0]
+          print(f'cam_img[:,:,0] time: {_msg_t}')
           continue
         if _msg_t >= path_secs[i] - time_gap:
           _cam_img = np.asarray(list(_msg.data), dtype=np.float32)
           cam_img[:,:,1] = _cam_img.reshape((_msg.height, _msg.width, 3))[:,:,0]
+          print(f'cam_img[:,:,1] time: {_msg_t}')
           break
       # not enough time since bag start to make history ch image!
       if ch1:
