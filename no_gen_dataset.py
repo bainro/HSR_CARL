@@ -263,6 +263,7 @@ if __name__ == "__main__":
   else:
     _ = os.system(f"rm -fr {args.out_dir} > /dev/null 2>&1")
     os.makedirs(args.out_dir, exist_ok=True)
+    
   for i in range(len(trans_path_x)):
     if len(map_img.shape) == 3: # e.g. RGB
       gmp_img = np.zeros(shape=(gmp_w, gmp_w, 3))
@@ -289,10 +290,11 @@ if __name__ == "__main__":
       cv2.imwrite(os.path.join(args.out_dir, f'{i + prior_data}_map.png'), gmp_img*255)
     else:
       cv2.imwrite(os.path.join(args.out_dir, f'{i + prior_data}_map.png'), gmp_img)
-    if i == 0:
-      plt.title("verify map region of interest quality")
-      plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
-      plt.show()
+    #if i == 0:
+      #plt.title("verify map region of interest quality")
+      #plt.imshow(gmp_img, cmap='gray', vmin=0, vmax=255)
+      #plt.show()
+    print(i)
 
   # save each FPV image with the corresponding GMP image
   bag = rosbag.Bag(args.bag_file)
