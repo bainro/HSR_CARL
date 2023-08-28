@@ -361,7 +361,3 @@ if __name__ == "__main__":
         plt.show()
   bag.close()
   print("DONE!")
-  
-  # === FUTURE THOUGHTS ===
-  # Include history channels (i.e. multiple stacked FPV images)
-  # Fully connect lidar in 1st VAE layer alongside image?
